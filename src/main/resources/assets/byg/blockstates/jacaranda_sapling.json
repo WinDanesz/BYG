@@ -1,6 +1,9 @@
 {
   "variants": {
-    "type=dandelion": {
+    "type=oak,stage=0": {
+      "model": "byg:jacaranda_sapling"
+    },
+    "type=oak,stage=1": {
       "model": "byg:jacaranda_sapling"
     }
   }

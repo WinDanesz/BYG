@@ -1,6 +1,9 @@
 {
   "variants": {
-    "type=dandelion": {
+    "type=oak,stage=0": {
+      "model": "byg:ebony_sapling"
+    },
+    "type=oak,stage=1": {
       "model": "byg:ebony_sapling"
     }
   }

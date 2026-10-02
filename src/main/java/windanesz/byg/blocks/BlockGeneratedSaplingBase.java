@@ -1,7 +1,6 @@
 package windanesz.byg.blocks;
 
-import net.minecraft.block.BlockFlower;
-import net.minecraft.block.IGrowable;
+import net.minecraft.block.BlockSapling;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -9,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.event.terraingen.TerrainGen;
@@ -20,7 +20,7 @@ import windanesz.byg.worldgen.treegenerator.TreeGrowthGenerator;
 import java.util.Random;
 import java.util.function.BiPredicate;
 
-public class BlockGeneratedSaplingBase extends BlockFlower implements IGrowable {
+public class BlockGeneratedSaplingBase extends BlockSapling {
     private static final int RANDOM_GROWTH_CHANCE = 7;
     private final TreePlacement[] tickPlacements;
     private final TreePlacement[] bonemealPlacements;
@@ -88,24 +88,54 @@ public class BlockGeneratedSaplingBase extends BlockFlower implements IGrowable 
     }
 
     @Override
-    public EnumFlowerColor getBlockType() {
-        return EnumFlowerColor.YELLOW;
+    public String getLocalizedName() {
+        return I18n.translateToLocal(this.getTranslationKey() + ".name");
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
-        for (EnumFlowerType type : EnumFlowerType.getTypes(this.getBlockType())) {
-            list.add(new ItemStack(this, 1, type.getMeta()));
-        }
+        list.add(new ItemStack(this));
+    }
+
+    @Override
+    public int damageDropped(IBlockState state) {
+        return 0;
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return this.getDefaultState();
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return 0;
     }
 
     @Override
     public void updateTick(World world, BlockPos pos, IBlockState state, Random random) {
-        if (world.isRemote || random.nextInt(RANDOM_GROWTH_CHANCE) != 0 || !this.canAttemptGrowth(world, pos, this.tickGrowthCondition)) {
+        if (world.isRemote) {
+            return;
+        }
+        this.checkAndDropBlock(world, pos, state);
+        if (world.getBlockState(pos).getBlock() != this || random.nextInt(RANDOM_GROWTH_CHANCE) != 0
+                || !this.canAttemptGrowth(world, pos, this.tickGrowthCondition)) {
             return;
         }
         this.tryGrow(world, pos, this.tickPlacements, random);
+    }
+
+    @Override
+    public void grow(World world, BlockPos pos, IBlockState state, Random random) {
+        if (this.canAttemptGrowth(world, pos, this.tickGrowthCondition)) {
+            this.tryGrow(world, pos, this.tickPlacements, random);
+        }
+    }
+
+    @Override
+    public void generateTree(World world, BlockPos pos, IBlockState state, Random random) {
+        this.grow(world, pos, state, random);
     }
 
     @Override

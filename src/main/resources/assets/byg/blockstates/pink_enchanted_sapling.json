@@ -1,6 +1,9 @@
 {
   "variants": {
-    "type=dandelion": {
+    "type=oak,stage=0": {
+      "model": "byg:pink_enchanted_sapling"
+    },
+    "type=oak,stage=1": {
       "model": "byg:pink_enchanted_sapling"
     }
   }
