@@ -13,6 +13,7 @@ import net.minecraft.entity.ai.*;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -49,6 +50,7 @@ public class EntityKiwiBird extends EntityAnimal {
     private static final ResourceLocation SLEEPING_TEXTURE = new ResourceLocation("byg:textures/entity/kiwi_sleeping.png");
 
     private BlockPos burrowPos = null;
+    private int timeUntilNextEgg;
 
     public EntityKiwiBird(World world) {
         super(world);
@@ -71,6 +73,22 @@ public class EntityKiwiBird extends EntityAnimal {
         this.tasks.addTask(7, new EntityAIFollowParent(this, 1.1D));
         this.tasks.addTask(8, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(9, new EntityAILookIdle(this));
+        this.timeUntilNextEgg = nextEggDelay();
+    }
+
+    private int nextEggDelay() {
+        int interval = Config.getKiwiEggLayInterval();
+        return interval + this.rand.nextInt(interval);
+    }
+
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        if (!this.world.isRemote && this.isEntityAlive() && !this.isChild() && ModItems.kiwi_egg != null && --this.timeUntilNextEgg <= 0) {
+            this.playSound(SoundEvents.ENTITY_CHICKEN_EGG, 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+            this.dropItem(ModItems.kiwi_egg, 1);
+            this.timeUntilNextEgg = nextEggDelay();
+        }
     }
 
     @Override
@@ -91,6 +109,9 @@ public class EntityKiwiBird extends EntityAnimal {
     @Override
     public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
+        if (compound.hasKey("EggLayTime")) {
+            this.timeUntilNextEgg = compound.getInteger("EggLayTime");
+        }
         if (compound.hasKey("BurrowX")) {
             this.burrowPos = new BlockPos(
                 compound.getInteger("BurrowX"),
@@ -103,6 +124,7 @@ public class EntityKiwiBird extends EntityAnimal {
     @Override
     public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
+        compound.setInteger("EggLayTime", this.timeUntilNextEgg);
         if (this.burrowPos != null) {
             compound.setInteger("BurrowX", this.burrowPos.getX());
             compound.setInteger("BurrowY", this.burrowPos.getY());
@@ -209,6 +231,19 @@ public class EntityKiwiBird extends EntityAnimal {
     @Override
     protected Item getDropItem() {
         return Items.FEATHER;
+    }
+
+    @Override
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
+        super.dropFewItems(wasRecentlyHit, lootingModifier);
+        int meat = Config.getKiwiMeatDropCount();
+        if (meat > 0) {
+            meat += this.rand.nextInt(lootingModifier + 1);
+            Item drop = this.isBurning() ? ModItems.kiwi_cooked : ModItems.kiwi_raw;
+            if (drop != null) {
+                this.dropItem(drop, meat);
+            }
+        }
     }
 
     @Override

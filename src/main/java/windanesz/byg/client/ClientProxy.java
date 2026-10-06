@@ -17,6 +17,7 @@ public class ClientProxy implements IProxyBYG {
     public void preInit(FMLPreInitializationEvent event) {
         windanesz.byg.entity.EntityFungalZombie.preInit(event);
         windanesz.byg.entity.EntityKiwiBird.preInit(event);
+        windanesz.byg.entity.EntityKiwiEgg.preInit(event);
         windanesz.byg.entity.EntityMudBall.preInit(event);
         windanesz.byg.entity.EntityCrystalCrawler.preInit(event);
         RenderingRegistry.registerEntityRenderingHandler(EntityCrystalCrawler.class, RenderCrystalCrawler::new);

@@ -13,7 +13,8 @@
       "item": "byg:strawberry"
     },
     {
-      "item": "minecraft:egg"
+      "type": "forge:ore_dict",
+      "ore": "egg"
     }
   ],
   "result": {

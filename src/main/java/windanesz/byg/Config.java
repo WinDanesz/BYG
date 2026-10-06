@@ -306,6 +306,7 @@ public final class Config {
         NAME_PATTERNS.put("rudo", Pattern.compile("(^|_)rudo"));
         NAME_PATTERNS.put("cattail", Pattern.compile("^cattail|^cooked_cattail"));
         NAME_PATTERNS.put("salal", Pattern.compile("salal"));
+        NAME_PATTERNS.put("kiwi_bird", Pattern.compile("^kiwi_"));
         NAME_PATTERNS.put("nether_furnace", Pattern.compile("^nether_furnace"));
     }
 
@@ -629,6 +630,16 @@ public final class Config {
     public static double getKiwiWormFindChance() {
         ensureBaked();
         return Math.max(0.0D, Math.min(1.0D, creatureSettings.kiwiWormFindChance));
+    }
+
+    public static int getKiwiEggLayInterval() {
+        ensureBaked();
+        return Math.max(1, creatureSettings.kiwiEggLayInterval);
+    }
+
+    public static int getKiwiMeatDropCount() {
+        ensureBaked();
+        return Math.max(0, creatureSettings.kiwiMeatDropCount);
     }
 
     public static boolean isOreContentEnabled(String oreName) {
@@ -1102,6 +1113,8 @@ public final class Config {
         FOOD_VALUES.put("green_apple_pie", new FoodValues(foodSettings.greenapplepieFoodLevel, (float) foodSettings.greenapplepieSaturation));
         FOOD_VALUES.put("hawthorn_berries", new FoodValues(foodSettings.hawthornberriesFoodLevel, (float) foodSettings.hawthornberriesSaturation));
         FOOD_VALUES.put("holly_berries", new FoodValues(foodSettings.hollyberriesFoodLevel, (float) foodSettings.hollyberriesSaturation));
+        FOOD_VALUES.put("kiwi_cooked", new FoodValues(foodSettings.kiwiCookedFoodLevel, (float) foodSettings.kiwiCookedSaturation));
+        FOOD_VALUES.put("kiwi_raw", new FoodValues(foodSettings.kiwiRawFoodLevel, (float) foodSettings.kiwiRawSaturation));
         FOOD_VALUES.put("pumpkin_bread", new FoodValues(foodSettings.pumpkinbreadFoodLevel, (float) foodSettings.pumpkinbreadSaturation));
         FOOD_VALUES.put("pumpkin_mash", new FoodValues(foodSettings.pumpkinmashFoodLevel, (float) foodSettings.pumpkinmashSaturation));
         FOOD_VALUES.put("rowan_berries", new FoodValues(foodSettings.rowanberriesFoodLevel, (float) foodSettings.rowanberriesSaturation));
@@ -1235,6 +1248,10 @@ public final class Config {
         public double hawthornberriesSaturation = 0.3D;
         public int hollyberriesFoodLevel = 2;
         public double hollyberriesSaturation = 0.3D;
+        public int kiwiCookedFoodLevel = 6;
+        public double kiwiCookedSaturation = 0.8D;
+        public int kiwiRawFoodLevel = 2;
+        public double kiwiRawSaturation = 0.3D;
         public int pumpkinbreadFoodLevel = 7;
         public double pumpkinbreadSaturation = 0.3D;
         public int pumpkinmashFoodLevel = 3;
@@ -1879,6 +1896,17 @@ public final class Config {
         @net.minecraftforge.common.config.Config.Comment("Chance for a kiwi to find a worm when a forage action completes.")
         @net.minecraftforge.common.config.Config.RangeDouble(min = 0.0D, max = 1.0D)
         public double kiwiWormFindChance = 0.33D;
+
+        @net.minecraftforge.common.config.Config.Comment({
+                "Minimum ticks between eggs laid by an adult kiwi. A random extra delay of up to the same amount is added, so 12000 means one egg every 10 to 20 minutes.",
+                "Set very high to make eggs effectively rare."
+        })
+        @net.minecraftforge.common.config.Config.RangeInt(min = 1)
+        public int kiwiEggLayInterval = 12000;
+
+        @net.minecraftforge.common.config.Config.Comment("Number of Raw Kiwi Meat a kiwi drops when killed. Each level of Looting adds up to one extra. Set to 0 to stop kiwis dropping meat.")
+        @net.minecraftforge.common.config.Config.RangeInt(min = 0)
+        public int kiwiMeatDropCount = 1;
     }
 
     public static final class EquipmentSettings {

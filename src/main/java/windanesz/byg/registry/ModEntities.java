@@ -10,6 +10,7 @@ import windanesz.byg.Config;
 import windanesz.byg.entity.EntityCrystalCrawler;
 import windanesz.byg.entity.EntityFungalZombie;
 import windanesz.byg.entity.EntityKiwiBird;
+import windanesz.byg.entity.EntityKiwiEgg;
 import windanesz.byg.entity.EntityMudBall;
 
 @Mod.EventBusSubscriber
@@ -24,6 +25,8 @@ public final class ModEntities {
                 EntityEntryBuilder.create().entity(EntityMudBall.class).id(new ResourceLocation("byg", "mudball"), 61).name("mudball").tracker(64, 10, true).build());
         if (Config.isWoodSetEnabled("fungal_zombie")) entries.add(
                 EntityEntryBuilder.create().entity(EntityFungalZombie.class).id(new ResourceLocation("byg", "fungalzombie"), 48).name("fungalzombie").tracker(64, 1, true).egg(-10053376, -8578791).build());
+        if (Config.isWoodSetEnabled("kiwi_bird")) entries.add(
+                EntityEntryBuilder.create().entity(EntityKiwiEgg.class).id(new ResourceLocation("byg", "kiwiegg"), 62).name("kiwiegg").tracker(64, 10, true).build());
         if (Config.isWoodSetEnabled("kiwi_bird")) entries.add(
                 EntityEntryBuilder.create().entity(EntityKiwiBird.class).id(new ResourceLocation("byg", "kiwibird"), 56).name("kiwibird").tracker(64, 1, true).egg(-13624819, -2172876).build());
         if (Config.isWoodSetEnabled("crystal_crawler")) entries.add(

@@ -152,6 +152,8 @@ Hunger restored (in hunger points, where 2 is one drumstick) and saturation for 
 | `rowanberries` | 2 | 0.3 |
 | `rudobeans` | 1 | 0.3 |
 | `rudobeansroasted` | 3 | 0.3 |
+| `kiwiCooked` | 6 | 0.8 |
+| `kiwiRaw` | 2 | 0.3 |
 | `salalBerry` | 2 | 0.3 |
 | `silverApple` | 6 | 0.3 |
 | `spidereyesoup` | 10 | 0.6 |
@@ -240,6 +242,8 @@ Each row stands for two options: the prefix followed by `FoodLevel` and by `Satu
 | `fungalZombieSpawnWeight` | `20` | ≥ 0 | ✔ | Relative spawn weight for fungal zombies in Fungal Jungle. 20 is the default; 0 disables natural spawning. |
 | `kiwiForageAttemptInterval` | `120` | ≥ 1 |  | Average interval in ticks between kiwi forage attempts at night. Lower values make kiwis dig for worms more often. |
 | `kiwiWormFindChance` | `0.3333333333333333` | 0.0 to 1.0 |  | Chance for a kiwi to find a worm when a forage action completes. |
+| `kiwiEggLayInterval` | `12000` | ≥ 1 |  | Minimum ticks between eggs laid by an adult kiwi. A random extra delay of up to the same amount is added, so 12000 means one egg every 10 to 20 minutes. Set very high to make eggs effectively rare. |
+| `kiwiMeatDropCount` | `1` | ≥ 0 |  | Number of Raw Kiwi Meat a kiwi drops when killed. Each level of Looting adds up to one extra. Set to 0 to stop kiwis dropping meat. |
 
 ## Equipment Settings
 

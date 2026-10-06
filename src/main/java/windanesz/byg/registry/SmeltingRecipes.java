@@ -43,6 +43,9 @@ public class SmeltingRecipes {
         if (ModItems.cooked_tropical_fish != null) {
             GameRegistry.addSmelting(new ItemStack(Items.FISH, 1, 2), new ItemStack(ModItems.cooked_tropical_fish, 1), 1.0f);
         }
+        if (ModItems.kiwi_raw != null) {
+            GameRegistry.addSmelting(new ItemStack(ModItems.kiwi_raw, 1), new ItemStack(ModItems.kiwi_cooked, 1), 0.35f);
+        }
         if (ModItems.rudo_beans != null) {
             GameRegistry.addSmelting(new ItemStack(ModItems.rudo_beans, 1), new ItemStack(ModItems.rudo_beans_roasted, 1), 1.0f);
         }

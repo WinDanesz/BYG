@@ -22,6 +22,7 @@ public final class OreDictionaryEntries {
         registerItem("dustCrystals", ModItems.light_blue_crystals, ModItems.purple_crystals, ModItems.red_crystals, ModItems.white_crystals);
         registerItem("dustGlowCane", ModItems.glowcane_dust_blue, ModItems.glowcane_dust_pink, ModItems.glowcane_dust_purple, ModItems.glowcane_dust_red);
         registerItem("dustMud", ModItems.mud_balls);
+        registerItem("egg", Items.EGG, ModItems.kiwi_egg);
         registerItem("gemLatharium", ModItems.latharium_gem);
         registerItem("gemPendorite", ModItems.pendorite_gem);
         registerItem("gemTamrelite", ModItems.tamrelite_gem);

@@ -33,6 +33,7 @@ public final class BygInitialization {
         BlockCrate.init(event);
         EntityFungalZombie.init(event);
         EntityKiwiBird.init(event);
+        windanesz.byg.entity.EntityKiwiEgg.registerDispenseBehavior();
         BlockNetherFurnaceLit.init(event);
         ModBrewingRecipes.init();
         SmeltingRecipes.init();

@@ -104,6 +104,9 @@ public final class ModItems {
     public static final Item kasai_pickaxe = placeholder();
     public static final Item kasai_shovel = placeholder();
     public static final Item kasai_sword = placeholder();
+    public static final Item kiwi_cooked = placeholder();
+    public static final Item kiwi_egg = placeholder();
+    public static final Item kiwi_raw = placeholder();
     public static final Item latharium_axe = placeholder();
     public static final Item latharium_armour_helmet = placeholder();
     public static final Item latharium_armour_body = placeholder();
@@ -246,6 +249,9 @@ public final class ModItems {
             registerItem(registry, createBasicItem("kasai_chain_plating"));
             registerItem(registry, createBasicItem("kasai_ingot"));
         }
+        registerItem(registry, createFoodItem("kiwi_cooked", 6, 0.8f, true, 64, false));
+        registerItem(registry, new ItemKiwiEgg());
+        registerItem(registry, createFoodItem("kiwi_raw", 2, 0.3f, true, 64, false));
         if (Config.isOreContentEnabled("latharium")) {
             registerItem(registry, createBasicItem("enchanted_stick"));
             registerItem(registry, createBasicItem("latharium_gem"));

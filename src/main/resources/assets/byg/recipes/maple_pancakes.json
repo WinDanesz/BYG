@@ -10,7 +10,8 @@
       "item": "minecraft:wheat"
     },
     {
-      "item": "minecraft:egg"
+      "type": "forge:ore_dict",
+      "ore": "egg"
     },
     {
       "item": "byg:maple_syrup"

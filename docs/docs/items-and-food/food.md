@@ -14,19 +14,21 @@ Hunger and saturation values are the defaults from the [Food Settings](../gettin
 |:-:|---|:-:|:-:|---|
 | <ItemIcon id="baobab_fruit" name="Baobab Fruit" size={32} inline /> | Baobab Fruit | 4 | 0.3 | Grows under Baobab leaves. See [baobab fruit](#baobab-fruit). |
 | <ItemIcon id="blueberry" name="Blueberry" size={32} inline /> | Blueberry | 2 | 0.3 | Blueberry bushes. See [berry bushes](#berry-bushes-and-rudo). |
-| <ItemIcon id="blueberry_pie" name="Blueberry Pie" size={32} inline /> | Blueberry Pie | 8 | 0.3 | 2 blueberries, sugar, egg (shapeless). |
+| <ItemIcon id="blueberry_pie" name="Blueberry Pie" size={32} inline /> | Blueberry Pie | 8 | 0.3 | 2 blueberries, sugar, egg (shapeless). A Kiwi Egg works as the egg. |
 | <ItemIcon id="strawberry" name="Strawberry" size={32} inline /> | Strawberry | 2 | 0.3 | Break wild strawberry plants for 2 berries, then plant berries on farmland to grow bushes. |
-| <ItemIcon id="strawberry_pie" name="Strawberry Pie" size={32} inline /> | Strawberry Pie | 8 | 0.3 | 2 strawberries, sugar, egg. |
+| <ItemIcon id="strawberry_pie" name="Strawberry Pie" size={32} inline /> | Strawberry Pie | 8 | 0.3 | 2 strawberries, sugar, egg. A Kiwi Egg works as the egg. |
 | <ItemIcon id="green_apple" name="Green Apple" size={32} inline /> | Green Apple | 6 | 0.3 | Dropped by green apple Skyris leaves. Can always be eaten. |
-| <ItemIcon id="green_apple_pie" name="Green Apple Pie" size={32} inline /> | Green Apple Pie | 8 | 0.3 | 2 green apples, sugar, egg. |
+| <ItemIcon id="green_apple_pie" name="Green Apple Pie" size={32} inline /> | Green Apple Pie | 8 | 0.3 | 2 green apples, sugar, egg. A Kiwi Egg works as the egg. |
 | <ItemIcon id="silver_apple" name="Silver Apple" size={32} inline /> | Silver Apple | 6 | 0.3 | Dropped by silver apple Skyris leaves. Can always be eaten. |
 | <ItemIcon id="hawthorn_berries" name="Hawthorn Berries" size={32} inline /> | Hawthorn Berries | 2 | 0.3 | Hawthorn berry leaves drop 2. |
 | <ItemIcon id="holly_berries" name="Holly Berries" size={32} inline /> | Holly Berries | 2 | 0.3 | Holly berry leaves drop 2. Can always be eaten. |
 | <ItemIcon id="rowan_berries" name="Rowan Berries" size={32} inline /> | Rowan Berries | 2 | 0.3 | Rowan berry leaves drop 2. |
 | <ItemIcon id="salal_berry" name="Salal Berry" size={32} inline /> | Salal Berry | 2 | 0.3 | Ripe salal bushes drop 2. Kiwi birds are drawn to them. |
+| <ItemIcon id="kiwi_raw" name="Raw Kiwi Meat" size={32} inline /> | Raw Kiwi Meat | 2 | 0.3 | Dropped by kiwi birds. Wolves like it. |
+| <ItemIcon id="kiwi_cooked" name="Cooked Kiwi Meat" size={32} inline /> | Cooked Kiwi Meat | 6 | 0.8 | Smelt Raw Kiwi Meat, or kill a kiwi bird while it is on fire. Wolves like it. |
 | | Berry Juice | 2 | 0.6 | Wooden Mortar, 5 berries and a glass bottle (shapeless). See [berry juice](#berry-juice). |
 | | Maple Syrup | 3 | 0.5 | Smelt Maple Sap. See [maple syrup](#maple-syrup). |
-| <ItemIcon id="maple_pancakes" name="Maple Pancakes" size={32} inline /> | Maple Pancakes | 8 | 0.8 | 2 wheat, egg, maple syrup gives 2 pancakes. |
+| <ItemIcon id="maple_pancakes" name="Maple Pancakes" size={32} inline /> | Maple Pancakes | 8 | 0.8 | 2 wheat, egg, maple syrup gives 2 pancakes. A Kiwi Egg works as the egg. |
 | <ItemIcon id="rudo_beans" name="Rudo Beans" size={32} inline /> | Rudo Beans | 1 | 0.3 | Rudo stalks. |
 | <ItemIcon id="rudo_beans_roasted" name="Roasted Rudo Beans" size={32} inline /> | Roasted Rudo Beans | 3 | 0.3 | Smelt rudo beans. |
 | <ItemIcon id="cooked_cattail_rhizome" name="Cooked Cattail Rhizome" size={32} inline /> | Cooked Cattail Rhizome | 4 | 0.1 | Smelt a cattail rhizome. |

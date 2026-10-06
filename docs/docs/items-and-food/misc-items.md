@@ -32,6 +32,14 @@ A **Worm** makes fishing faster. Kiwi birds dig them up (see [Kiwi Bird](../crea
 - If you **reel in without catching anything, you get the worm back**. A worm is only used up when the cast catches something.
 - The whole effect can be switched off with `wormFishingEnhancementEnabled`.
 
+## Kiwi Egg
+
+<ItemIcon id="kiwi_egg" name="Kiwi Egg" size={96} />
+
+Adult kiwi birds lay a **Kiwi Egg** every so often (see [Kiwi Bird](../creatures/kiwi-bird.md)). It stacks to 16 and counts as an egg in recipes, so it can replace the egg in blueberry, strawberry and green apple pies and in maple pancakes.
+
+Like a chicken egg, it can also be **thrown** (right-click, or fire it from a dispenser). A thrown egg does no damage, but has a 1 in 8 chance of hatching a baby kiwi where it lands, and a small chance of hatching four.
+
 ## Wooden Mortar
 
 <ItemIcon id="wooden_mortar" name="Wooden Mortar" size={96} />
