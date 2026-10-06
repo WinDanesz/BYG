@@ -174,9 +174,9 @@ public final class ModItems {
     public static void register(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> registry = event.getRegistry();
 
-        registerItem(registry, createDoorItem("aspen_door", () -> ModBlocks.aspen_door_bottom, () -> ModBlocks.aspen_door_top));
+        registerItem(registry, createDoorItem("aspen_door", () -> ModBlocks.aspen_door_bottom));
         if (Config.isBaobabContentEnabled()) {
-            registerItem(registry, createDoorItem("baobab_door", () -> ModBlocks.baobab_door_bottom, () -> ModBlocks.baobab_door_top));
+            registerItem(registry, createDoorItem("baobab_door", () -> ModBlocks.baobab_door_bottom));
             registerItem(registry, new ItemBaobabfruit());
             registerItem(registry, createBaobabPowderItem());
         }
@@ -185,7 +185,7 @@ public final class ModItems {
         registerItem(registry, new windanesz.byg.items.ItemMapleSyrup());
         registerItem(registry, createFoodItem("maple_pancakes", 8, 0.8f, false, 16, false));
         if (Config.isEnchantedTreeContentEnabled()) {
-            registerItem(registry, createDoorItem("blue_enchanted_door", () -> ModBlocks.blue_enchanted_door_bottom, () -> ModBlocks.blue_enchanted_door_top));
+            registerItem(registry, createDoorItem("blue_enchanted_door", () -> ModBlocks.blue_enchanted_door_bottom));
         }
         registerItem(registry, new ItemBlueberry());
         registerItem(registry, createFoodItem("blueberry_pie", 8, 0.3f, false, 16, false));
@@ -194,9 +194,9 @@ public final class ModItems {
         registerItem(registry, createSoupItem("carrot_soup", 9));
         registerItem(registry, createGroundPlantItem("cattail", () -> windanesz.byg.registry.ModBlocks.cattails));
         registerItem(registry, createBasicItem("cattail_rhizome"));
-        registerItem(registry, createDoorItem("cherry_door", () -> ModBlocks.cherry_door_bottom, () -> ModBlocks.cherry_door_top));
+        registerItem(registry, createDoorItem("cherry_door", () -> ModBlocks.cherry_door_bottom));
         if (Config.isCikaContentEnabled()) {
-            registerItem(registry, createDoorItem("cika_door", () -> ModBlocks.cika_door_bottom, () -> ModBlocks.cika_door_top));
+            registerItem(registry, createDoorItem("cika_door", () -> ModBlocks.cika_door_bottom));
         }
         registerItem(registry, createFoodItem("cooked_carrot", 4, 0.3f, false, 64, false));
         registerItem(registry, createFoodItem("cooked_cattail_rhizome", 4, 0.1f, false, 64, false));
@@ -205,14 +205,14 @@ public final class ModItems {
         registerItem(registry, createFoodItem("cooked_spider_eye", 5, 0.3f, true, 64, false));
         registerItem(registry, createFoodItem("cooked_tropical_fish", 5, 0.3f, false, 64, false));
         if (Config.isCypressContentEnabled()) {
-            registerItem(registry, createDoorItem("cypress_door", () -> ModBlocks.cypress_door_bottom, () -> ModBlocks.cypress_door_top));
+            registerItem(registry, createDoorItem("cypress_door", () -> ModBlocks.cypress_door_bottom));
         }
         if (Config.isEbonyContentEnabled()) {
-            registerItem(registry, createDoorItem("ebony_door", () -> ModBlocks.ebony_door_bottom, () -> ModBlocks.ebony_door_top));
+            registerItem(registry, createDoorItem("ebony_door", () -> ModBlocks.ebony_door_bottom));
         }
-        registerItem(registry, createDoorItem("eucalyptus_door", () -> ModBlocks.eucalyptus_door_bottom, () -> ModBlocks.eucalyptus_door_top));
-        registerItem(registry, createDoorItem("fir_door", () -> ModBlocks.fir_door_bottom, () -> ModBlocks.fir_door_top));
-        registerItem(registry, createDoorItem("frozen_oak_door", () -> ModBlocks.frozen_oak_door_bottom, () -> ModBlocks.frozen_oak_door_top));
+        registerItem(registry, createDoorItem("eucalyptus_door", () -> ModBlocks.eucalyptus_door_bottom));
+        registerItem(registry, createDoorItem("fir_door", () -> ModBlocks.fir_door_bottom));
+        registerItem(registry, createDoorItem("frozen_oak_door", () -> ModBlocks.frozen_oak_door_bottom));
         registerItem(registry, createBasicItem("glowcane_dust_blue"));
         registerItem(registry, createBasicItem("glowcane_dust_pink"));
         registerItem(registry, createBasicItem("glowcane_dust_purple"));
@@ -225,10 +225,10 @@ public final class ModItems {
         registerItem(registry, createSoupItem("glowshroom_soup_purple", 8));
         registerItem(registry, createGoldenBeetrootItem());
         if (Config.isGreatOakContentEnabled()) {
-            registerItem(registry, createDoorItem("great_oak_door", () -> ModBlocks.great_oak_door_bottom, () -> ModBlocks.great_oak_door_top));
+            registerItem(registry, createDoorItem("great_oak_door", () -> ModBlocks.great_oak_door_bottom));
         }
         if (Config.isEnchantedTreeContentEnabled()) {
-            registerItem(registry, createDoorItem("green_enchanted_door", () -> ModBlocks.green_enchanted_door_bottom, () -> ModBlocks.green_enchanted_door_top));
+            registerItem(registry, createDoorItem("green_enchanted_door", () -> ModBlocks.green_enchanted_door_bottom));
         }
         registerItem(registry, createSoupItem("green_glowshroom_stew", 8));
         if (Config.isSkyrisContentEnabled()) {
@@ -236,12 +236,12 @@ public final class ModItems {
             registerItem(registry, createFoodItem("green_apple_pie", 8, 0.3f, false, 16, false));
         }
         registerItem(registry, createGlowshroomItem("green_glowshroom", () -> ModBlocks.small_green_glowshroom));
-        registerItem(registry, createDoorItem("hawthorn_door", () -> ModBlocks.hawthorn_door_bottom, () -> ModBlocks.hawthorn_door_top));
+        registerItem(registry, createDoorItem("hawthorn_door", () -> ModBlocks.hawthorn_door_bottom));
         registerItem(registry, createFoodItem("hawthorn_berries", 2, 0.3f, false, 64, false));
-        registerItem(registry, createDoorItem("holly_door", () -> ModBlocks.holly_door_bottom, () -> ModBlocks.holly_door_top));
+        registerItem(registry, createDoorItem("holly_door", () -> ModBlocks.holly_door_bottom));
         registerItem(registry, createFoodItem("holly_berries", 2, 0.3f, false, 64, true));
-        registerItem(registry, createDoorItem("ironwood_door", () -> ModBlocks.ironwood_door_bottom, () -> ModBlocks.ironwood_door_top));
-        registerItem(registry, createDoorItem("jacaranda_door", () -> ModBlocks.jacaranda_door_bottom, () -> ModBlocks.jacaranda_door_top));
+        registerItem(registry, createDoorItem("ironwood_door", () -> ModBlocks.ironwood_door_bottom));
+        registerItem(registry, createDoorItem("jacaranda_door", () -> ModBlocks.jacaranda_door_bottom));
         if (Config.isOreContentEnabled("kasai")) {
             registerItem(registry, createBasicItem("kasai_chain_plating"));
             registerItem(registry, createBasicItem("kasai_ingot"));
@@ -251,33 +251,33 @@ public final class ModItems {
             registerItem(registry, createBasicItem("latharium_gem"));
         }
         registerItem(registry, createBasicItem("light_blue_crystals"));
-        registerItem(registry, createDoorItem("mahogany_door", () -> ModBlocks.mahogany_door_bottom, () -> ModBlocks.mahogany_door_top));
+        registerItem(registry, createDoorItem("mahogany_door", () -> ModBlocks.mahogany_door_bottom));
         if (Config.isMangroveContentEnabled()) {
-            registerItem(registry, createDoorItem("mangrove_door", () -> ModBlocks.mangrove_door_bottom, () -> ModBlocks.mangrove_door_top));
+            registerItem(registry, createDoorItem("mangrove_door", () -> ModBlocks.mangrove_door_bottom));
         }
-        registerItem(registry, createDoorItem("maple_door", () -> ModBlocks.maple_door_bottom, () -> ModBlocks.maple_door_top));
+        registerItem(registry, createDoorItem("maple_door", () -> ModBlocks.maple_door_bottom));
         registerItem(registry, new ItemMudballs());
         if (Config.isPalmContentEnabled()) {
-            registerItem(registry, createDoorItem("palm_door", () -> ModBlocks.palm_door_bottom, () -> ModBlocks.palm_door_top));
+            registerItem(registry, createDoorItem("palm_door", () -> ModBlocks.palm_door_bottom));
         }
         if (Config.isOreContentEnabled("pendorite")) {
             registerItem(registry, createBasicItem("pendorite_gem"));
         }
-        registerItem(registry, createDoorItem("pine_door", () -> ModBlocks.pine_door_bottom, () -> ModBlocks.pine_door_top));
+        registerItem(registry, createDoorItem("pine_door", () -> ModBlocks.pine_door_bottom));
         registerItem(registry, createFoodItem("pumpkin_bread", 7, 0.3f, false, 64, false));
         registerItem(registry, createSoupItem("pumpkin_mash", 3));
         registerItem(registry, createBasicItem("purple_crystals"));
         registerItem(registry, createGlowshroomItem("purple_glowshroom", () -> ModBlocks.small_purple_glowshroom));
         registerItem(registry, createBasicItem("red_crystals"));
         registerItem(registry, createGroundPlantItem("reeds", () -> windanesz.byg.registry.ModBlocks.reed));
-        registerItem(registry, createDoorItem("rowan_door", () -> ModBlocks.rowan_door_bottom, () -> ModBlocks.rowan_door_top));
+        registerItem(registry, createDoorItem("rowan_door", () -> ModBlocks.rowan_door_bottom));
         registerItem(registry, createFoodItem("rowan_berries", 2, 0.3f, false, 64, false));
         registerItem(registry, createSeedFoodItem("rudo_beans", 1, 0.3f, () -> windanesz.byg.registry.ModBlocks.rudo_stalk));
         registerItem(registry, createFoodItem("rudo_beans_roasted", 3, 0.3f, false, 64, false));
         registerItem(registry, createFoodItem("salal_berry", 2, 0.3f, false, 64, false));
         if (Config.isSkyrisContentEnabled()) {
             registerItem(registry, createFoodItem("silver_apple", 6, 0.3f, false, 64, true));
-            registerItem(registry, createDoorItem("skyris_door", () -> ModBlocks.skyris_door_bottom, () -> ModBlocks.skyris_door_top));
+            registerItem(registry, createDoorItem("skyris_door", () -> ModBlocks.skyris_door_bottom));
         }
         registerItem(registry, createSoupItem("spider_eye_soup", 10));
         if (Config.isOreContentEnabled("kasai") || Config.isOreContentEnabled("pendorite")) {
@@ -290,11 +290,11 @@ public final class ModItems {
         }
         registerItem(registry, createSoupItem("tropical_fish_soup", 10));
         registerItem(registry, createBasicItem("white_crystals"));
-        registerItem(registry, createDoorItem("willow_door", () -> ModBlocks.willow_door_bottom, () -> ModBlocks.willow_door_top));
-        registerItem(registry, createDoorItem("witch_hazel_door", () -> ModBlocks.witch_hazel_door, () -> ModBlocks.witch_hazel_door));
+        registerItem(registry, createDoorItem("willow_door", () -> ModBlocks.willow_door_bottom));
+        registerItem(registry, createDoorItem("witch_hazel_door", () -> ModBlocks.witch_hazel_door));
         registerItem(registry, createWoodenMortarItem());
         registerItem(registry, createWormItem());
-        registerItem(registry, createDoorItem("zelkova_door", () -> ModBlocks.zelkova_door_bottom, () -> ModBlocks.zelkova_door_top));
+        registerItem(registry, createDoorItem("zelkova_door", () -> ModBlocks.zelkova_door_bottom));
 
         if (Config.areBiomeTeleporterItemsEnabled()) {
             registerItem(registry, new ItemBiomeTeleporter());
@@ -441,8 +441,8 @@ public final class ModItems {
         return item;
     }
 
-    private static Item createDoorItem(String registryName, Supplier<Block> bottomBlock, Supplier<Block> topBlock) {
-        return new ItemDoorBase(registryName, bottomBlock, topBlock);
+    private static Item createDoorItem(String registryName, Supplier<Block> doorBlock) {
+        return new ItemDoorBase(registryName, doorBlock);
     }
 
     private static Item createGlowcaneStalkItem(String registryName, Supplier<Block> placedBlock) {

@@ -1,8 +1,0 @@
-{
-  "parent": "byg:door_open_bottom",
-  "textures": {
-    "all": "byg:blocks/ebony_door_bottom",
-    "particle": "byg:blocks/ebony_door_bottom",
-    "aspen_door_bottom": "byg:blocks/ebony_door_bottom"
-  }
-}

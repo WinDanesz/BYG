@@ -57,9 +57,6 @@ public final class ModBlocks {
     public static final Block angelica = placeholder();
     public static final Block aspen_bookshelf = placeholder();
     public static final Block aspen_door_bottom = placeholder();
-    public static final Block aspen_door_open_bottom = placeholder();
-    public static final Block aspen_door_open_top = placeholder();
-    public static final Block aspen_door_top = placeholder();
     public static final Block aspen_fence = placeholder();
     public static final Block aspen_gate = placeholder();
     public static final Block aspen_gate_closed = placeholder();
@@ -74,9 +71,6 @@ public final class ModBlocks {
     public static final Block aspen_stick_pile = placeholder();
     public static final Block azalea = placeholder();
     public static final Block baobab_door_bottom = placeholder();
-    public static final Block baobab_door_open_bottom = placeholder();
-    public static final Block baobab_door_open_top = placeholder();
-    public static final Block baobab_door_top = placeholder();
     public static final Block baobab_fence = placeholder();
     public static final Block baobab_gate = placeholder();
     public static final Block baobab_gate_open = placeholder();
@@ -101,9 +95,6 @@ public final class ModBlocks {
     public static final Block black_smooth_sandstone = placeholder();
     public static final Block blanket_weed = placeholder();
     public static final Block blue_enchanted_door_bottom = placeholder();
-    public static final Block blue_enchanted_door_open_bottom = placeholder();
-    public static final Block blue_enchanted_door_open_top = placeholder();
-    public static final Block blue_enchanted_door_top = placeholder();
     public static final Block blue_enchanted_fence = placeholder();
     public static final Block blue_enchanted_gate = placeholder();
     public static final Block blue_enchanted_gate_closed = placeholder();
@@ -122,9 +113,6 @@ public final class ModBlocks {
     public static final Block carved_melon = placeholder();
     public static final Block cattails = placeholder();
     public static final Block cherry_door_bottom = placeholder();
-    public static final Block cherry_door_open_bottom = placeholder();
-    public static final Block cherry_door_open_top = placeholder();
-    public static final Block cherry_door_top = placeholder();
     public static final Block cherry_fence = placeholder();
     public static final Block cherry_gate = placeholder();
     public static final Block cherry_gate_closed = placeholder();
@@ -138,9 +126,6 @@ public final class ModBlocks {
     public static final Block cherry_planks = placeholder();
     public static final Block cherry_slab = placeholder();
     public static final Block cika_door_bottom = placeholder();
-    public static final Block cika_door_open_bottom = placeholder();
-    public static final Block cika_door_open_top = placeholder();
-    public static final Block cika_door_top = placeholder();
     public static final Block cika_fence = placeholder();
     public static final Block cika_gate = placeholder();
     public static final Block cika_gate_closed = placeholder();
@@ -161,9 +146,6 @@ public final class ModBlocks {
     public static final Block cyan_rose = placeholder();
     public static final Block cyan_tulip = placeholder();
     public static final Block cypress_door_bottom = placeholder();
-    public static final Block cypress_door_open_bottom = placeholder();
-    public static final Block cypress_door_open_top = placeholder();
-    public static final Block cypress_door_top = placeholder();
     public static final Block cypress_fence = placeholder();
     public static final Block cypress_gate = placeholder();
     public static final Block cypress_gate_closed = placeholder();
@@ -181,9 +163,6 @@ public final class ModBlocks {
     public static final Block dry_brown_oak_sapling = placeholder();
     public static final Block dry_green_oak_sapling = placeholder();
     public static final Block ebony_door_bottom = placeholder();
-    public static final Block ebony_door_open_bottom = placeholder();
-    public static final Block ebony_door_open_top = placeholder();
-    public static final Block ebony_door_top = placeholder();
     public static final Block ebony_fence = placeholder();
     public static final Block ebony_gate = placeholder();
     public static final Block ebony_gate_closed = placeholder();
@@ -204,14 +183,8 @@ public final class ModBlocks {
     public static final Block enchanted_planks = placeholder();
     public static final Block enchanted_slab = placeholder();
     public static final Block eucalyptus_door_bottom = placeholder();
-    public static final Block eucalyptus_door_open_bottom = placeholder();
-    public static final Block eucalyptus_door_open_top = placeholder();
-    public static final Block eucalyptus_door_top = placeholder();
     public static final Block fairy_slipper = placeholder();
     public static final Block fir_door_bottom = placeholder();
-    public static final Block fir_door_open_bottom = placeholder();
-    public static final Block fir_door_open_top = placeholder();
-    public static final Block fir_door_top = placeholder();
     public static final Block fir_fence = placeholder();
     public static final Block fir_gate = placeholder();
     public static final Block fir_gate_closed = placeholder();
@@ -228,9 +201,6 @@ public final class ModBlocks {
     public static final Block flowers = placeholder();
     public static final Block foxglove = placeholder();
     public static final Block frozen_oak_door_bottom = placeholder();
-    public static final Block frozen_oak_door_open_bottom = placeholder();
-    public static final Block frozen_oak_door_open_top = placeholder();
-    public static final Block frozen_oak_door_top = placeholder();
     public static final Block frozen_oak_fence = placeholder();
     public static final Block frozen_oak_gate = placeholder();
     public static final Block frozen_oak_gate_closed = placeholder();
@@ -257,9 +227,6 @@ public final class ModBlocks {
     public static final Block glowshroom_stem_yellow = placeholder();
     public static final Block golden_spined_cactus = placeholder();
     public static final Block great_oak_door_bottom = placeholder();
-    public static final Block great_oak_door_open_bottom = placeholder();
-    public static final Block great_oak_door_open_top = placeholder();
-    public static final Block great_oak_door_top = placeholder();
     public static final Block great_oak_fence = placeholder();
     public static final Block great_oak_gate = placeholder();
     public static final Block great_oak_gate_closed = placeholder();
@@ -274,9 +241,6 @@ public final class ModBlocks {
     public static final Block great_oak_slab = placeholder();
     public static final Block green_enchanted_bookshelf = placeholder();
     public static final Block green_enchanted_door_bottom = placeholder();
-    public static final Block green_enchanted_door_open_bottom = placeholder();
-    public static final Block green_enchanted_door_open_top = placeholder();
-    public static final Block green_enchanted_door_top = placeholder();
     public static final Block green_enchanted_fence = placeholder();
     public static final Block green_enchanted_gate = placeholder();
     public static final Block green_enchanted_gate_closed = placeholder();
@@ -291,9 +255,6 @@ public final class ModBlocks {
     public static final Block guzmania = placeholder();
     public static final Block hardened_dirt = placeholder();
     public static final Block hawthorn_door_bottom = placeholder();
-    public static final Block hawthorn_door_open_bottom = placeholder();
-    public static final Block hawthorn_door_open_top = placeholder();
-    public static final Block hawthorn_door_top = placeholder();
     public static final Block hawthorn_fence = placeholder();
     public static final Block hawthorn_gate = placeholder();
     public static final Block hawthorn_gate_closed = placeholder();
@@ -309,9 +270,6 @@ public final class ModBlocks {
     public static final Block hawthorn_sapling = placeholder();
     public static final Block hawthorn_slab = placeholder();
     public static final Block holly_door_bottom = placeholder();
-    public static final Block holly_door_open_bottom = placeholder();
-    public static final Block holly_door_open_top = placeholder();
-    public static final Block holly_door_top = placeholder();
     public static final Block holly_fence = placeholder();
     public static final Block holly_gate = placeholder();
     public static final Block holly_gate_closed = placeholder();
@@ -329,9 +287,6 @@ public final class ModBlocks {
     public static final Block incan_lily = placeholder();
     public static final Block iris = placeholder();
     public static final Block ironwood_door_bottom = placeholder();
-    public static final Block ironwood_door_open_bottom = placeholder();
-    public static final Block ironwood_door_open_top = placeholder();
-    public static final Block ironwood_door_top = placeholder();
     public static final Block ironwood_fence = placeholder();
     public static final Block ironwood_gate = placeholder();
     public static final Block ironwood_gate_closed = placeholder();
@@ -346,9 +301,6 @@ public final class ModBlocks {
     public static final Block ironwood_slab = placeholder();
     public static final Block ivy = placeholder();
     public static final Block jacaranda_door_bottom = placeholder();
-    public static final Block jacaranda_door_open_bottom = placeholder();
-    public static final Block jacaranda_door_open_top = placeholder();
-    public static final Block jacaranda_door_top = placeholder();
     public static final Block jacaranda_fence = placeholder();
     public static final Block jacaranda_gate = placeholder();
     public static final Block jacaranda_gate_closed = placeholder();
@@ -383,9 +335,6 @@ public final class ModBlocks {
     public static final Block magenta_tulip = placeholder();
     public static final Block mahogany_bookshelf = placeholder();
     public static final Block mahogany_door_bottom = placeholder();
-    public static final Block mahogany_door_open_bottom = placeholder();
-    public static final Block mahogany_door_open_top = placeholder();
-    public static final Block mahogany_door_top = placeholder();
     public static final Block mahogany_fence = placeholder();
     public static final Block mahogany_gate = placeholder();
     public static final Block mahogany_gate_closed = placeholder();
@@ -398,9 +347,6 @@ public final class ModBlocks {
     public static final Block mahogany_wood = placeholder();
     public static final Block mahogany_wood_wall = placeholder();
     public static final Block mangrove_door_bottom = placeholder();
-    public static final Block mangrove_door_open_bottom = placeholder();
-    public static final Block mangrove_door_open_top = placeholder();
-    public static final Block mangrove_door_top = placeholder();
     public static final Block mangrove_fence = placeholder();
     public static final Block mangrove_gate = placeholder();
     public static final Block mangrove_gate_closed = placeholder();
@@ -414,9 +360,6 @@ public final class ModBlocks {
     public static final Block mangrove_sapling = placeholder();
     public static final Block mangrove_slab = placeholder();
     public static final Block maple_door_bottom = placeholder();
-    public static final Block maple_door_open_bottom = placeholder();
-    public static final Block maple_door_open_top = placeholder();
-    public static final Block maple_door_top = placeholder();
     public static final Block maple_fence = placeholder();
     public static final Block maple_gate = placeholder();
     public static final Block maple_gate_closed = placeholder();
@@ -460,9 +403,6 @@ public final class ModBlocks {
     public static final Block overgrown_stone = placeholder();
     public static final Block palm_bookshelf = placeholder();
     public static final Block palm_door_bottom = placeholder();
-    public static final Block palm_door_open_bottom = placeholder();
-    public static final Block palm_door_open_top = placeholder();
-    public static final Block palm_door_top = placeholder();
     public static final Block palm_fence = placeholder();
     public static final Block palm_gate = placeholder();
     public static final Block palm_gate_closed = placeholder();
@@ -488,9 +428,6 @@ public final class ModBlocks {
     public static final Block pendorite_block = placeholder();
     public static final Block pendorite_ore = placeholder();
     public static final Block pine_door_bottom = placeholder();
-    public static final Block pine_door_open_bottom = placeholder();
-    public static final Block pine_door_open_top = placeholder();
-    public static final Block pine_door_top = placeholder();
     public static final Block pine_fence = placeholder();
     public static final Block pine_gate = placeholder();
     public static final Block pine_gate_closed = placeholder();
@@ -583,9 +520,6 @@ public final class ModBlocks {
     public static final Block rocky_stone = placeholder();
     public static final Block rose = placeholder();
     public static final Block rowan_door_bottom = placeholder();
-    public static final Block rowan_door_open_bottom = placeholder();
-    public static final Block rowan_door_open_top = placeholder();
-    public static final Block rowan_door_top = placeholder();
     public static final Block rowan_fence = placeholder();
     public static final Block rowan_gate = placeholder();
     public static final Block rowan_gate_closed = placeholder();
@@ -621,9 +555,6 @@ public final class ModBlocks {
     public static final Block silver_vase_flower = placeholder();
     public static final Block silver_maple_sapling = placeholder();
     public static final Block skyris_door_bottom = placeholder();
-    public static final Block skyris_door_open_bottom = placeholder();
-    public static final Block skyris_door_open_top = placeholder();
-    public static final Block skyris_door_top = placeholder();
     public static final Block skyris_fence = placeholder();
     public static final Block skyris_gate = placeholder();
     public static final Block skyris_gate_closed = placeholder();
@@ -734,9 +665,6 @@ public final class ModBlocks {
     public static final Block wild_rudo = placeholder();
     public static final Block wild_strawberry = placeholder();
     public static final Block willow_door_bottom = placeholder();
-    public static final Block willow_door_open_bottom = placeholder();
-    public static final Block willow_door_open_top = placeholder();
-    public static final Block willow_door_top = placeholder();
     public static final Block willow_fence = placeholder();
     public static final Block willow_gate = placeholder();
     public static final Block willow_gate_open = placeholder();
@@ -775,9 +703,6 @@ public final class ModBlocks {
     public static final Block yellow_spruce_sapling = placeholder();
     public static final Block yellow_tulip = placeholder();
     public static final Block zelkova_door_bottom = placeholder();
-    public static final Block zelkova_door_open_bottom = placeholder();
-    public static final Block zelkova_door_open_top = placeholder();
-    public static final Block zelkova_door_top = placeholder();
     public static final Block zelkova_fence = placeholder();
     public static final Block zelkova_gate = placeholder();
     public static final Block zelkova_gate_closed = placeholder();

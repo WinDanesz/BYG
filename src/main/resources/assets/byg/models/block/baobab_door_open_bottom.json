@@ -1,8 +1,0 @@
-{
-  "parent": "byg:door_open_bottom",
-  "textures": {
-    "all": "byg:blocks/baobab_door_bottom",
-    "particle": "byg:blocks/baobab_door_bottom",
-    "aspen_door_bottom": "byg:blocks/baobab_door_bottom"
-  }
-}
