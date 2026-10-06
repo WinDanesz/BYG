@@ -5,7 +5,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenMinable;
 import windanesz.byg.Config;
 import windanesz.byg.registry.ModBlocks;
 
@@ -24,7 +23,7 @@ final class SurfaceBlockWorldgen {
             int x = BygWorldGenerator.safeMinableCoordinate(random, blockX, 32);
             int y = random.nextInt(252) + 2;
             int z = BygWorldGenerator.safeMinableCoordinate(random, blockZ, 32);
-            new WorldGenMinable(ModBlocks.peat_grass.getDefaultState(), 32, new Predicate<IBlockState>() {
+            new FastMinable(ModBlocks.peat_grass.getDefaultState(), 32, new Predicate<IBlockState>() {
                 @Override
                 public boolean apply(IBlockState blockAt) {
                     return blockAt.getBlock() == Blocks.GRASS;
@@ -42,7 +41,7 @@ final class SurfaceBlockWorldgen {
             int x = BygWorldGenerator.safeMinableCoordinate(random, blockX, 32);
             int y = random.nextInt(138) + 70;
             int z = BygWorldGenerator.safeMinableCoordinate(random, blockZ, 32);
-            new WorldGenMinable(ModBlocks.rocky_grass.getDefaultState(), 32, new Predicate<IBlockState>() {
+            new FastMinable(ModBlocks.rocky_grass.getDefaultState(), 32, new Predicate<IBlockState>() {
                 @Override
                 public boolean apply(IBlockState blockAt) {
                     return blockAt.getBlock() == Blocks.GRASS || blockAt.getBlock() == ModBlocks.peat_grass;
@@ -59,7 +58,7 @@ final class SurfaceBlockWorldgen {
             int x = BygWorldGenerator.safeMinableCoordinate(random, blockX, 32);
             int y = random.nextInt(10) + 153;
             int z = BygWorldGenerator.safeMinableCoordinate(random, blockZ, 32);
-            new WorldGenMinable(ModBlocks.rocky_grass_alps.getDefaultState(), 32, new Predicate<IBlockState>() {
+            new FastMinable(ModBlocks.rocky_grass_alps.getDefaultState(), 32, new Predicate<IBlockState>() {
                 @Override
                 public boolean apply(IBlockState blockAt) {
                     return blockAt.getBlock() == Blocks.SNOW;
@@ -93,7 +92,7 @@ final class SurfaceBlockWorldgen {
             int x = BygWorldGenerator.safeMinableCoordinate(random, blockX, 32);
             int y = random.nextInt(yRange) + minY;
             int z = BygWorldGenerator.safeMinableCoordinate(random, blockZ, 32);
-            new WorldGenMinable(ModBlocks.rocky_stone.getDefaultState(), 32, replaceable)
+            new FastMinable(ModBlocks.rocky_stone.getDefaultState(), 32, replaceable)
                     .generate(world, random, new BlockPos(x, y, z));
         }
     }
@@ -107,7 +106,7 @@ final class SurfaceBlockWorldgen {
             int x = BygWorldGenerator.safeMinableCoordinate(random, blockX, 30);
             int y = random.nextInt(42) + 60;
             int z = BygWorldGenerator.safeMinableCoordinate(random, blockZ, 30);
-            new WorldGenMinable(ModBlocks.sandy_grass.getDefaultState(), 32, new Predicate<IBlockState>() {
+            new FastMinable(ModBlocks.sandy_grass.getDefaultState(), 32, new Predicate<IBlockState>() {
                 @Override
                 public boolean apply(IBlockState blockAt) {
                     if (blockAt.getBlock() == Blocks.HARDENED_CLAY || blockAt.getBlock() == ModBlocks.hardened_dirt) {
@@ -131,7 +130,7 @@ final class SurfaceBlockWorldgen {
             int x = BygWorldGenerator.safeMinableCoordinate(random, blockX, 30);
             int y = random.nextInt(135) + 45;
             int z = BygWorldGenerator.safeMinableCoordinate(random, blockZ, 30);
-            new WorldGenMinable(ModBlocks.sodalite.getDefaultState(), 30, new Predicate<IBlockState>() {
+            new FastMinable(ModBlocks.sodalite.getDefaultState(), 30, new Predicate<IBlockState>() {
                 @Override
                 public boolean apply(IBlockState blockAt) {
                     return blockAt.getBlock() == Blocks.STONE;

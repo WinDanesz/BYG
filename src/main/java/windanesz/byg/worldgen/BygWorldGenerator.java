@@ -804,7 +804,7 @@ public final class BygWorldGenerator implements IWorldGenerator {
         Block block = blockSupplier.get();
         int configuredAttempts = Config.scaleSandAttempts(32);
         Predicate<IBlockState> sandMatcher = net.minecraft.block.state.pattern.BlockMatcher.forBlock(Blocks.SAND);
-        WorldGenMinable generator = new WorldGenMinable(block.getDefaultState(), 32, sandMatcher);
+        WorldGenMinable generator = new FastMinable(block.getDefaultState(), 32, sandMatcher);
         for (int i = 0; i < configuredAttempts; ++i) {
             // WorldGenMinable adds +8 internally. Choose a conservative seed so
             // the complete vein remains in Forge's loaded 2x2 decoration window.
@@ -827,7 +827,7 @@ public final class BygWorldGenerator implements IWorldGenerator {
         Block block = blockSupplier.get();
         int configuredAttempts = Config.scaleDepositAttempts(attempts);
         int configuredVeinSize = Config.scaleDepositVeinSize(veinSize);
-        WorldGenMinable generator = new WorldGenMinable(block.getDefaultState(), configuredVeinSize, targetPredicate);
+        WorldGenMinable generator = new FastMinable(block.getDefaultState(), configuredVeinSize, targetPredicate);
         for (int i = 0; i < configuredAttempts; ++i) {
             // WorldGenMinable adds +8 internally. Choose a conservative seed so
             // the complete vein remains in Forge's loaded 2x2 decoration window.
