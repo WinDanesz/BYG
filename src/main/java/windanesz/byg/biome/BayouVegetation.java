@@ -42,7 +42,12 @@ final class BayouVegetation {
 
             if (shoreline && random.nextInt(4) != 0) {
                 Block plant = random.nextInt(3) == 0 ? ModBlocks.cattails : ModBlocks.reed;
-                world.setBlockState(plantPos, plant.getDefaultState(), 2);
+                if (plant == null) {
+                    plant = ModBlocks.cattails != null ? ModBlocks.cattails : ModBlocks.reed;
+                }
+                if (plant != null) {
+                    world.setBlockState(plantPos, plant.getDefaultState(), 2);
+                }
             } else if (ground == Blocks.GRASS && world.isAirBlock(plantPos.up())
                     && random.nextBoolean()) {
                 world.setBlockState(plantPos, Blocks.DOUBLE_PLANT.getDefaultState()

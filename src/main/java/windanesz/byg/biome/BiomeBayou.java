@@ -68,7 +68,8 @@ public class BiomeBayou
         for (int y = floorY + 1; y < mudY; y++) {
             primer.setBlockState(primerX, y, primerZ, Blocks.DIRT.getDefaultState());
         }
-        primer.setBlockState(primerX, mudY, primerZ, ModBlocks.mud_block.getDefaultState());
+        primer.setBlockState(primerX, mudY, primerZ,
+                ModBlocks.mud_block != null ? ModBlocks.mud_block.getDefaultState() : Blocks.DIRT.getDefaultState());
     }
 
     public WorldGenAbstractTree getRandomTreeFeature(Random rand) {
