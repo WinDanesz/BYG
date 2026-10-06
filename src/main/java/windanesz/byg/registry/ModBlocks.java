@@ -901,7 +901,7 @@ public final class ModBlocks {
 
         registerBlock(registry, new BlockSimpleFlowerBase("california_poppy", BYGTab.tab, 0.0f));
 
-        registerBlock(registry, createFacingMelonBlock("carved_melon"));
+        registerBlock(registry, createFacingMelonBlock("carved_melon", 0.0f));
 
         registerBlock(registry, new BlockCattails());
         registerBlock(registry, new BlockWoodDoorBase("cherry_door_bottom", 1, 2.0f, 8.0f, () -> ModItems.cherry_door));
@@ -1353,7 +1353,7 @@ public final class ModBlocks {
 
         registerBlock(registry, new BlockWoodSlabBase("jacaranda_slab", 0));
 
-        registerBlock(registry, createFacingMelonBlock("jackomelon"));
+        registerBlock(registry, createFacingMelonBlock("jackomelon", 1.0f));
 
         registerBlock(registry, new BlockSimpleFlowerBase("japanese_orchid", BYGTab.tab, 0.0f));
 
@@ -2874,7 +2874,7 @@ public final class ModBlocks {
         };
     }
 
-    private static Block createFacingMelonBlock(String name) {
+    private static Block createFacingMelonBlock(String name, float lightLevel) {
         return new Block(Material.WOOD) {
             {
                 this.setRegistryName(name);
@@ -2882,7 +2882,7 @@ public final class ModBlocks {
                 this.setSoundType(SoundType.WOOD);
                 this.setHardness(1.0f);
                 this.setResistance(10.0f);
-                this.setLightLevel(1.0f);
+                this.setLightLevel(lightLevel);
                 this.setLightOpacity(255);
                 this.setCreativeTab(BYGTab.tab);
                 this.setDefaultState(this.blockState.getBaseState().withProperty(BlockHorizontal.FACING, EnumFacing.NORTH));

@@ -4,9 +4,9 @@
     "down": "byg:blocks/jack_o_melon_top",
     "up": "byg:blocks/jack_o_melon_top",
     "north": "byg:blocks/jack_o_melon_side",
-    "east": "byg:blocks/jack_o_melon_side",
-    "south": "byg:blocks/jack_o_melon_side",
-    "west": "byg:blocks/jack_o_melon_side",
+    "east": "byg:blocks/carved_melon_side",
+    "south": "byg:blocks/carved_melon_side",
+    "west": "byg:blocks/carved_melon_side",
     "particle": "byg:blocks/jack_o_melon_top"
   }
 }
