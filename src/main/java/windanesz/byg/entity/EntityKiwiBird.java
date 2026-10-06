@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
@@ -41,6 +42,11 @@ public class EntityKiwiBird extends EntityAnimal {
             EntityDataManager.createKey(EntityKiwiBird.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> IS_FORAGING =
             EntityDataManager.createKey(EntityKiwiBird.class, DataSerializers.BOOLEAN);
+
+    @SideOnly(Side.CLIENT)
+    private static final ResourceLocation AWAKE_TEXTURE = new ResourceLocation("byg:textures/entity/kiwi.png");
+    @SideOnly(Side.CLIENT)
+    private static final ResourceLocation SLEEPING_TEXTURE = new ResourceLocation("byg:textures/entity/kiwi_sleeping.png");
 
     private BlockPos burrowPos = null;
 
@@ -175,7 +181,7 @@ public class EntityKiwiBird extends EntityAnimal {
         RenderingRegistry.registerEntityRenderingHandler(EntityKiwiBird.class, renderManager -> new RenderLiving(renderManager, new ModelKiwi(), 0.5f) {
             @Override
             protected ResourceLocation getEntityTexture(Entity entity) {
-                return new ResourceLocation("byg:textures/kiwi.png");
+                return entity instanceof EntityKiwiBird && ((EntityKiwiBird) entity).isSleeping() ? SLEEPING_TEXTURE : AWAKE_TEXTURE;
             }
 
             @Override
@@ -429,133 +435,97 @@ public class EntityKiwiBird extends EntityAnimal {
 
     @SideOnly(Side.CLIENT)
     public static class ModelKiwi extends ModelBase {
-        public ModelRenderer Body;
-        public ModelRenderer Head;
-        public ModelRenderer Beak;
-        public ModelRenderer legpart1;
-        public ModelRenderer legpart2;
-        public ModelRenderer rightleg;
-        public ModelRenderer leftleg;
-        public ModelRenderer Shape1;
-        public ModelRenderer Shape2;
-        public ModelRenderer Shape3;
-        public ModelRenderer Shape4;
-        public ModelRenderer Shape5;
-        public ModelRenderer Shape6;
-        public ModelRenderer rightfoot;
-        public ModelRenderer leftfoot;
+        private static final float BODY_PITCH = 1.5708F;
+
+        public final ModelRenderer head;
+        public final ModelRenderer bill;
+        public final ModelRenderer body;
+        public final ModelRenderer left_wing;
+        public final ModelRenderer right_wing;
+        public final ModelRenderer left_leg;
+        public final ModelRenderer right_leg;
+
+        // Separate, authored sleeping pose: the bird lies on the ground with its legs splayed out to the sides
+        private final ModelRenderer sleep_head;
+        private final ModelRenderer sleep_bill;
+        private final ModelRenderer sleep_body;
+        private final ModelRenderer sleep_left_wing;
+        private final ModelRenderer sleep_right_wing;
+        private final ModelRenderer sleep_left_leg;
+        private final ModelRenderer sleep_right_leg;
 
         public ModelKiwi() {
             this.textureWidth = 64;
             this.textureHeight = 32;
 
-            this.Body = new ModelRenderer(this, 27, 0);
-            this.Body.addBox(0.0f, 0.0f, 0.0f, 9, 9, 9);
-            this.Body.setRotationPoint(-4.0f, 9.0f, -4.0f);
-            this.Body.setTextureSize(64, 32);
-            this.Body.mirror = true;
-            this.setRotation(this.Body, -0.2082002f, 0.0f, 0.0f);
+            this.head = new ModelRenderer(this);
+            this.head.setRotationPoint(0.0F, 15.0F, -4.0F);
+            this.head.cubeList.add(new ModelBox(this.head, 0, 0, -2.0F, -5.0F, -4.0F, 4, 5, 4, 0.0F, false));
+            this.head.cubeList.add(new ModelBox(this.head, 0, 9, -2.0F, -5.0F, -4.0F, 4, 2, 4, 0.2F, false));
 
-            this.Head = new ModelRenderer(this, 29, 19);
-            this.Head.addBox(-3.0f, 0.0f, -7.0f, 6, 6, 7);
-            this.Head.setRotationPoint(0.5f, 10.0f, -4.0f);
-            this.Head.setTextureSize(64, 32);
-            this.Head.mirror = true;
-            this.setRotation(this.Head, 0.2974289f, 0.0f, 0.0f);
+            // Child of the head so the bill follows head turns, bobbing and sleeping poses
+            this.bill = new ModelRenderer(this);
+            this.bill.setRotationPoint(0.0F, 0.0F, -2.0F);
+            this.bill.cubeList.add(new ModelBox(this.bill, 16, 0, -1.0F, -2.5F, -7.0F, 2, 2, 5, 0.0F, false));
+            this.head.addChild(this.bill);
 
-            this.Beak = new ModelRenderer(this, 10, 22);
-            this.Beak.addBox(0.0f, 0.0f, 0.0f, 1, 1, 7);
-            this.Beak.setRotationPoint(-0.5f, 7.0f, -11.0f);
-            this.Beak.setTextureSize(64, 32);
-            this.Beak.mirror = true;
-            this.setRotation(this.Beak, 0.4461433f, 0.0f, 0.0f);
-            this.Head.addChild(this.Beak);
+            this.body = new ModelRenderer(this);
+            this.body.setRotationPoint(0.0F, 16.0F, 0.0F);
+            this.body.rotateAngleX = BODY_PITCH;
+            this.body.cubeList.add(new ModelBox(this.body, 0, 16, -4.0F, -4.0F, -3.0F, 8, 8, 8, 0.0F, false));
+            this.body.cubeList.add(new ModelBox(this.body, 32, 23, -4.0F, -4.0F, -4.0F, 8, 8, 1, 0.0F, false));
 
-            this.legpart1 = new ModelRenderer(this, 11, 0);
-            this.legpart1.addBox(0.0f, 0.0f, 0.0f, 2, 1, 2);
-            this.legpart1.setRotationPoint(3.0f, 19.0f, 0.0f);
-            this.legpart1.setTextureSize(64, 32);
-            this.legpart1.mirror = true;
-            this.setRotation(this.legpart1, 0.0f, 0.0f, 0.0f);
+            this.left_wing = new ModelRenderer(this);
+            this.left_wing.setRotationPoint(5.0F, 13.0F, 0.0F);
+            this.left_wing.cubeList.add(new ModelBox(this.left_wing, 50, 0, -1.0F, 0.0F, -3.0F, 1, 4, 6, 0.0F, false));
 
-            this.legpart2 = new ModelRenderer(this, 12, 0);
-            this.legpart2.addBox(0.0f, 0.0f, 0.0f, 2, 1, 2);
-            this.legpart2.setRotationPoint(-4.0f, 19.0f, 0.0f);
-            this.legpart2.setTextureSize(64, 32);
-            this.legpart2.mirror = true;
-            this.setRotation(this.legpart2, 0.0f, 0.0f, 0.0f);
+            this.right_wing = new ModelRenderer(this);
+            this.right_wing.setRotationPoint(-5.0F, 13.0F, 0.0F);
+            this.right_wing.cubeList.add(new ModelBox(this.right_wing, 50, 0, 0.0F, 0.0F, -3.0F, 1, 4, 6, 0.0F, true));
 
-            this.rightleg = new ModelRenderer(this, 0, 9);
-            this.rightleg.addBox(0.0f, 0.0f, 0.0f, 1, 4, 1);
-            this.rightleg.setRotationPoint(-3.5f, 20.0f, 0.5f);
-            this.rightleg.setTextureSize(64, 32);
-            this.rightleg.mirror = true;
-            this.setRotation(this.rightleg, 0.0f, 0.0f, 0.0f);
+            this.left_leg = new ModelRenderer(this);
+            this.left_leg.setRotationPoint(2.0F, 19.0F, 1.0F);
+            this.left_leg.cubeList.add(new ModelBox(this.left_leg, 38, 0, -1.0F, 0.0F, -3.0F, 3, 5, 3, 0.0F, false));
+            this.left_leg.cubeList.add(new ModelBox(this.left_leg, 38, 8, -1.0F, 0.0F, -2.0F, 3, 3, 3, 0.01F, true));
 
-            this.leftleg = new ModelRenderer(this, 0, 9);
-            this.leftleg.addBox(0.0f, 0.0f, 0.0f, 1, 4, 1);
-            this.leftleg.setRotationPoint(3.5f, 20.0f, 0.5f);
-            this.leftleg.setTextureSize(64, 32);
-            this.leftleg.mirror = true;
-            this.setRotation(this.leftleg, 0.0f, 0.0f, 0.0f);
+            this.right_leg = new ModelRenderer(this);
+            this.right_leg.setRotationPoint(-3.0F, 19.0F, 1.0F);
+            this.right_leg.cubeList.add(new ModelBox(this.right_leg, 38, 0, -1.0F, 0.0F, -3.0F, 3, 5, 3, 0.0F, false));
+            this.right_leg.cubeList.add(new ModelBox(this.right_leg, 38, 8, -1.0F, 0.0F, -2.0F, 3, 3, 3, 0.001F, false));
 
-            this.Shape1 = new ModelRenderer(this, 0, 0);
-            this.Shape1.addBox(0.0f, 0.0f, 0.0f, 0, 1, 1);
-            this.Shape1.setRotationPoint(0.0f, 9.0f, 0.0f);
-            this.Shape1.setTextureSize(64, 32);
-            this.Shape1.mirror = true;
-            this.setRotation(this.Shape1, 0.0f, 0.0f, 0.0f);
+            this.sleep_head = new ModelRenderer(this);
+            this.sleep_head.setRotationPoint(0.0F, 24.0F, -4.0F);
+            this.sleep_head.cubeList.add(new ModelBox(this.sleep_head, 0, 0, -2.0F, -5.0F, -4.0F, 4, 5, 4, 0.0F, false));
+            this.sleep_head.cubeList.add(new ModelBox(this.sleep_head, 0, 9, -2.0F, -5.0F, -4.0F, 4, 3, 4, 0.2F, false));
 
-            this.Shape2 = new ModelRenderer(this, 0, 0);
-            this.Shape2.addBox(0.0f, 0.0f, 0.0f, 0, 1, 1);
-            this.Shape2.setRotationPoint(0.0f, 12.0f, 4.0f);
-            this.Shape2.setTextureSize(64, 32);
-            this.Shape2.mirror = true;
-            this.setRotation(this.Shape2, 0.0f, 0.0f, 0.0f);
+            this.sleep_bill = new ModelRenderer(this);
+            this.sleep_bill.setRotationPoint(0.0F, 0.0F, -2.0F);
+            this.sleep_bill.cubeList.add(new ModelBox(this.sleep_bill, 16, 0, -1.0F, -2.5F, -7.0F, 2, 2, 5, 0.0F, false));
+            this.sleep_head.addChild(this.sleep_bill);
 
-            this.Shape3 = new ModelRenderer(this, 0, 0);
-            this.Shape3.addBox(0.0f, 0.0f, 0.0f, 1, 1, 0);
-            this.Shape3.setRotationPoint(5.0f, 11.0f, -1.0f);
-            this.Shape3.setTextureSize(64, 32);
-            this.Shape3.mirror = true;
-            this.setRotation(this.Shape3, 0.0f, 0.0f, 0.0f);
+            this.sleep_body = new ModelRenderer(this);
+            this.sleep_body.setRotationPoint(0.0F, 21.0F, 0.0F);
+            this.sleep_body.rotateAngleX = BODY_PITCH;
+            this.sleep_body.cubeList.add(new ModelBox(this.sleep_body, 0, 16, -4.0F, -4.0F, -3.0F, 8, 8, 8, 0.0F, false));
+            this.sleep_body.cubeList.add(new ModelBox(this.sleep_body, 32, 23, -4.0F, -4.0F, -4.0F, 8, 8, 1, 0.0F, false));
 
-            this.Shape4 = new ModelRenderer(this, 0, 0);
-            this.Shape4.addBox(0.0f, 0.0f, 0.0f, 1, 1, 0);
-            this.Shape4.setRotationPoint(-5.0f, 11.0f, -1.0f);
-            this.Shape4.setTextureSize(64, 32);
-            this.Shape4.mirror = true;
-            this.setRotation(this.Shape4, 0.0f, 0.0f, 0.0f);
+            this.sleep_left_wing = new ModelRenderer(this);
+            this.sleep_left_wing.setRotationPoint(5.0F, 18.0F, 0.0F);
+            this.sleep_left_wing.cubeList.add(new ModelBox(this.sleep_left_wing, 50, 0, -1.0F, 0.0F, -3.0F, 1, 4, 6, 0.0F, false));
 
-            this.Shape5 = new ModelRenderer(this, 0, 0);
-            this.Shape5.addBox(0.0f, 0.0f, 0.0f, 1, 1, 0);
-            this.Shape5.setRotationPoint(5.0f, 17.0f, 3.0f);
-            this.Shape5.setTextureSize(64, 32);
-            this.Shape5.mirror = true;
-            this.setRotation(this.Shape5, 0.0f, 0.0f, 0.0f);
+            this.sleep_right_wing = new ModelRenderer(this);
+            this.sleep_right_wing.setRotationPoint(-5.0F, 18.0F, 0.0F);
+            this.sleep_right_wing.cubeList.add(new ModelBox(this.sleep_right_wing, 50, 0, 0.0F, 0.0F, -3.0F, 1, 4, 6, 0.0F, true));
 
-            this.Shape6 = new ModelRenderer(this, 0, 0);
-            this.Shape6.addBox(0.0f, 0.0f, 0.0f, 1, 1, 0);
-            this.Shape6.setRotationPoint(0.0f, 19.0f, 0.0f);
-            this.Shape6.setTextureSize(64, 32);
-            this.Shape6.mirror = true;
-            this.setRotation(this.Shape6, 0.0f, 0.0f, 0.0f);
+            this.sleep_left_leg = new ModelRenderer(this);
+            this.sleep_left_leg.setRotationPoint(5.0F, 19.0F, 1.0F);
+            this.sleep_left_leg.cubeList.add(new ModelBox(this.sleep_left_leg, 38, 0, -1.0F, 0.0F, -3.0F, 3, 5, 3, 0.0F, false));
+            this.sleep_left_leg.cubeList.add(new ModelBox(this.sleep_left_leg, 38, 8, -1.0F, 0.0F, -2.0F, 3, 3, 3, 0.01F, true));
 
-            this.rightfoot = new ModelRenderer(this, 40, 0);
-            this.rightfoot.setRotationPoint(0.5f, 4.0f, 0.5f);
-            this.rightfoot.addBox(-1.5f, 0.0f, -2.0f, 3, 0, 4, 0.0f);
-            this.rightfoot.setTextureSize(64, 32);
-            this.rightfoot.mirror = true;
-            this.setRotation(this.rightfoot, 0.0f, 0.0f, 0.0f);
-            this.rightleg.addChild(this.rightfoot);
-
-            this.leftfoot = new ModelRenderer(this, 40, 0);
-            this.leftfoot.setRotationPoint(0.5f, 4.0f, 0.5f);
-            this.leftfoot.addBox(-1.5f, 0.0f, -2.0f, 3, 0, 4, 0.0f);
-            this.leftfoot.setTextureSize(64, 32);
-            this.leftfoot.mirror = true;
-            this.setRotation(this.leftfoot, 0.0f, 0.0f, 0.0f);
-            this.leftleg.addChild(this.leftfoot);
+            this.sleep_right_leg = new ModelRenderer(this);
+            this.sleep_right_leg.setRotationPoint(-6.0F, 19.0F, 1.0F);
+            this.sleep_right_leg.cubeList.add(new ModelBox(this.sleep_right_leg, 38, 0, -1.0F, 0.0F, -3.0F, 3, 5, 3, 0.0F, false));
+            this.sleep_right_leg.cubeList.add(new ModelBox(this.sleep_right_leg, 38, 8, -1.0F, 0.0F, -2.0F, 3, 3, 3, 0.001F, false));
         }
 
         @Override
@@ -563,151 +533,52 @@ public class EntityKiwiBird extends EntityAnimal {
             super.render(entity, f, f1, f2, f3, f4, f5);
             this.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
             boolean sleeping = entity instanceof EntityKiwiBird && ((EntityKiwiBird) entity).isSleeping();
-            this.Body.render(f5);
-            this.Head.render(f5);
-            this.Shape1.render(f5);
-            this.Shape2.render(f5);
-            this.Shape3.render(f5);
-            this.Shape4.render(f5);
-            this.Shape5.render(f5);
-            this.Shape6.render(f5);
-            if (!sleeping) {
-                this.legpart1.render(f5);
-                this.legpart2.render(f5);
-                this.rightleg.render(f5);
-                this.leftleg.render(f5);
+            if (sleeping) {
+                this.sleep_head.render(f5);
+                this.sleep_body.render(f5);
+                this.sleep_left_wing.render(f5);
+                this.sleep_right_wing.render(f5);
+                this.sleep_left_leg.render(f5);
+                this.sleep_right_leg.render(f5);
+                return;
             }
+            this.head.render(f5);
+            this.body.render(f5);
+            this.left_wing.render(f5);
+            this.right_wing.render(f5);
+            this.left_leg.render(f5);
+            this.right_leg.render(f5);
         }
 
         @Override
         public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entity) {
             super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entity);
 
-            this.Body.rotateAngleX = -0.2082002f;
-            this.Body.rotateAngleY = 0.0f;
-            this.Body.rotateAngleZ = 0.0f;
-            this.Body.setRotationPoint(-4.0f, 9.0f, -4.0f);
-
-            this.Head.rotateAngleX = 0.2974289f;
-            this.Head.rotateAngleY = 0.0f;
-            this.Head.rotateAngleZ = 0.0f;
-            this.Head.setRotationPoint(0.5f, 10.0f, -4.0f);
-
-            this.Beak.rotateAngleX = 0.4461433f;
-            this.Beak.rotateAngleY = 0.0f;
-            this.Beak.rotateAngleZ = 0.0f;
-
-            this.legpart1.rotateAngleX = 0.0f;
-            this.legpart1.rotateAngleY = 0.0f;
-            this.legpart1.rotateAngleZ = 0.0f;
-            this.legpart2.rotateAngleX = 0.0f;
-            this.legpart2.rotateAngleY = 0.0f;
-            this.legpart2.rotateAngleZ = 0.0f;
-            this.rightleg.rotateAngleX = 0.0f;
-            this.rightleg.rotateAngleY = 0.0f;
-            this.rightleg.rotateAngleZ = 0.0f;
-            this.leftleg.rotateAngleX = 0.0f;
-            this.leftleg.rotateAngleY = 0.0f;
-            this.leftleg.rotateAngleZ = 0.0f;
-            this.rightfoot.rotateAngleX = 0.0f;
-            this.rightfoot.rotateAngleY = 0.0f;
-            this.rightfoot.rotateAngleZ = 0.0f;
-            this.leftfoot.rotateAngleX = 0.0f;
-            this.leftfoot.rotateAngleY = 0.0f;
-            this.leftfoot.rotateAngleZ = 0.0f;
-
-            this.legpart1.showModel = true;
-            this.legpart2.showModel = true;
-            this.rightleg.showModel = true;
-            this.leftleg.showModel = true;
-            this.rightfoot.showModel = true;
-            this.leftfoot.showModel = true;
-
-            this.Shape1.rotateAngleX = 0.0f;
-            this.Shape1.rotateAngleY = 0.0f;
-            this.Shape1.rotateAngleZ = 0.0f;
-            this.Shape1.setRotationPoint(0.0f, 9.0f, 0.0f);
-            this.Shape2.rotateAngleX = 0.0f;
-            this.Shape2.rotateAngleY = 0.0f;
-            this.Shape2.rotateAngleZ = 0.0f;
-            this.Shape2.setRotationPoint(0.0f, 12.0f, 4.0f);
-            this.Shape3.rotateAngleX = 0.0f;
-            this.Shape3.rotateAngleY = 0.0f;
-            this.Shape3.rotateAngleZ = 0.0f;
-            this.Shape3.setRotationPoint(5.0f, 11.0f, -1.0f);
-            this.Shape4.rotateAngleX = 0.0f;
-            this.Shape4.rotateAngleY = 0.0f;
-            this.Shape4.rotateAngleZ = 0.0f;
-            this.Shape4.setRotationPoint(-5.0f, 11.0f, -1.0f);
-            this.Shape5.rotateAngleX = 0.0f;
-            this.Shape5.rotateAngleY = 0.0f;
-            this.Shape5.rotateAngleZ = 0.0f;
-            this.Shape5.setRotationPoint(5.0f, 17.0f, 3.0f);
-            this.Shape6.rotateAngleX = 0.0f;
-            this.Shape6.rotateAngleY = 0.0f;
-            this.Shape6.rotateAngleZ = 0.0f;
-            this.Shape6.setRotationPoint(0.0f, 19.0f, 0.0f);
+            // Reset to the rest pose so state changes (forage/walk) never leak into each other
+            this.head.rotateAngleX = 0.0F;
+            this.head.rotateAngleY = 0.0F;
+            this.left_leg.rotateAngleX = 0.0F;
+            this.right_leg.rotateAngleX = 0.0F;
 
             if (entity instanceof EntityKiwiBird) {
                 EntityKiwiBird kiwi = (EntityKiwiBird) entity;
                 if (kiwi.isSleeping()) {
-                    float breathe = MathHelper.sin(ageInTicks * 0.05f) * 0.04f;
-                    this.legpart1.showModel = false;
-                    this.legpart2.showModel = false;
-                    this.rightleg.showModel = false;
-                    this.leftleg.showModel = false;
-                    this.rightfoot.showModel = false;
-                    this.leftfoot.showModel = false;
-                    this.Body.rotateAngleX = 0.0f;
-                    this.Body.rotateAngleZ = 1.57f + breathe;
-                    this.Body.setRotationPoint(-4.0f, 15.0f, -4.0f);
-                    this.Head.rotateAngleX = 0.2f + breathe;
-                    this.Head.rotateAngleY = 0.0f;
-                    this.Head.rotateAngleZ = 1.57f + breathe;
-                    this.Head.setRotationPoint(0.5f, 21.0f, -4.0f);
-                    this.Beak.rotateAngleX = 0.35f;
-                    this.Shape1.rotateAngleZ = 1.57f + breathe;
-                    this.Shape1.setRotationPoint(0.0f, 15.0f, 0.0f);
-                    this.Shape2.rotateAngleZ = 1.57f + breathe;
-                    this.Shape2.setRotationPoint(0.0f, 18.0f, 4.0f);
-                    this.Shape3.rotateAngleZ = 1.57f + breathe;
-                    this.Shape3.setRotationPoint(5.0f, 17.0f, -1.0f);
-                    this.Shape4.rotateAngleZ = 1.57f + breathe;
-                    this.Shape4.setRotationPoint(-5.0f, 17.0f, -1.0f);
-                    this.Shape5.rotateAngleZ = 1.57f + breathe;
-                    this.Shape5.setRotationPoint(5.0f, 23.0f, 3.0f);
-                    this.Shape6.rotateAngleZ = 1.57f + breathe;
-                    this.Shape6.setRotationPoint(0.0f, 25.0f, 0.0f);
-                } else if (kiwi.isForaging()) {
-                    this.Body.rotateAngleX = -0.12f;
-                    this.Body.rotateAngleZ = MathHelper.sin(ageInTicks * 0.18f) * 0.04f;
-                    this.Head.rotateAngleX = 0.8f + MathHelper.sin(ageInTicks * 0.35f) * 0.55f;
-                    this.Head.rotateAngleY = 0.0f;
-                } else {
-                    this.Body.rotateAngleZ = MathHelper.cos(limbSwing * 0.6662f) * 0.15f * limbSwingAmount;
-
-                    this.Head.rotateAngleY = netHeadYaw * 0.017453292f;
-                    this.Head.rotateAngleX = 0.2974289f + headPitch * 0.017453292f;
-
-                    float rightThigh = MathHelper.cos(limbSwing * 0.6662f) * 1.4f * limbSwingAmount;
-                    float leftThigh = MathHelper.cos(limbSwing * 0.6662f + (float) Math.PI) * 1.4f * limbSwingAmount;
-
-                    this.legpart1.rotateAngleX = leftThigh;
-                    this.legpart2.rotateAngleX = rightThigh;
-
-                    float rightLower = MathHelper.cos(limbSwing * 0.6662f + (float) Math.PI / 4) * 1.2f * limbSwingAmount;
-                    float leftLower = MathHelper.cos(limbSwing * 0.6662f + (float) Math.PI + (float) Math.PI / 4) * 1.2f * limbSwingAmount;
-
-                    this.rightleg.rotateAngleX = rightLower;
-                    this.leftleg.rotateAngleX = leftLower;
+                    // Slow breathing: the head rocks gently about its resting point
+                    this.sleep_head.rotateAngleX = MathHelper.sin(ageInTicks * 0.05F) * 0.04F;
+                    return;
+                }
+                if (kiwi.isForaging()) {
+                    this.head.rotateAngleX = 0.8F + MathHelper.sin(ageInTicks * 0.35F) * 0.55F;
+                    return;
                 }
             }
-        }
 
-        public void setRotation(ModelRenderer modelRenderer, float x, float y, float z) {
-            modelRenderer.rotateAngleX = x;
-            modelRenderer.rotateAngleY = y;
-            modelRenderer.rotateAngleZ = z;
+            this.head.rotateAngleY = netHeadYaw * 0.017453292F;
+            this.head.rotateAngleX = 0.2F + headPitch * 0.017453292F;
+
+            float swing = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+            this.left_leg.rotateAngleX = swing;
+            this.right_leg.rotateAngleX = -swing;
         }
     }
 }
