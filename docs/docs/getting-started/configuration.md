@@ -99,7 +99,7 @@ Each option turns a whole content set on or off. Turning a set off removes its b
 | `cactiContentEnabled` | Set to false to disable the golden spined cactus, mini cactus, prickly pear and Sonoran cacti, their recipes, and their generation. No biome is disabled; Stone Pillar Savanna simply grows no cacti. |
 | `mushroomDecorContentEnabled` | Set to false to disable the black puff, shelf fungi, weeping milk cap and wood blewit mushrooms and their generation. Glowshrooms have their own toggle. No biome is disabled. |
 | `groundCoverContentEnabled` | Set to false to disable small ground-cover plants and debris: algae, blanket weed, ivy, poison ivy, tiny lilypads, stone pebbles and spikes, thorns, clover, dead grass and leaf piles, and their generation. Reeds, prairie grass and overgrown stone are not included because biomes are built from them. No biome is disabled. |
-| `glowshroomContentEnabled` | Set to false to disable glowshroom plants, glowshroom blocks, soups and stew, and their generation. Ancient Forest keeps its ordinary giant mushrooms; Fungal Zombies stop dropping glowshrooms. |
+| `glowshroomContentEnabled` | Set to false to disable glowshroom plants, glowshroom blocks, soups and stew, and their generation. Ancient Forest keeps its ordinary giant mushrooms; Fungal Zombies and Fungal Skeletons stop dropping glowshrooms. |
 | `strawberryContentEnabled` | Set to false to disable strawberries, strawberry bushes, wild strawberries, strawberry pie, and their generation. No biome is disabled. |
 | `blueberryContentEnabled` | Set to false to disable blueberries, blueberry bushes, blueberry pie, and their generation. No biome is disabled. |
 | `rudoContentEnabled` | Set to false to disable rudo beans, rudo stalks, wild rudo, roasted beans, and their generation. No biome is disabled. |
@@ -112,6 +112,7 @@ Each option turns a whole content set on or off. Turning a set off removes its b
 | Setting | What turning it off does |
 |---|---|
 | `fungalZombieContentEnabled` | Set to false to disable Fungal Zombies: the mob is not registered, has no spawn egg, and never spawns. Existing mobs of this type disappear from loaded worlds. No blocks or biomes are affected. |
+| `fungalSkeletonContentEnabled` | Set to false to disable Fungal Skeletons: the mob and its mushroom blob are not registered, it has no spawn egg, and never spawns. Existing mobs of this type disappear from loaded worlds. No blocks or biomes are affected. |
 | `kiwiBirdContentEnabled` | Set to false to disable Kiwi Birds: the mob is not registered, has no spawn egg, and never spawns. Existing mobs of this type disappear from loaded worlds. No blocks or biomes are affected. |
 | `crystalCrawlerContentEnabled` | Set to false to disable Crystal Crawlers: the mob is not registered, has no spawn egg, and never spawns. Existing mobs of this type disappear from loaded worlds. No blocks or biomes are affected. |
 
@@ -240,6 +241,7 @@ Each row stands for two options: the prefix followed by `FoodLevel` and by `Satu
 | `kiwiSpawnBiomes` | `{"byg_woodlands", "byg_great_oak_lowlands", "byg_deciduous_forest"}` | - | ✔ | Biome registry IDs where kiwis spawn naturally. Use 'registry_name' for BYG biomes or 'modid:registry_name' for other mods. An empty list disables natural kiwi spawning. |
 | `kiwiSpawnWeight` | `25` | ≥ 0 | ✔ | Relative spawn weight for kiwis in the configured biomes. Higher values make them more common; 25 is the default. Set to 0 to disable natural kiwi spawning. |
 | `fungalZombieSpawnWeight` | `20` | ≥ 0 | ✔ | Relative spawn weight for fungal zombies in Fungal Jungle. 20 is the default; 0 disables natural spawning. |
+| `fungalSkeletonSpawnWeight` | `20` | ≥ 0 | ✔ | Relative spawn weight for fungal skeletons in Fungal Jungle. 20 is the default; 0 disables natural spawning. |
 | `kiwiForageAttemptInterval` | `120` | ≥ 1 |  | Average interval in ticks between kiwi forage attempts at night. Lower values make kiwis dig for worms more often. |
 | `kiwiWormFindChance` | `0.3333333333333333` | 0.0 to 1.0 |  | Chance for a kiwi to find a worm when a forage action completes. |
 | `kiwiEggLayInterval` | `12000` | ≥ 1 |  | Minimum ticks between eggs laid by an adult kiwi. A random extra delay of up to the same amount is added, so 12000 means one egg every 10 to 20 minutes. Set very high to make eggs effectively rare. |

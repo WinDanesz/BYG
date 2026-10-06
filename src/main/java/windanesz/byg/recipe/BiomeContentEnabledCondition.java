@@ -41,6 +41,7 @@ public class BiomeContentEnabledCondition implements IConditionFactory {
             case "ground_cover":
             case "food":
             case "fungal_zombie":
+            case "fungal_skeleton":
             case "kiwi_bird":
             case "crystal_crawler":
             case "structures":

@@ -585,6 +585,7 @@ tile.azalea.name=Azalea
 tile.green_tulip.name=Green Tulip
 item.hawthorn_door.name=Hawthorn Door
 entity.fungalzombie.name=Fungal Zombie
+entity.fungalskeleton.name=Fungal Skeleton
 tile.medium_green_glowshroom.name=Medium green Glowshroom
 tile.stripped_aspen_wood.name=Stripped Aspen Wood
 tile.light_blue_sandstone.name=Light Blue Sandstone

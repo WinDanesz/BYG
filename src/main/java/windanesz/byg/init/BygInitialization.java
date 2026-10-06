@@ -10,6 +10,7 @@ import windanesz.byg.Config;
 import windanesz.byg.blocks.BlockCrate;
 import windanesz.byg.blocks.BlockNetherFurnaceLit;
 import windanesz.byg.blocks.BlockSpringwater;
+import windanesz.byg.entity.EntityFungalSkeleton;
 import windanesz.byg.entity.EntityFungalZombie;
 import windanesz.byg.entity.EntityKiwiBird;
 import windanesz.byg.registry.ModBiomes;
@@ -32,6 +33,7 @@ public final class BygInitialization {
         ModBiomes.init();
         BlockCrate.init(event);
         EntityFungalZombie.init(event);
+        EntityFungalSkeleton.init(event);
         EntityKiwiBird.init(event);
         windanesz.byg.entity.EntityKiwiEgg.registerDispenseBehavior();
         BlockNetherFurnaceLit.init(event);

@@ -158,6 +158,7 @@ public final class Config {
             case "ground_cover": return contentSettings.groundCoverContentEnabled;
             case "food": return contentSettings.foodContentEnabled;
             case "fungal_zombie": return contentSettings.fungalZombieContentEnabled;
+            case "fungal_skeleton": return contentSettings.fungalSkeletonContentEnabled;
             case "kiwi_bird": return contentSettings.kiwiBirdContentEnabled;
             case "crystal_crawler": return contentSettings.crystalCrawlerContentEnabled;
             case "structures": return contentSettings.structuresContentEnabled;
@@ -666,6 +667,11 @@ public final class Config {
     public static int getFungalZombieSpawnWeight() {
         ensureBaked();
         return Math.max(0, creatureSettings.fungalZombieSpawnWeight);
+    }
+
+    public static int getFungalSkeletonSpawnWeight() {
+        ensureBaked();
+        return Math.max(0, creatureSettings.fungalSkeletonSpawnWeight);
     }
 
     public static boolean isMangroveContentEnabled() {
@@ -1652,6 +1658,14 @@ public final class Config {
         public boolean fungalZombieContentEnabled = true;
 
         @net.minecraftforge.common.config.Config.Comment({
+                "Set to false to disable Fungal Skeletons: the mob and its mushroom blob are not registered, it has no spawn egg, and never spawns.",
+                "Existing mobs of this type disappear from loaded worlds. No blocks or biomes are affected.",
+                "Restart required."
+        })
+        @net.minecraftforge.common.config.Config.RequiresMcRestart
+        public boolean fungalSkeletonContentEnabled = true;
+
+        @net.minecraftforge.common.config.Config.Comment({
                 "Set to false to disable Kiwi Birds: the mob is not registered, has no spawn egg, and never spawns.",
                 "Existing mobs of this type disappear from loaded worlds. No blocks or biomes are affected.",
                 "Restart required."
@@ -1749,7 +1763,7 @@ public final class Config {
 
         @net.minecraftforge.common.config.Config.Comment({
                 "Set to false to disable glowshroom plants, glowshroom blocks, soups and stew, and their generation.",
-                "Ancient Forest keeps its ordinary giant mushrooms; Fungal Zombies stop dropping glowshrooms.",
+                "Ancient Forest keeps its ordinary giant mushrooms; Fungal Zombies and Fungal Skeletons stop dropping glowshrooms.",
                 "Change only before creating a world: removing blocks from an existing world causes missing mappings. Restart required."
         })
         @net.minecraftforge.common.config.Config.RequiresMcRestart
@@ -1888,6 +1902,11 @@ public final class Config {
         @net.minecraftforge.common.config.Config.RangeInt(min = 0)
         @net.minecraftforge.common.config.Config.RequiresMcRestart
         public int fungalZombieSpawnWeight = 20;
+
+        @net.minecraftforge.common.config.Config.Comment("Relative spawn weight for fungal skeletons in Fungal Jungle. 20 is the default; 0 disables natural spawning. Restart required.")
+        @net.minecraftforge.common.config.Config.RangeInt(min = 0)
+        @net.minecraftforge.common.config.Config.RequiresMcRestart
+        public int fungalSkeletonSpawnWeight = 20;
 
         @net.minecraftforge.common.config.Config.Comment("Average interval in ticks between kiwi forage attempts at night. Lower values make kiwis dig for worms more often.")
         @net.minecraftforge.common.config.Config.RangeInt(min = 1)

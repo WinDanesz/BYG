@@ -10,7 +10,7 @@ Jungle, tropical and island biomes.
 
 <BiomeScreenshot id="byg_fungal_jungle" name="Fungal Jungle" />
 
-Large mushrooms and tangled undergrowth fill this warm, wet jungle. [Fungal Zombies](../creatures/fungal-zombie.md) spawn here when enabled.
+Large mushrooms and tangled undergrowth fill this warm, wet jungle. [Fungal Zombies](../creatures/fungal-zombie.md) and [Fungal Skeletons](../creatures/fungal-skeleton.md) spawn here when enabled.
 
 | | |
 |---|---|
