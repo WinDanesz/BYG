@@ -674,6 +674,17 @@ public final class Config {
         return Math.max(0, creatureSettings.fungalSkeletonSpawnWeight);
     }
 
+    public static int getFungalZombiePoisonAmplifier() {
+        ensureBaked();
+        // the amplifier is stored as a signed byte when an effect is saved
+        return Math.max(0, Math.min(127, creatureSettings.fungalZombiePoisonAmplifier));
+    }
+
+    public static int getFungalZombiePoisonDuration() {
+        ensureBaked();
+        return Math.max(0, creatureSettings.fungalZombiePoisonDuration);
+    }
+
     public static boolean isMangroveContentEnabled() {
         ensureBaked();
         return contentSettings.mangroveContentEnabled;
@@ -1907,6 +1918,14 @@ public final class Config {
         @net.minecraftforge.common.config.Config.RangeInt(min = 0)
         @net.minecraftforge.common.config.Config.RequiresMcRestart
         public int fungalSkeletonSpawnWeight = 20;
+
+        @net.minecraftforge.common.config.Config.Comment("Amplifier of the Poison effect a fungal zombie's hit inflicts. 0 is Poison I, 1 is Poison II, and so on.")
+        @net.minecraftforge.common.config.Config.RangeInt(min = 0, max = 127)
+        public int fungalZombiePoisonAmplifier = 0;
+
+        @net.minecraftforge.common.config.Config.Comment("Duration in ticks of the Poison effect a fungal zombie's hit inflicts. Set to 0 to disable the poison. 160 ticks is 8 seconds.")
+        @net.minecraftforge.common.config.Config.RangeInt(min = 0)
+        public int fungalZombiePoisonDuration = 160;
 
         @net.minecraftforge.common.config.Config.Comment("Average interval in ticks between kiwi forage attempts at night. Lower values make kiwis dig for worms more often.")
         @net.minecraftforge.common.config.Config.RangeInt(min = 1)

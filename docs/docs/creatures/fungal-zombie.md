@@ -20,7 +20,8 @@ A hostile zombie variant, only appears if glowshroom (`glowshroomContentEnabled`
 | Attack damage | 6 |
 | Movement speed | 0.2 |
 | Armour | 0 |
+| Hit effect | Poison I for 8 seconds (`fungalZombiePoisonAmplifier`, `fungalZombiePoisonDuration`) |
 | Drops | Rotten flesh as usual; rarely a Green Glowshroom |
 
-- Behaves like a vanilla zombie: breaks down doors and avoids sunlight.
+- Behaves like a vanilla zombie: breaks down doors, avoids sunlight and swims, but causes poison on hit.
 - Killing one is the **Spore Wars** [advancement](../advancements.md).

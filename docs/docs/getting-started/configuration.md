@@ -242,6 +242,8 @@ Each row stands for two options: the prefix followed by `FoodLevel` and by `Satu
 | `kiwiSpawnWeight` | `25` | ≥ 0 | ✔ | Relative spawn weight for kiwis in the configured biomes. Higher values make them more common; 25 is the default. Set to 0 to disable natural kiwi spawning. |
 | `fungalZombieSpawnWeight` | `20` | ≥ 0 | ✔ | Relative spawn weight for fungal zombies in Fungal Jungle. 20 is the default; 0 disables natural spawning. |
 | `fungalSkeletonSpawnWeight` | `20` | ≥ 0 | ✔ | Relative spawn weight for fungal skeletons in Fungal Jungle. 20 is the default; 0 disables natural spawning. |
+| `fungalZombiePoisonAmplifier` | `0` | 0 to 127 |  | Amplifier of the Poison effect a fungal zombie's hit inflicts. 0 is Poison I, 1 is Poison II, and so on. |
+| `fungalZombiePoisonDuration` | `160` | ≥ 0 |  | Duration in ticks of the Poison effect a fungal zombie's hit inflicts. Set to 0 to disable the poison. 160 ticks is 8 seconds. |
 | `kiwiForageAttemptInterval` | `120` | ≥ 1 |  | Average interval in ticks between kiwi forage attempts at night. Lower values make kiwis dig for worms more often. |
 | `kiwiWormFindChance` | `0.3333333333333333` | 0.0 to 1.0 |  | Chance for a kiwi to find a worm when a forage action completes. |
 | `kiwiEggLayInterval` | `12000` | ≥ 1 |  | Minimum ticks between eggs laid by an adult kiwi. A random extra delay of up to the same amount is added, so 12000 means one egg every 10 to 20 minutes. Set very high to make eggs effectively rare. |
