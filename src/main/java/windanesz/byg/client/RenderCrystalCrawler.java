@@ -17,7 +17,7 @@ import java.util.WeakHashMap;
 // Uses the same model as a spider, but with rotations when climbing walls and ceilings
 @SideOnly(Side.CLIENT)
 public class RenderCrystalCrawler extends RenderLiving<EntityCrystalCrawler> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("byg:textures/crystal_crawler.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation("byg:textures/entity/crystal_crawler.png");
 
     private final Map<EntityCrystalCrawler, CrawlerSurfaceTransition> surfaceTransitions = new WeakHashMap<>();
 
