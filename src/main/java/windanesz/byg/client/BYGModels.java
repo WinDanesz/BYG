@@ -2,6 +2,7 @@ package windanesz.byg.client;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeaves;
+import net.minecraft.block.BlockSapling;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.item.Item;
@@ -15,6 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import windanesz.byg.BiomesYouGo;
 import windanesz.byg.blocks.BlockAlgae;
 import windanesz.byg.blocks.BlockBygLeaves;
+import windanesz.byg.blocks.BlockGeneratedSaplingBase;
 import windanesz.byg.items.ItemBiomeTeleporter;
 import windanesz.byg.registry.ModBlocks;
 import windanesz.byg.registry.ModItems;
@@ -24,6 +26,10 @@ public final class BYGModels {
     // check_decay and decayable track leaf decay state only; they never change which model is used, so the renderer
     // must ignore them or it would look for blockstate variants ("check_decay=true" etc.) that don't exist.
     private static final StateMap LEAF_DECAY_STATE_MAP = new StateMap.Builder().ignore(BlockLeaves.CHECK_DECAY, BlockLeaves.DECAYABLE).build();
+
+    // BYG saplings inherit vanilla's tree "type" property, but it is never used (metadata is fixed to 0), so the
+    // renderer must ignore it or it would look for blockstate variants for spruce, birch, etc.
+    private static final StateMap SAPLING_TYPE_STATE_MAP = new StateMap.Builder().ignore(BlockSapling.TYPE).build();
 
     private BYGModels() {
     }
@@ -39,6 +45,8 @@ public final class BYGModels {
         for (Block block : Block.REGISTRY) {
             if (block instanceof BlockBygLeaves) {
                 ModelLoader.setCustomStateMapper(block, LEAF_DECAY_STATE_MAP);
+            } else if (block instanceof BlockGeneratedSaplingBase) {
+                ModelLoader.setCustomStateMapper(block, SAPLING_TYPE_STATE_MAP);
             }
         }
     }
