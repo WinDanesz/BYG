@@ -37,7 +37,7 @@ These are surface-replacement blocks: BYG scans a biome's existing grass or snow
 | Block | Replaces | Where | Toggle |
 |---|---|---|---|
 | Rocky Grass | Grass or Peatgrass | Bluff Mountains, Stone Brushlands, Y 70–207 | `generateRockyGrass` |
-| Rocky Grass (Alps) | Snow | Alps, Y 153–162 | `generateRockyGrassAlps` |
+| Rocky Grass | Snow | Alps, Y 153–162 | `generateRockyGrassAlps` |
 | Rocky Stone | Grass or Peatgrass | Pine Mountains, Snowy Pine Mountains, Y 117–253 | `generateRockystone` |
 | Rocky Stone | Grass, Peatgrass or Rocky Grass | Bluff Mountains, Stone Brushlands, Y 70–207 | `generateRockystone2` |
 | Sandy Grass | Sand or Hardened Clay/Dirt | Lush Desert, Outback, Y 60–101 | `generateSandygrass` |

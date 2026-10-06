@@ -58,7 +58,7 @@ final class SurfaceBlockWorldgen {
             int x = BygWorldGenerator.safeMinableCoordinate(random, blockX, 32);
             int y = random.nextInt(10) + 153;
             int z = BygWorldGenerator.safeMinableCoordinate(random, blockZ, 32);
-            new FastMinable(ModBlocks.rocky_grass_alps.getDefaultState(), 32, new Predicate<IBlockState>() {
+            new FastMinable(ModBlocks.rocky_grass.getDefaultState(), 32, new Predicate<IBlockState>() {
                 @Override
                 public boolean apply(IBlockState blockAt) {
                     return blockAt.getBlock() == Blocks.SNOW;

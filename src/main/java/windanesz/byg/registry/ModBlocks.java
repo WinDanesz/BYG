@@ -17,6 +17,7 @@ import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -516,7 +517,6 @@ public final class ModBlocks {
     public static final Block richea = placeholder();
     public static final Block rowan_wood_wall = placeholder();
     public static final Block rocky_grass = placeholder();
-    public static final Block rocky_grass_alps = placeholder();
     public static final Block rocky_stone = placeholder();
     public static final Block rose = placeholder();
     public static final Block rowan_door_bottom = placeholder();
@@ -759,6 +759,30 @@ public final class ModBlocks {
                                                 BlockGeneratedSaplingBase.SaplingFormation formation) {
         return new BlockGeneratedSaplingBase(name, tickPlacements, bonemealSuccessChance, bonemealPlacements,
                 tickGrowthCondition, bonemealGrowthCondition, formation);
+    }
+
+    private static final ResourceLocation REMOVED_ROCKY_GRASS_ALPS = new ResourceLocation(BiomesYouGo.MODID, "rocky_grass_alps");
+
+    /** Remaps the removed Rocky Grass (Alps) block in old saves to regular Rocky Grass. */
+    @SubscribeEvent
+    public static void remapBlocks(RegistryEvent.MissingMappings<Block> event) {
+        for (RegistryEvent.MissingMappings.Mapping<Block> mapping : event.getMappings()) {
+            if (REMOVED_ROCKY_GRASS_ALPS.equals(mapping.key) && rocky_grass != null) {
+                mapping.remap(rocky_grass);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void remapItems(RegistryEvent.MissingMappings<Item> event) {
+        for (RegistryEvent.MissingMappings.Mapping<Item> mapping : event.getMappings()) {
+            if (REMOVED_ROCKY_GRASS_ALPS.equals(mapping.key)) {
+                Item item = Item.getItemFromBlock(rocky_grass);
+                if (item != Items.AIR) {
+                    mapping.remap(item);
+                }
+            }
+        }
     }
 
     @SubscribeEvent
@@ -1867,8 +1891,6 @@ public final class ModBlocks {
         registerBlock(registry, new BlockWoodWallBase("rowan_wood_wall", 1, 2.0f, 10.0f, 0, true, true));
 
         registerBlock(registry, new BlockRockyGrass());
-
-        registerBlock(registry, new BlockRockyGrassAlps());
 
         registerBlock(registry, new BlockRockystone());
 

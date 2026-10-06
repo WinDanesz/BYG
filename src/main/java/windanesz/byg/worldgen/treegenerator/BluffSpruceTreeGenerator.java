@@ -15,8 +15,7 @@ public final class BluffSpruceTreeGenerator extends WoodlandTreeGenerator {
 
     @Override
     protected boolean canGrowOn(World world, BlockPos pos) {
-        return world.getBlockState(pos).getBlock() == ModBlocks.rocky_grass
-                || world.getBlockState(pos).getBlock() == ModBlocks.rocky_grass_alps;
+        return world.getBlockState(pos).getBlock() == ModBlocks.rocky_grass;
     }
 
     @Override

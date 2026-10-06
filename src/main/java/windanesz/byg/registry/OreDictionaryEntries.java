@@ -94,7 +94,7 @@ public final class OreDictionaryEntries {
         registerBlock("flowerWhite", ModBlocks.angelica, ModBlocks.richea, ModBlocks.sacred_datura, ModBlocks.snowdrops, ModBlocks.white_anemone, ModBlocks.white_celosia, ModBlocks.white_sage, ModBlocks.winter_rose);
         registerBlock("flowerYellow", ModBlocks.lollipop_flower, ModBlocks.yellow_celosia, ModBlocks.yellow_daffodil, ModBlocks.yellow_tulip);
 
-        registerBlock("grass", ModBlocks.glowcelium, ModBlocks.meadow_grass, ModBlocks.overgrown_stone, ModBlocks.pasture_grass, ModBlocks.peat_grass, ModBlocks.rocky_grass, ModBlocks.rocky_grass_alps, ModBlocks.sandy_grass);
+        registerBlock("grass", ModBlocks.glowcelium, ModBlocks.meadow_grass, ModBlocks.overgrown_stone, ModBlocks.pasture_grass, ModBlocks.peat_grass, ModBlocks.rocky_grass, ModBlocks.sandy_grass);
         registerBlock("leafpile", ModBlocks.leafpile, ModBlocks.leaf_pile_dead);
         registerBlock("lilypad", ModBlocks.tiny_lilypad);
         registerBlock("logWood",
