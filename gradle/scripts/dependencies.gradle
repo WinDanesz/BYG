@@ -41,6 +41,9 @@ dependencies {
     // Example - Deobfuscating dependencies:
     compileOnly rfg.deobf('curse.maven:had-enough-items-557549:4543375')
     runtimeOnly rfg.deobf('curse.maven:had-enough-items-557549:4543375')
+    // spark profiler 1.6.3 (Forge 1.12.2) for profiling dev runs; Spark Unforged is newer but its mixins don't apply in this dev env
+    runtimeOnly rfg.deobf('curse.maven:spark-361579:3542217')
+
     // By wrapping a dependency descriptor in rfg.deobf() method call, the dependency is queued for deobfuscation
     // When deobfuscating, RFG respects the mapping_channel + mapping_version stated in gradle.properties
 
