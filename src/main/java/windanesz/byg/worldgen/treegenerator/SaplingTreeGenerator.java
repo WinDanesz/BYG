@@ -1176,6 +1176,12 @@ public final class SaplingTreeGenerator extends WorldGenAbstractTree implements 
             // Skyris trunks poke through neighbouring crowns; never grow on top of another tree's log.
             return false;
         }
+        if (this.style == TreeStyle.GREAT_OAK) {
+            // Great oak branches overhang water and neighbouring ground. A tree rooted on one of those
+            // branch logs would float, so only real soil counts.
+            return material == Material.GROUND || material == Material.GRASS || material == Material.SAND
+                    || material == Material.CLAY;
+        }
         return material == Material.GROUND || material == Material.GRASS || material == Material.SAND
                 || material == Material.CLAY || material == Material.WOOD;
     }
@@ -1201,18 +1207,25 @@ public final class SaplingTreeGenerator extends WorldGenAbstractTree implements 
     }
 
     private void placeGreatOakRootFlare(World world, BlockPos center, IBlockState logState) {
-        this.placeLog(world, center.north(), logState);
-        this.placeLog(world, center.south(), logState);
-        this.placeLog(world, center.east(), logState);
-        this.placeLog(world, center.west(), logState);
-        this.placeLog(world, center.north(2), logState);
-        this.placeLog(world, center.south(2), logState);
-        this.placeLog(world, center.east(2), logState);
-        this.placeLog(world, center.west(2), logState);
-        this.placeLog(world, center.north().east(), logState);
-        this.placeLog(world, center.north().west(), logState);
-        this.placeLog(world, center.south().east(), logState);
-        this.placeLog(world, center.south().west(), logState);
+        this.placeGreatOakRoot(world, center.north(), logState);
+        this.placeGreatOakRoot(world, center.south(), logState);
+        this.placeGreatOakRoot(world, center.east(), logState);
+        this.placeGreatOakRoot(world, center.west(), logState);
+        this.placeGreatOakRoot(world, center.north(2), logState);
+        this.placeGreatOakRoot(world, center.south(2), logState);
+        this.placeGreatOakRoot(world, center.east(2), logState);
+        this.placeGreatOakRoot(world, center.west(2), logState);
+        this.placeGreatOakRoot(world, center.north().east(), logState);
+        this.placeGreatOakRoot(world, center.north().west(), logState);
+        this.placeGreatOakRoot(world, center.south().east(), logState);
+        this.placeGreatOakRoot(world, center.south().west(), logState);
+    }
+
+    /** Roots outside the 3x3 soil check must still sit on soil, otherwise they hang over water or cliffs. */
+    private void placeGreatOakRoot(World world, BlockPos pos, IBlockState logState) {
+        if (this.canGrowOn(world, pos.down())) {
+            this.placeLog(world, pos, logState);
+        }
     }
 
     private void placeZelkovaBranch(World world, Random random, BlockPos start, int dx, int dz, int length,
