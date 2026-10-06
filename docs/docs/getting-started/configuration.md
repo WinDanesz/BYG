@@ -285,9 +285,11 @@ Tuning for world generation in new chunks. Attempt multipliers change how many t
 | `scoriaMaxY` | `14` | 1 to 255 |  | Highest Y level where scoria deposits can start. Must be at least the minimum Y. |
 | `sepiniteAttemptMultiplier` | `1.0` | 0.0 to 10.0 |  | Sepinite generation attempts relative to default. Multiplies the global underground deposit attempt setting; 0 disables attempts in new chunks. |
 | `sepiniteMinY` | `60` | 1 to 255 |  | Lowest Y level where sepinite deposits can start. |
+| `scoriaBiomes` | `{}` | - |  | Biome registry IDs where scoria deposits may generate. Use 'registry_name' for BYG biomes or 'modid:registry_name' for other mods. An empty list (the default) lets scoria generate in every biome. |
 | `sepiniteMaxY` | `119` | 1 to 255 |  | Highest Y level where sepinite deposits can start. Must be at least the minimum Y. |
 
 ### Feature switches
+| `soapstoneBiomes` | `{}` | - |  | Biome registry IDs where soapstone deposits may generate. Use 'registry_name' for BYG biomes or 'modid:registry_name' for other mods. An empty list (the default) lets soapstone generate in every biome. |
 
 All of these default to `true`.
 

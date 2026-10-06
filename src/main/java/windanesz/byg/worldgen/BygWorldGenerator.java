@@ -149,7 +149,8 @@ public final class BygWorldGenerator implements IWorldGenerator {
         if (Config.isWorldgenFeatureEnabled("sandy_grass")) {
             SurfaceBlockWorldgen.generateSandygrass(random, blockX, blockZ, world, dimID);
         }
-        if (Config.isWorldgenFeatureEnabled("scoria")) {
+        if (Config.isWorldgenFeatureEnabled("scoria")
+                && matchesConfiguredBiome(world, blockX, blockZ, Config.getScoriaBiomes())) {
             generateMinableDeposit(random, blockX, blockZ, world, dimID, 0, () -> ModBlocks.scoria, 30 * Config.scoriaAttemptMultiplier(), Config.scoriaMinY(), Config.scoriaYRange(), 30,
                     blockAt -> blockAt.getBlock() == Blocks.STONE, new String[0]);
         }
@@ -161,7 +162,8 @@ public final class BygWorldGenerator implements IWorldGenerator {
             generateReedCluster(random, blockX, blockZ, world, dimID, () -> ModBlocks.short_dead_grass, 3, 1,
                     "byg:byg_outback", "byg:byg_dunes");
         }
-        if (Config.isWorldgenFeatureEnabled("soapstone")) {
+        if (Config.isWorldgenFeatureEnabled("soapstone")
+                && matchesConfiguredBiome(world, blockX, blockZ, Config.getSoapstoneBiomes())) {
             generateMinableDeposit(random, blockX, blockZ, world, dimID, 0, () -> ModBlocks.soapstone, 30, 16, 5, 30,
                     blockAt -> blockAt.getBlock() == Blocks.STONE, new String[0]);
         }
@@ -869,6 +871,29 @@ public final class BygWorldGenerator implements IWorldGenerator {
      */
     public static boolean biomeIdMatches(ResourceLocation biomeId, String entry) {
         return biomeId.equals(new ResourceLocation(entry));
+    }
+
+    /**
+     * Matches a user-configured biome list: an empty list allows every biome, otherwise an entry matches either the
+     * full registry ID ("byg:byg_alps", "minecraft:desert") or just the registry name ("byg_alps", "desert").
+     */
+    private static boolean matchesConfiguredBiome(World world, int chunkX, int chunkZ, String[] biomeIds) {
+        if (biomeIds.length == 0) {
+            return true;
+        }
+        ResourceLocation biomeId = Biome.REGISTRY.getNameForObject(world.getBiome(new BlockPos(chunkX, 128, chunkZ)));
+        if (biomeId == null) {
+            return false;
+        }
+        String full = biomeId.toString();
+        String name = biomeId.getPath();
+        for (String id : biomeIds) {
+            String trimmed = id.trim();
+            if (trimmed.equals(full) || trimmed.equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean matchesSwampBiome(World world, int chunkX, int chunkZ) {

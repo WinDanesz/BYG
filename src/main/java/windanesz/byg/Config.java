@@ -866,6 +866,16 @@ public final class Config {
     }
 
     public static int sepiniteMinY() {
+    public static String[] getScoriaBiomes() {
+        ensureBaked();
+        return worldgenSettings.scoriaBiomes.clone();
+    }
+
+    public static String[] getSoapstoneBiomes() {
+        ensureBaked();
+        return worldgenSettings.soapstoneBiomes.clone();
+    }
+
         ensureBaked();
         return worldgenSettings.sepiniteMinY;
     }
@@ -2042,6 +2052,18 @@ public final class Config {
         public boolean generateShortDeadGrassClusters = true;
         public boolean generateAlgaePatches = true;
         public boolean generateGlowcaneBlue = true;
+        @net.minecraftforge.common.config.Config.Comment({
+                "Biome registry IDs where scoria deposits may generate. Use 'registry_name' for BYG biomes or 'modid:registry_name' for other mods.",
+                "An empty list (the default) lets scoria generate in every biome. Applies to newly generated chunks."
+        })
+        public String[] scoriaBiomes = {};
+
+        @net.minecraftforge.common.config.Config.Comment({
+                "Biome registry IDs where soapstone deposits may generate. Use 'registry_name' for BYG biomes or 'modid:registry_name' for other mods.",
+                "An empty list (the default) lets soapstone generate in every biome. Applies to newly generated chunks."
+        })
+        public String[] soapstoneBiomes = {};
+
         public boolean generateGlowcanePink = true;
         public boolean generateGlowcanePurple = true;
         public boolean generateGlowcaneRed = true;
