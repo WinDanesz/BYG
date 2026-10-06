@@ -855,13 +855,20 @@ public final class BygWorldGenerator implements IWorldGenerator {
         if (biomeId == null) {
             return false;
         }
-        String idStr = biomeId.toString();
         for (String id : biomeIds) {
-            if (id.equals(idStr)) {
+            if (biomeIdMatches(biomeId, id)) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Whether a hard-coded biome entry names the given biome. Like {@link ResourceLocation}, an entry without a
+     * namespace is a vanilla biome, so "plains" means "minecraft:plains"; BYG and other mods need the full ID.
+     */
+    public static boolean biomeIdMatches(ResourceLocation biomeId, String entry) {
+        return biomeId.equals(new ResourceLocation(entry));
     }
 
     private static boolean matchesSwampBiome(World world, int chunkX, int chunkZ) {

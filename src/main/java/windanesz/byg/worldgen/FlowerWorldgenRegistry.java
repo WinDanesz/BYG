@@ -131,7 +131,12 @@ public final class FlowerWorldgenRegistry {
         }
 
         private boolean matches(ResourceLocation biomeId) {
-            return this.biomeIds.contains(biomeId.toString());
+            for (String entry : this.biomeIds) {
+                if (BygWorldGenerator.biomeIdMatches(biomeId, entry)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void generate(Random random, int chunkX, int chunkZ, World world) {
