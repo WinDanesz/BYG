@@ -888,12 +888,6 @@ public final class Config {
         return Math.max(1, worldgenSettings.scoriaMaxY - worldgenSettings.scoriaMinY + 1);
     }
 
-    public static double sepiniteAttemptMultiplier() {
-        ensureBaked();
-        return worldgenSettings.sepiniteAttemptMultiplier;
-    }
-
-    public static int sepiniteMinY() {
     public static String[] getScoriaBiomes() {
         ensureBaked();
         return worldgenSettings.scoriaBiomes.clone();
@@ -904,6 +898,12 @@ public final class Config {
         return worldgenSettings.soapstoneBiomes.clone();
     }
 
+    public static double sepiniteAttemptMultiplier() {
+        ensureBaked();
+        return worldgenSettings.sepiniteAttemptMultiplier;
+    }
+
+    public static int sepiniteMinY() {
         ensureBaked();
         return worldgenSettings.sepiniteMinY;
     }
@@ -1132,7 +1132,7 @@ public final class Config {
         FOOD_VALUES.put("holly_berries", new FoodValues(foodSettings.hollyberriesFoodLevel, (float) foodSettings.hollyberriesSaturation));
         FOOD_VALUES.put("kiwi_cooked", new FoodValues(foodSettings.kiwiCookedFoodLevel, (float) foodSettings.kiwiCookedSaturation));
         FOOD_VALUES.put("kiwi_raw", new FoodValues(foodSettings.kiwiRawFoodLevel, (float) foodSettings.kiwiRawSaturation));
-        FOOD_VALUES.put("pumpkin_bread", new FoodValues(foodSettings.pumpkinbreadFoodLevel, (float) foodSettings.pumpkinbreadSaturation));
+        FOOD_VALUES.put("pumpkin_bread",new FoodValues(foodSettings.pumpkinbreadFoodLevel, (float) foodSettings.pumpkinbreadSaturation));
         FOOD_VALUES.put("pumpkin_mash", new FoodValues(foodSettings.pumpkinmashFoodLevel, (float) foodSettings.pumpkinmashSaturation));
         FOOD_VALUES.put("rowan_berries", new FoodValues(foodSettings.rowanberriesFoodLevel, (float) foodSettings.rowanberriesSaturation));
         FOOD_VALUES.put("rudo_beans", new FoodValues(foodSettings.rudobeansFoodLevel, (float) foodSettings.rudobeansSaturation));
@@ -2099,6 +2099,18 @@ public final class Config {
         @net.minecraftforge.common.config.Config.RangeInt(min = 1, max = 255)
         public int scoriaMaxY = 14;
 
+        @net.minecraftforge.common.config.Config.Comment({
+                "Biome registry IDs where scoria deposits may generate. Use 'registry_name' for BYG biomes or 'modid:registry_name' for other mods.",
+                "An empty list (the default) lets scoria generate in every biome. Applies to newly generated chunks."
+        })
+        public String[] scoriaBiomes = {};
+
+        @net.minecraftforge.common.config.Config.Comment({
+                "Biome registry IDs where soapstone deposits may generate. Use 'registry_name' for BYG biomes or 'modid:registry_name' for other mods.",
+                "An empty list (the default) lets soapstone generate in every biome. Applies to newly generated chunks."
+        })
+        public String[] soapstoneBiomes = {};
+
         @net.minecraftforge.common.config.Config.Comment("Sepinite generation attempts relative to default. Multiplies the global underground deposit attempt setting; 0 disables attempts in new chunks.")
         @net.minecraftforge.common.config.Config.RangeDouble(min = 0.0, max = 10.0)
         public double sepiniteAttemptMultiplier = 1.0D;
@@ -2118,18 +2130,6 @@ public final class Config {
         public boolean generateShortDeadGrassClusters = true;
         public boolean generateAlgaePatches = true;
         public boolean generateGlowcaneBlue = true;
-        @net.minecraftforge.common.config.Config.Comment({
-                "Biome registry IDs where scoria deposits may generate. Use 'registry_name' for BYG biomes or 'modid:registry_name' for other mods.",
-                "An empty list (the default) lets scoria generate in every biome. Applies to newly generated chunks."
-        })
-        public String[] scoriaBiomes = {};
-
-        @net.minecraftforge.common.config.Config.Comment({
-                "Biome registry IDs where soapstone deposits may generate. Use 'registry_name' for BYG biomes or 'modid:registry_name' for other mods.",
-                "An empty list (the default) lets soapstone generate in every biome. Applies to newly generated chunks."
-        })
-        public String[] soapstoneBiomes = {};
-
         public boolean generateGlowcanePink = true;
         public boolean generateGlowcanePurple = true;
         public boolean generateGlowcaneRed = true;
