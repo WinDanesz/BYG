@@ -1,6 +1,5 @@
 package windanesz.byg.entity;
 
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelZombie;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -25,6 +24,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import windanesz.byg.Config;
+import windanesz.byg.client.model.ModelFungalZombie;
 import windanesz.byg.registry.ModItems;
 
 public class EntityFungalZombie extends EntityMob {
@@ -54,10 +54,10 @@ public class EntityFungalZombie extends EntityMob {
     @SideOnly(Side.CLIENT)
     public static void preInit(FMLPreInitializationEvent event) {
         RenderingRegistry.registerEntityRenderingHandler(EntityFungalZombie.class, renderManager -> {
-            RenderBiped customRender = new RenderBiped(renderManager, (ModelBiped) new ModelZombie(), 0.5f) {
+            RenderBiped customRender = new RenderBiped(renderManager, new ModelFungalZombie(), 0.5f) {
 
                 protected ResourceLocation getEntityTexture(Entity entity) {
-                    return new ResourceLocation("byg:textures/fungal_zombie.png");
+                    return new ResourceLocation("byg:textures/entity/fungal_zombie.png");
                 }
             };
             customRender.addLayer((LayerRenderer) new LayerBipedArmor((RenderLivingBase) customRender) {
