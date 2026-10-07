@@ -79,6 +79,7 @@ Each option turns a whole content set on or off. Turning a set off removes its b
 | `stellataContentEnabled` | Set to false to disable stellata tree blocks, recipes, and tree generation. Also disables Stellata Pasture. |
 | `birchVariantsContentEnabled` | Set to false to disable the brown, orange, red and yellow birch variants: saplings, leaves, and tree generation. Also disables Seasonal Birch Forest. |
 | `spruceVariantsContentEnabled` | Set to false to disable the blue, orange, red and yellow spruce variants: saplings, leaves, and tree generation. Also disables Blue Taiga, Giant Blue Spruce Taiga, Seasonal Taiga and Giant Seasonal Spruce Taiga. |
+| `strippedLogsEnabled` | Set to false to disable every stripped log and stripped wood block of all wood sets at once. A stripped block is also dropped when its own wood set is disabled; this toggle only adds to that. No biome is disabled. |
 
 ### Stone, sand and crystals
 

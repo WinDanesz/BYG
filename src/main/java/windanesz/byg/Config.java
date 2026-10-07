@@ -175,6 +175,9 @@ public final class Config {
      * (including stripped variants and the differently named cherry and maple saplings) are dropped when the set is off.
      */
     public static boolean isContentRegistered(String registryPath) {
+        if (registryPath.startsWith("stripped_") && !isStrippedLogsEnabled()) {
+            return false;
+        }
         String set = woodSetOf(registryPath);
         return set == null || isWoodSetEnabled(set);
     }
@@ -222,6 +225,12 @@ public final class Config {
         TEMPLATE_PREFIXES.put("glowshroom", new String[]{"bayoutreeglow"});
         TEMPLATE_PREFIXES.put("oak_variants", new String[]{"dry_brown_oak_", "dry_green_oak_", "dstree", "deciduous_village_seasonal",
                 "redoak_tree", "sapling_oak_", "sf_"});
+    }
+
+    /** Whether stripped log and stripped wood blocks are registered at all, regardless of wood set. */
+    public static boolean isStrippedLogsEnabled() {
+        ensureBaked();
+        return contentSettings.strippedLogsEnabled;
     }
 
     public static boolean isCrystalContentEnabled() {
@@ -621,6 +630,11 @@ public final class Config {
         return mudMovementMultiplier;
     }
 
+    /** Whether the entity with this registry ID (e.g. "wilderlands:battlefield_ghost") ignores mud slowdown. */
+    public static boolean isMudSlownessImmune(ResourceLocation entityId) {
+        return entityId != null && MUD_IMMUNE_ENTITIES.contains(entityId.toString());
+    }
+
     public static double getQuagmireSlimeChance() {
         return quagmireSlimeChance;
     }
@@ -628,11 +642,6 @@ public final class Config {
     public static int getKiwiForageAttemptInterval() {
         ensureBaked();
         return Math.max(1, creatureSettings.kiwiForageAttemptInterval);
-    }
-
-    /** Whether the entity with this registry ID (e.g. "wilderlands:battlefield_ghost") ignores mud slowdown. */
-    public static boolean isMudSlownessImmune(ResourceLocation entityId) {
-        return entityId != null && MUD_IMMUNE_ENTITIES.contains(entityId.toString());
     }
 
     public static double getKiwiWormFindChance() {
@@ -1115,6 +1124,12 @@ public final class Config {
         addFoodValues();
         mudMovementMultiplier = Math.max(0.0D, Math.min(1.0D, blockSettings.mudMovementMultiplier));
         quagmireSlimeChance = Math.max(0.0D, Math.min(0.05D, blockSettings.quagmireSlimeChance));
+        MUD_IMMUNE_ENTITIES.clear();
+        for (String entityId : blockSettings.mudSlownessImmuneEntities) {
+            if (entityId != null && !entityId.trim().isEmpty()) {
+                MUD_IMMUNE_ENTITIES.add(entityId.trim().toLowerCase(Locale.ROOT));
+            }
+        }
         baked = true;
     }
 
@@ -1124,12 +1139,6 @@ public final class Config {
         FOOD_VALUES.put("blueberry", new FoodValues(foodSettings.blueberryFoodLevel, (float) foodSettings.blueberrySaturation));
         FOOD_VALUES.put("blueberry_pie", new FoodValues(foodSettings.blueberrypieFoodLevel, (float) foodSettings.blueberrypieSaturation));
         FOOD_VALUES.put("carrot_soup", new FoodValues(foodSettings.carrotsoupFoodLevel, (float) foodSettings.carrotsoupSaturation));
-        MUD_IMMUNE_ENTITIES.clear();
-        for (String entityId : blockSettings.mudSlownessImmuneEntities) {
-            if (entityId != null && !entityId.trim().isEmpty()) {
-                MUD_IMMUNE_ENTITIES.add(entityId.trim().toLowerCase(Locale.ROOT));
-            }
-        }
         FOOD_VALUES.put("cooked_carrot", new FoodValues(foodSettings.cookedcarrotFoodLevel, (float) foodSettings.cookedcarrotSaturation));
         FOOD_VALUES.put("cooked_pufferfish", new FoodValues(foodSettings.cookedpufferfishFoodLevel, (float) foodSettings.cookedpufferfishSaturation));
         FOOD_VALUES.put("cooked_pumpkin_seeds", new FoodValues(foodSettings.cookedpumpkinseedsFoodLevel, (float) foodSettings.cookedpumpkinseedsSaturation));
@@ -1848,6 +1857,14 @@ public final class Config {
         })
         @net.minecraftforge.common.config.Config.RequiresMcRestart
         public boolean flowersContentEnabled = true;
+
+        @net.minecraftforge.common.config.Config.Comment({
+                "Set to false to disable every stripped log and stripped wood block of all wood sets at once.",
+                "A stripped block is also dropped when its own wood set is disabled; this toggle only adds to that. No biome is disabled.",
+                "Change only before creating a world: removing blocks from an existing world causes missing mappings. Restart required."
+        })
+        @net.minecraftforge.common.config.Config.RequiresMcRestart
+        public boolean strippedLogsEnabled = true;
     }
 
     public static final class BlockSettings {
