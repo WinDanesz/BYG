@@ -44,9 +44,7 @@ public class EntityKiwiBird extends EntityAnimal {
     private static final DataParameter<Boolean> IS_FORAGING =
             EntityDataManager.createKey(EntityKiwiBird.class, DataSerializers.BOOLEAN);
 
-    @SideOnly(Side.CLIENT)
     private static final ResourceLocation AWAKE_TEXTURE = new ResourceLocation("byg:textures/entity/kiwi.png");
-    @SideOnly(Side.CLIENT)
     private static final ResourceLocation SLEEPING_TEXTURE = new ResourceLocation("byg:textures/entity/kiwi_sleeping.png");
 
     private BlockPos burrowPos = null;
