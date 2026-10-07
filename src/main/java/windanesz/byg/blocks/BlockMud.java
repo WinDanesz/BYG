@@ -5,6 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.entity.EntityList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -59,3 +60,6 @@ public class BlockMud extends BlockBasicBase {
         drops.add(new ItemStack(ModItems.mud_balls, 4));
     }
 }
+        if (Config.isMudSlownessImmune(EntityList.getKey(entity))) {
+            return;
+        }

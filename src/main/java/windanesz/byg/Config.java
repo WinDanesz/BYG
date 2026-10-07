@@ -1,5 +1,6 @@
 package windanesz.byg;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -16,8 +17,9 @@ public final class Config {
     private static boolean baked;
     // Updated only when the config is baked; collision code reads this cached
     // primitive rather than consulting Forge's config data every tick.
-    private static double mudMovementMultiplier = 0.85D;
+    private static double mudMovementMultiplier = 0.925D;
     private static double quagmireSlimeChance = 0.004D;
+    private static final Set<String> MUD_IMMUNE_ENTITIES = new HashSet<>();
 
     @net.minecraftforge.common.config.Config.Name("Biome Settings")
     @net.minecraftforge.common.config.Config.Comment({
@@ -628,6 +630,11 @@ public final class Config {
         return Math.max(1, creatureSettings.kiwiForageAttemptInterval);
     }
 
+    /** Whether the entity with this registry ID (e.g. "wilderlands:battlefield_ghost") ignores mud slowdown. */
+    public static boolean isMudSlownessImmune(ResourceLocation entityId) {
+        return entityId != null && MUD_IMMUNE_ENTITIES.contains(entityId.toString());
+    }
+
     public static double getKiwiWormFindChance() {
         ensureBaked();
         return Math.max(0.0D, Math.min(1.0D, creatureSettings.kiwiWormFindChance));
@@ -1117,6 +1124,12 @@ public final class Config {
         FOOD_VALUES.put("blueberry", new FoodValues(foodSettings.blueberryFoodLevel, (float) foodSettings.blueberrySaturation));
         FOOD_VALUES.put("blueberry_pie", new FoodValues(foodSettings.blueberrypieFoodLevel, (float) foodSettings.blueberrypieSaturation));
         FOOD_VALUES.put("carrot_soup", new FoodValues(foodSettings.carrotsoupFoodLevel, (float) foodSettings.carrotsoupSaturation));
+        MUD_IMMUNE_ENTITIES.clear();
+        for (String entityId : blockSettings.mudSlownessImmuneEntities) {
+            if (entityId != null && !entityId.trim().isEmpty()) {
+                MUD_IMMUNE_ENTITIES.add(entityId.trim().toLowerCase(Locale.ROOT));
+            }
+        }
         FOOD_VALUES.put("cooked_carrot", new FoodValues(foodSettings.cookedcarrotFoodLevel, (float) foodSettings.cookedcarrotSaturation));
         FOOD_VALUES.put("cooked_pufferfish", new FoodValues(foodSettings.cookedpufferfishFoodLevel, (float) foodSettings.cookedpufferfishSaturation));
         FOOD_VALUES.put("cooked_pumpkin_seeds", new FoodValues(foodSettings.cookedpumpkinseedsFoodLevel, (float) foodSettings.cookedpumpkinseedsSaturation));
@@ -1859,9 +1872,14 @@ public final class Config {
         public double thornBranchesDamage = 1.0D;
         public double cactusDamage = 1.0D;
         public double damagingPlantDamage = 1.0D;
-        @net.minecraftforge.common.config.Config.Comment("Horizontal movement retained while walking through mud. 1.0 disables slowdown; 0.85 is a 15% slowdown.")
+        @net.minecraftforge.common.config.Config.Comment("Horizontal movement retained while walking through mud. 1.0 disables slowdown; 0.925 is a 7.5% slowdown.")
         @net.minecraftforge.common.config.Config.RangeDouble(min = 0.0D, max = 1.0D)
-        public double mudMovementMultiplier = 0.85D;
+        public double mudMovementMultiplier = 0.925D;
+        @net.minecraftforge.common.config.Config.Comment({
+                "Entity registry IDs ('modid:entity_name') that are not slowed by mud, such as flying or ethereal mobs.",
+                "An empty list means every entity is slowed."
+        })
+        public String[] mudSlownessImmuneEntities = {"wilderlands:battlefield_ghost"};
         @net.minecraftforge.common.config.Config.Comment("Chance for an eligible quagmire land surface to be a slime pocket. Set to 0.0 to disable slime generation.")
         @net.minecraftforge.common.config.Config.RangeDouble(min = 0.0D, max = 0.05D)
         public double quagmireSlimeChance = 0.004D;
