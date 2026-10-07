@@ -188,6 +188,13 @@ public final class TemplateWorldgenHelper {
             return;
         }
 
+        // The prairie farm house is a single flat slab of dirt/cobblestone on layer 0. On a slope the
+        // downhill side hung in midair, so refuse steep ground here and fill the gap below after placing.
+        boolean farmHouse = "farm_house1".equals(config.templatePath);
+        if (farmHouse && !hasShallowGapBelowFootprint(world, x, z, height - 1, bounds)) {
+            return;
+        }
+
         // Bluff trees include stone in their saved bases. On the steep Alps,
         // placing one from a single surface sample can leave that base in midair.
         if (config.templatePath.startsWith("blufftree")
@@ -270,6 +277,9 @@ public final class TemplateWorldgenHelper {
             CrystalCanyonWorldgen.place(world, random, spawnTo, rotation, mirror, clipMinX, clipMaxX, clipMinZ, clipMaxZ);
         } else {
             placeTemplateWithSettings(world, template, spawnTo, placement);
+            if (farmHouse) {
+                fillFoundationBelow(world, spawnTo, bounds);
+            }
             if (config.templatePath.startsWith("bayoutree")
                     && ("byg:byg_glowshroom_bayou".equals(String.valueOf(biomeId))
                     || "byg:byg_bayou".equals(String.valueOf(biomeId)))) {
@@ -494,6 +504,43 @@ public final class TemplateWorldgenHelper {
             }
         }
         return true;
+    }
+
+    private static final int MAX_FOUNDATION_DEPTH = 5;
+
+    /** True when every column of the footprint has ground within {@link #MAX_FOUNDATION_DEPTH} blocks below the template's bottom layer. */
+    private static boolean hasShallowGapBelowFootprint(World world, int originX, int originZ, int bottomY, int[] bounds) {
+        for (int x = originX + bounds[0]; x <= originX + bounds[1]; x++) {
+            for (int z = originZ + bounds[2]; z <= originZ + bounds[3]; z++) {
+                int depth = 0;
+                BlockPos pos = new BlockPos(x, bottomY - 1, z);
+                while (depth <= MAX_FOUNDATION_DEPTH && pos.getY() > 0 && isReplaceableOrAir(world, pos)) {
+                    pos = pos.down();
+                    depth++;
+                }
+                if (depth > MAX_FOUNDATION_DEPTH) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /** Pillars dirt down from every solid block on the template's bottom layer until it meets ground. */
+    private static void fillFoundationBelow(World world, BlockPos origin, int[] bounds) {
+        IBlockState fill = Blocks.DIRT.getDefaultState();
+        for (int x = origin.getX() + bounds[0]; x <= origin.getX() + bounds[1]; x++) {
+            for (int z = origin.getZ() + bounds[2]; z <= origin.getZ() + bounds[3]; z++) {
+                if (!world.getBlockState(new BlockPos(x, origin.getY(), z)).getMaterial().isSolid()) {
+                    continue;
+                }
+                BlockPos pos = new BlockPos(x, origin.getY() - 1, z);
+                for (int depth = 0; depth <= MAX_FOUNDATION_DEPTH && pos.getY() > 0 && isReplaceableOrAir(world, pos); depth++) {
+                    world.setBlockState(pos, fill, 2);
+                    pos = pos.down();
+                }
+            }
+        }
     }
 
     private static boolean hasFullySupportedFootprint(World world, int originX, int originZ, int groundY, int[] bounds) {
