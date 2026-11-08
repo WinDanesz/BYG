@@ -1,5 +1,6 @@
 package windanesz.byg.worldgen;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockTallGrass;
 import net.minecraft.block.state.IBlockState;
@@ -21,11 +22,14 @@ import java.util.Random;
  */
 public final class QuagmireLandGenerator {
     private static final ResourceLocation QUAGMIRE = new ResourceLocation("byg", "byg_quagmire");
+    private static final int WORLDGEN_FLAGS = 2 | 16;
+    private static final int POOL_DEPTH = 2;
+
     private QuagmireLandGenerator() {
     }
 
     public static void generate(Random random, int blockX, int blockZ, World world, int dimensionId) {
-        if (!Config.isFeatureDimension(dimensionId) || world.isRemote || !isQuagmire(world, blockX, blockZ)) {
+        if (!Config.isFeatureDimension(dimensionId) || world.isRemote) {
             return;
         }
 
@@ -33,22 +37,34 @@ public final class QuagmireLandGenerator {
         int maxX = blockX + 7;
         int minZ = blockZ - 8;
         int maxZ = blockZ + 7;
+        long seed = world.getSeed();
         double slimeChance = Config.getQuagmireSlimeChance();
+        boolean hasQuagmire = false;
 
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
-                if (!isQuagmire(world, x, z) || !isPeatLand(world.getSeed(), x, z)) {
+                if (!isQuagmire(world, x, z)) {
                     continue;
                 }
-                int waterY = findWaterSurface(world, x, z);
-                if (waterY < 1) {
+                hasQuagmire = true;
+                BlockPos surface = findSurface(world, x, z);
+                Block surfaceBlock = world.getBlockState(surface).getBlock();
+                // A neighboring chunk can decorate this water before Quagmire shapes it.
+                boolean hasFloatingPlant = surfaceBlock == ModBlocks.algae || surfaceBlock == ModBlocks.tiny_lilypad
+                        || surfaceBlock == Blocks.WATERLILY;
+                BlockPos water = hasFloatingPlant ? surface.down() : surface;
+                if (water.getY() < 1 || !isWater(world, water)) {
                     continue;
                 }
-                BlockPos top = new BlockPos(x, waterY, z);
-                if (world.getBlockState(top).getBlock() == Blocks.WATER) {
-                    placeColumn(random, world, top, slimeChance);
+                if (!hasFloatingPlant && isPeatLand(seed, x, z)) {
+                    placeColumn(random, world, water, slimeChance);
+                } else {
+                    fillWaterBelow(world, water.down(POOL_DEPTH));
                 }
             }
+        }
+        if (!hasQuagmire) {
+            return;
         }
         coverExposedMud(random, world, minX, maxX, minZ, maxZ);
         generateTrees(random, world, minX, maxX, minZ, maxZ);
@@ -90,14 +106,25 @@ public final class QuagmireLandGenerator {
         return start + (end - start) * amount;
     }
 
-    private static int findWaterSurface(World world, int x, int z) {
-        int y = world.getActualHeight() - 1;
-        BlockPos cursor = new BlockPos(x, y, z);
-        while (y > 0 && world.isAirBlock(cursor)) {
-            y--;
+    private static BlockPos findSurface(World world, int x, int z) {
+        BlockPos cursor = new BlockPos(x, world.getActualHeight() - 1, z);
+        while (cursor.getY() > 0 && world.isAirBlock(cursor)) {
             cursor = cursor.down();
         }
-        return world.getBlockState(cursor).getBlock() == Blocks.WATER ? y : -1;
+        return cursor;
+    }
+
+    private static boolean isWater(World world, BlockPos pos) {
+        Block block = world.getBlockState(pos).getBlock();
+        return block == Blocks.WATER || block == Blocks.FLOWING_WATER;
+    }
+
+    private static void fillWaterBelow(World world, BlockPos pos) {
+        IBlockState mud = ModBlocks.mud_block.getDefaultState();
+        while (pos.getY() > 0 && isWater(world, pos)) {
+            world.setBlockState(pos, mud, WORLDGEN_FLAGS);
+            pos = pos.down();
+        }
     }
 
     private static void placeColumn(Random random, World world, BlockPos top, double slimeChance) {
@@ -107,18 +134,13 @@ public final class QuagmireLandGenerator {
                 ? Blocks.SLIME_BLOCK.getDefaultState()
                 : random.nextInt(4) == 0 ? ModBlocks.mud_block.getDefaultState()
                 : ModBlocks.peat_grass.getDefaultState();
-        world.setBlockState(top, surface, 2);
+        world.setBlockState(top, surface, WORLDGEN_FLAGS);
 
-        // Peat grass is the tree template's valid ground. Give every surface
-        // column a two-block submerged foundation so a tree placed on it has
-        // solid support rather than a single block over open water.
+        // Keep a peat layer under the surface and fill the remaining water down to the bed.
         BlockPos below = top.down();
-        if (world.getBlockState(below).getBlock() == Blocks.WATER) {
-            world.setBlockState(below, ModBlocks.peat_dirt.getDefaultState(), 2);
-        }
-        BlockPos lower = below.down();
-        if (world.getBlockState(lower).getBlock() == Blocks.WATER) {
-            world.setBlockState(lower, ModBlocks.mud_block.getDefaultState(), 2);
+        if (isWater(world, below)) {
+            world.setBlockState(below, ModBlocks.peat_dirt.getDefaultState(), WORLDGEN_FLAGS);
+            fillWaterBelow(world, below.down());
         }
 
         if ((surface.getBlock() != ModBlocks.peat_grass && surface.getBlock() != ModBlocks.mud_block)
@@ -130,10 +152,10 @@ public final class QuagmireLandGenerator {
             return;
         }
         if (random.nextInt(16) == 0) {
-            world.setBlockState(plantPos, Blocks.DEADBUSH.getDefaultState(), 2);
+            world.setBlockState(plantPos, Blocks.DEADBUSH.getDefaultState(), WORLDGEN_FLAGS);
         } else {
             world.setBlockState(plantPos, Blocks.TALLGRASS.getDefaultState()
-                    .withProperty(BlockTallGrass.TYPE, BlockTallGrass.EnumType.GRASS), 2);
+                    .withProperty(BlockTallGrass.TYPE, BlockTallGrass.EnumType.GRASS), WORLDGEN_FLAGS);
         }
     }
 
@@ -144,18 +166,21 @@ public final class QuagmireLandGenerator {
         // mud so naturally generated flats do not read as sterile slabs.
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
+                if (!isQuagmire(world, x, z)) {
+                    continue;
+                }
                 BlockPos ground = findTreeGround(world, x, z);
                 if (world.getBlockState(ground).getBlock() != ModBlocks.mud_block
                         || !world.isAirBlock(ground.up()) || random.nextInt(8) == 0) {
                     continue;
                 }
-                world.setBlockState(ground, ModBlocks.peat_grass.getDefaultState(), 2);
+                world.setBlockState(ground, ModBlocks.peat_grass.getDefaultState(), WORLDGEN_FLAGS);
                 if (random.nextInt(3) == 0) {
                     IBlockState plant = random.nextInt(12) == 0
                             ? Blocks.DEADBUSH.getDefaultState()
                             : Blocks.TALLGRASS.getDefaultState()
                                     .withProperty(BlockTallGrass.TYPE, BlockTallGrass.EnumType.GRASS);
-                    world.setBlockState(ground.up(), plant, 2);
+                    world.setBlockState(ground.up(), plant, WORLDGEN_FLAGS);
                 }
             }
         }
@@ -168,6 +193,9 @@ public final class QuagmireLandGenerator {
             }
             int x = minX + 3 + random.nextInt(maxX - minX - 5);
             int z = minZ + 3 + random.nextInt(maxZ - minZ - 5);
+            if (!isQuagmire(world, x, z)) {
+                continue;
+            }
             BlockPos ground = findTreeGround(world, x, z);
             if (world.getBlockState(ground).getBlock() != ModBlocks.peat_grass) {
                 continue;
@@ -193,7 +221,7 @@ public final class QuagmireLandGenerator {
         BlockPos trunk = ground;
         for (int y = 1; y <= height; y++) {
             trunk = trunk.up();
-            world.setBlockState(trunk, log, 2);
+            world.setBlockState(trunk, log, WORLDGEN_FLAGS);
 
             // A bent upper trunk stops every specimen from reading as a
             // perfectly vertical sapling.
@@ -201,7 +229,7 @@ public final class QuagmireLandGenerator {
                 EnumFacing bend = EnumFacing.Plane.HORIZONTAL.random(random);
                 BlockPos bentTrunk = trunk.offset(bend);
                 if (world.isAirBlock(bentTrunk)) {
-                    world.setBlockState(bentTrunk, log, 2);
+                    world.setBlockState(bentTrunk, log, WORLDGEN_FLAGS);
                     trunk = bentTrunk;
                 }
             }
@@ -217,11 +245,11 @@ public final class QuagmireLandGenerator {
             if (!world.isAirBlock(branch)) {
                 continue;
             }
-            world.setBlockState(branch, log, 2);
+            world.setBlockState(branch, log, WORLDGEN_FLAGS);
             if (random.nextBoolean()) {
                 BlockPos tip = branch.offset(direction);
                 if (world.isAirBlock(tip)) {
-                    world.setBlockState(tip, log, 2);
+                    world.setBlockState(tip, log, WORLDGEN_FLAGS);
                     branch = tip;
                 }
             }
@@ -229,7 +257,7 @@ public final class QuagmireLandGenerator {
         if (random.nextInt(4) == 0) {
             BlockPos leaf = trunk.offset(EnumFacing.Plane.HORIZONTAL.random(random));
             if (world.isAirBlock(leaf)) {
-                world.setBlockState(leaf, leaves, 2);
+                world.setBlockState(leaf, leaves, WORLDGEN_FLAGS);
             }
         }
     }
@@ -247,12 +275,12 @@ public final class QuagmireLandGenerator {
         IBlockState log = Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS,
                 direction.getAxis() == EnumFacing.Axis.X ? BlockLog.EnumAxis.X : BlockLog.EnumAxis.Z);
         for (int offset = 0; offset < length; offset++) {
-            world.setBlockState(ground.offset(direction, offset).up(), log, 2);
+            world.setBlockState(ground.offset(direction, offset).up(), log, WORLDGEN_FLAGS);
         }
         if (random.nextBoolean()) {
             BlockPos brokenBranch = ground.offset(direction, length - 1).up().offset(EnumFacing.UP);
             if (world.isAirBlock(brokenBranch)) {
-                world.setBlockState(brokenBranch, Blocks.LOG.getDefaultState(), 2);
+                world.setBlockState(brokenBranch, Blocks.LOG.getDefaultState(), WORLDGEN_FLAGS);
             }
         }
     }
