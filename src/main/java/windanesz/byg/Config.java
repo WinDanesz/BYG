@@ -18,7 +18,7 @@ public final class Config {
     // Updated only when the config is baked; collision code reads this cached
     // primitive rather than consulting Forge's config data every tick.
     private static double mudMovementMultiplier = 0.925D;
-    private static double quagmireSlimeChance = 0.004D;
+    private static double quagmireSlimeChance = 0.0012D;
     private static final Set<String> MUD_IMMUNE_ENTITIES = new HashSet<>();
 
     @net.minecraftforge.common.config.Config.Name("Biome Settings")
@@ -1942,7 +1942,7 @@ public final class Config {
         public String[] mudSlownessImmuneEntities = {"wilderlands:battlefield_ghost"};
         @net.minecraftforge.common.config.Config.Comment("Chance for an eligible quagmire land surface to be a slime pocket. Set to 0.0 to disable slime generation.")
         @net.minecraftforge.common.config.Config.RangeDouble(min = 0.0D, max = 0.05D)
-        public double quagmireSlimeChance = 0.004D;
+        public double quagmireSlimeChance = 0.0012D;
         @net.minecraftforge.common.config.Config.Comment({
                 "How many blocks of connected leaves may lie between a leaf and the nearest log or wood block before the leaf decays once a tree is cut or damaged.",
                 "Vanilla uses 4, which cuts the outer crown off many BYG trees. Applies to leaves the next time they check for decay."

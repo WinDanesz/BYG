@@ -215,7 +215,7 @@ Each row stands for two options: the prefix followed by `FoodLevel` and by `Satu
 | `damagingPlantDamage` | `1.0` | - |  | - |
 | `mudMovementMultiplier` | `0.925` | 0.0 to 1.0 |  | Horizontal movement retained while walking through mud. 1.0 disables slowdown; 0.925 is a 7.5% slowdown. |
 | `mudSlownessImmuneEntities` | `{"wilderlands:battlefield_ghost"}` | - |  | Entity registry IDs ('modid:entity_name') that are not slowed by mud, such as flying or ethereal mobs. An empty list means every entity is slowed. |
-| `quagmireSlimeChance` | `0.004` | 0.0 to 0.05 |  | Chance for an eligible quagmire land surface to be a slime pocket. Set to 0.0 to disable slime generation. |
+| `quagmireSlimeChance` | `0.0012` | 0.0 to 0.05 |  | Chance for an eligible quagmire land surface to be a slime pocket. Set to 0.0 to disable slime generation. |
 | `springwaterBubbleChance` | `0.4` | - |  | - |
 | `springwaterBubbleParticleCount` | `2` | - |  | - |
 | `springwaterAppliesRegeneration` | `true` | - |  | Whether Springwater grants Regeneration I while an entity remains in it. |
