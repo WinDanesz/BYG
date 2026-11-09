@@ -19,10 +19,16 @@ import windanesz.byg.client.BYGTab;
 public class BlockDirectionalLogBase extends Block {
     private static final PropertyDirection FACING = BlockDirectional.FACING;
     private final boolean silkHarvest;
+    private final boolean supportsWideCanopy;
 
     public BlockDirectionalLogBase(String name, int harvestLevel, boolean silkHarvest) {
+        this(name, harvestLevel, silkHarvest, false);
+    }
+
+    public BlockDirectionalLogBase(String name, int harvestLevel, boolean silkHarvest, boolean supportsWideCanopy) {
         super(Material.WOOD);
         this.silkHarvest = silkHarvest;
+        this.supportsWideCanopy = supportsWideCanopy;
         this.setRegistryName(name);
         this.setTranslationKey(name);
         this.setSoundType(SoundType.WOOD);
@@ -69,6 +75,14 @@ public class BlockDirectionalLogBase extends Block {
     @Override
     public boolean canSustainLeaves(IBlockState state, IBlockAccess world, BlockPos pos) {
         return true;
+    }
+
+    @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        super.breakBlock(world, pos, state);
+        if (this.supportsWideCanopy) {
+            BlockBygLeaves.checkCanopyAfterLogBreak(world, pos, this);
+        }
     }
 }
 

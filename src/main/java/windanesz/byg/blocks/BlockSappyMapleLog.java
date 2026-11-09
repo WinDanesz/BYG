@@ -74,4 +74,10 @@ public class BlockSappyMapleLog extends Block {
     public boolean canSustainLeaves(IBlockState state, IBlockAccess world, BlockPos pos) {
         return true;
     }
+
+    @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        super.breakBlock(world, pos, state);
+        BlockBygLeaves.checkCanopyAfterLogBreak(world, pos, this);
+    }
 }

@@ -917,11 +917,13 @@ public final class ModBlocks {
 
         registerBlock(registry, new BlockBookshelfBase("cherry_bookshelf", 0, 1.0f, 8.0f, 255, false));
 
-        registerBlock(registry, new BlockShearableLeavesBase("cherry_leaves_pink", 0, () -> ModBlocks.cherry_leaves_pink, () -> new ItemStack(ModBlocks.pink_cherry_sapling, 1), 0.03, 1));
+        registerBlock(registry, new BlockShearableLeavesBase("cherry_leaves_pink", 0, () -> ModBlocks.cherry_leaves_pink, () -> new ItemStack(ModBlocks.pink_cherry_sapling, 1), 0.03, 1)
+                .withCanopySupport(ModBlocks::isCherryCanopyLog));
 
-        registerBlock(registry, new BlockShearableLeavesBase("cherry_leaves_white", 0, () -> ModBlocks.cherry_leaves_white, () -> new ItemStack(ModBlocks.white_cherry_sapling, 1), 0.03, 1));
+        registerBlock(registry, new BlockShearableLeavesBase("cherry_leaves_white", 0, () -> ModBlocks.cherry_leaves_white, () -> new ItemStack(ModBlocks.white_cherry_sapling, 1), 0.03, 1)
+                .withCanopySupport(ModBlocks::isCherryCanopyLog));
 
-        registerBlock(registry, new BlockDirectionalLogBase("cherry_log", 0, false));
+        registerBlock(registry, new BlockDirectionalLogBase("cherry_log", 0, false, true));
 
         registerBlock(registry, new BlockPlanksBase("cherry_planks",  0, 2.0f, 10.0f, 255, false));
 
@@ -1249,13 +1251,15 @@ public final class ModBlocks {
 
         registerBlock(registry, new BlockWoodWallBase("holly_wood_wall", 0, 2.0f, 10.0f, 0, true, true));
 
-        registerBlock(registry, new BlockFruitLeavesBase("holly_berry_leaves", 0, () -> new ItemStack(ModItems.holly_berries, 2)));
+        registerBlock(registry, new BlockFruitLeavesBase("holly_berry_leaves", 0, () -> new ItemStack(ModItems.holly_berries, 2))
+                .withCanopySupport(ModBlocks::isHollyCanopyLog));
 
         registerBlock(registry, new BlockBookshelfBase("holly_bookshelf", 0, 1.0f, 8.0f, 255, true));
 
-        registerBlock(registry, new BlockShearableLeavesBase("holly_leaves", 0, () -> ModBlocks.holly_leaves, () -> new ItemStack(ModBlocks.holly_sapling, 1), 0.03, 0));
+        registerBlock(registry, new BlockShearableLeavesBase("holly_leaves", 0, () -> ModBlocks.holly_leaves, () -> new ItemStack(ModBlocks.holly_sapling, 1), 0.03, 0)
+                .withCanopySupport(ModBlocks::isHollyCanopyLog));
 
-        registerBlock(registry, new BlockDirectionalLogBase("holly_log", 0, true));
+        registerBlock(registry, new BlockDirectionalLogBase("holly_log", 0, true, true));
 
         registerBlock(registry, new BlockPlanksBase("holly_planks",  1, 2.0f, 8.0f, 255, true));
 
@@ -1434,11 +1438,13 @@ public final class ModBlocks {
 
         registerBlock(registry, new BlockBookshelfBase("maple_bookshelf", 0, 1.0f, 8.0f, 255, false));
 
-        registerBlock(registry, new BlockShearableLeavesBase("maple_leaves_red", 0, () -> ModBlocks.maple_leaves_red, () -> new ItemStack(ModBlocks.red_maple_sapling, 1), 0.03, 1));
+        registerBlock(registry, new BlockShearableLeavesBase("maple_leaves_red", 0, () -> ModBlocks.maple_leaves_red, () -> new ItemStack(ModBlocks.red_maple_sapling, 1), 0.03, 1)
+                .withCanopySupport(ModBlocks::isMapleCanopyLog));
 
-        registerBlock(registry, new BlockShearableLeavesBase("maple_leaves_silver", 0, () -> ModBlocks.maple_leaves_silver, () -> new ItemStack(ModBlocks.silver_maple_sapling, 1), 0.03, 1));
+        registerBlock(registry, new BlockShearableLeavesBase("maple_leaves_silver", 0, () -> ModBlocks.maple_leaves_silver, () -> new ItemStack(ModBlocks.silver_maple_sapling, 1), 0.03, 1)
+                .withCanopySupport(ModBlocks::isMapleCanopyLog));
 
-        registerBlock(registry, new BlockDirectionalLogBase("maple_log", 0, false));
+        registerBlock(registry, new BlockDirectionalLogBase("maple_log", 0, false, true));
         registerBlock(registry, new windanesz.byg.blocks.BlockSappyMapleLog());
         registerBlock(registry, new windanesz.byg.blocks.BlockMapleTap());
 
@@ -2012,7 +2018,7 @@ public final class ModBlocks {
             registerBlock(registry, new BlockWoodBase("stripped_blue_enchanted_wood", 1, 2.0f, 10.0f, 255, true));
         }
 
-        registerBlock(registry, new BlockDirectionalLogBase("stripped_cherry_log", 1, true));
+        registerBlock(registry, new BlockDirectionalLogBase("stripped_cherry_log", 1, true, true));
 
         registerBlock(registry, new BlockWoodBase("stripped_cherry_wood", 1, 2.0f, 10.0f, 255, true));
 
@@ -2045,7 +2051,7 @@ public final class ModBlocks {
 
         registerBlock(registry, new BlockWoodBase("stripped_hawthorn_wood", 1, 2.0f, 10.0f, 255, true));
 
-        registerBlock(registry, new BlockDirectionalLogBase("stripped_holly_log", 1, true));
+        registerBlock(registry, new BlockDirectionalLogBase("stripped_holly_log", 1, true, true));
 
         registerBlock(registry, new BlockWoodBase("stripped_holly_wood", 1, 2.0f, 10.0f, 255, true));
 
@@ -2062,7 +2068,7 @@ public final class ModBlocks {
             registerBlock(registry, new BlockWoodBase("stripped_mangrove_wood", 1, 2.0f, 10.0f, 255, true));
         }
 
-        registerBlock(registry, new BlockDirectionalLogBase("stripped_maple_log", 1, true));
+        registerBlock(registry, new BlockDirectionalLogBase("stripped_maple_log", 1, true, true));
 
         registerBlock(registry, new BlockWoodBase("stripped_maple_wood", 1, 2.0f, 10.0f, 255, true));
 
@@ -2996,6 +3002,18 @@ public final class ModBlocks {
 
     private static Block createDeadGrassBlock(String name) {
         return new BlockStackingPlantBase(name, BYGTab.tab, 0.0f, EnumPlantType.Desert, 1, true, true, false, false, () -> ItemStack.EMPTY, true);
+    }
+
+    private static boolean isCherryCanopyLog(Block block) {
+        return block == cherry_log || block == stripped_cherry_log;
+    }
+
+    private static boolean isHollyCanopyLog(Block block) {
+        return block == holly_log || block == stripped_holly_log;
+    }
+
+    private static boolean isMapleCanopyLog(Block block) {
+        return block == maple_log || block == sappy_maple_log || block == stripped_maple_log;
     }
 
     private static void registerBlock(IForgeRegistry<Block> registry, Block block) {

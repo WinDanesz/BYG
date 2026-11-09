@@ -22,13 +22,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Base for BYG leaves. Extends vanilla {@link BlockLeaves} so vanilla leaf decay applies and mods that detect
  * leaves by class (RLFoliage/BetterFoliage, tree fellers, leaf decay mods) recognise BYG leaves.
  */
 public abstract class BlockBygLeaves extends BlockLeaves {
+    private static final int CANOPY_SUPPORT_RANGE = 8;
     private final BlockRenderLayer renderLayer;
+    private Predicate<Block> canopyLog;
 
     protected BlockBygLeaves(String name, int harvestLevel, float lightLevel, BlockRenderLayer renderLayer) {
         this.renderLayer = renderLayer;
@@ -67,21 +70,69 @@ public abstract class BlockBygLeaves extends BlockLeaves {
         return this.getDefaultState().withProperty(DECAYABLE, false);
     }
 
+    /** Wide crowns and sparse foliage can stay supported by their own logs across gaps. */
+    public BlockBygLeaves withCanopySupport(Predicate<Block> canopyLog) {
+        this.canopyLog = canopyLog;
+        return this;
+    }
+
+    static void checkCanopyAfterLogBreak(World world, BlockPos pos, Block removedLog) {
+        Block replacement = world.getBlockState(pos).getBlock();
+        for (BlockPos.MutableBlockPos nearby : canopyPositions(pos)) {
+            if (!withinCanopyRange(pos, nearby) || !world.isBlockLoaded(nearby)) {
+                continue;
+            }
+            IBlockState state = world.getBlockState(nearby);
+            if (state.getBlock() instanceof BlockBygLeaves) {
+                BlockBygLeaves leaves = (BlockBygLeaves) state.getBlock();
+                if (leaves.canopyLog != null && leaves.canopyLog.test(removedLog)
+                        && !leaves.canopyLog.test(replacement) && state.getValue(DECAYABLE)) {
+                    leaves.beginLeavesDecay(state, world, nearby.toImmutable());
+                }
+            }
+        }
+    }
+
+    private static Iterable<BlockPos.MutableBlockPos> canopyPositions(BlockPos pos) {
+        int range = CANOPY_SUPPORT_RANGE;
+        return BlockPos.getAllInBoxMutable(pos.add(-range, -range, -range), pos.add(range, range, range));
+    }
+
+    private static boolean withinCanopyRange(BlockPos center, BlockPos pos) {
+        return Math.abs(center.getX() - pos.getX()) + Math.abs(center.getY() - pos.getY())
+                + Math.abs(center.getZ() - pos.getZ()) <= CANOPY_SUPPORT_RANGE;
+    }
+
     @Override
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
         if (world.isRemote || !state.getValue(CHECK_DECAY) || !state.getValue(DECAYABLE)) {
             return;
         }
         int range = Config.leafDecayRange();
-        if (!world.isAreaLoaded(pos, range + 1)) {
+        // Skip the check while part of the search area is unloaded, rather than deciding from missing blocks.
+        int loadedRange = this.canopyLog == null ? range + 1 : Math.max(range + 1, CANOPY_SUPPORT_RANGE);
+        if (!world.isAreaLoaded(pos, loadedRange)) {
             return;
         }
-        if (isSupported(world, pos, range)) {
+        if (hasCanopyLogNearby(world, pos) || isSupported(world, pos, range)) {
             world.setBlockState(pos, state.withProperty(CHECK_DECAY, false), 4);
         } else {
             this.dropBlockAsItem(world, pos, state, 0);
             world.setBlockToAir(pos);
         }
+    }
+
+    /** Wide crowns and sparse foliage count as supported by any of their own logs in range, even across gaps. */
+    private boolean hasCanopyLogNearby(World world, BlockPos pos) {
+        if (this.canopyLog == null) {
+            return false;
+        }
+        for (BlockPos.MutableBlockPos nearby : canopyPositions(pos)) {
+            if (withinCanopyRange(pos, nearby) && this.canopyLog.test(world.getBlockState(nearby).getBlock())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean isSupported(World world, BlockPos origin, int range) {

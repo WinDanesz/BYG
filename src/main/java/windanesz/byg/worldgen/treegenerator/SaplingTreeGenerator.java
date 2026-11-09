@@ -741,10 +741,7 @@ public final class SaplingTreeGenerator extends WorldGenAbstractTree implements 
         return true;
     }
 
-    /**
-     * An airy leaf mass with random holes, ported from the old maple NBT trees. Every leaf stays within
-     * four steps of the centre so it is not immediately decayed away from the limb it is centred on.
-     */
+    /** An airy leaf mass with random holes, ported from the old maple NBT trees. */
     private void placeMapleLeaves(World world, Random random, BlockPos center, int radius, int verticalRadius,
                                   float density, IBlockState leaves) {
         for (int y = -verticalRadius; y <= verticalRadius; y++) {
@@ -1388,7 +1385,8 @@ public final class SaplingTreeGenerator extends WorldGenAbstractTree implements 
         int canopyStart = matureTree && random.nextBoolean() ? 5 + random.nextInt(2) : (matureTree ? 3 : 1);
         int baseRadius = matureTree ? 5 : 3;
         int canopyHeight = height + 2 - canopyStart;
-        this.placeTrunk(world, position, canopyStart + 3 + random.nextInt(2));
+        // Run the trunk through the whole crown so even the tip has nearby support.
+        this.placeTrunk(world, position, height + 2);
         for (int layer = canopyStart; layer <= height + 1; layer++) {
             int crownLayer = layer - canopyStart;
             int radius = Math.max(1, baseRadius - (crownLayer * baseRadius / canopyHeight));
@@ -1406,6 +1404,23 @@ public final class SaplingTreeGenerator extends WorldGenAbstractTree implements 
         }
         if (random.nextInt(4) != 0) {
             this.placeLeaf(world, position.up(height + 2), leavesState);
+        }
+        this.placeHollyBranches(world, position, canopyStart, height, baseRadius, canopyHeight);
+    }
+
+    /** Hidden branch arms in the wide lower layers, so the rim of the crown stays within decay range of a log. */
+    private void placeHollyBranches(World world, BlockPos position, int canopyStart, int height, int baseRadius, int canopyHeight) {
+        for (int layer = canopyStart; layer <= height + 1; layer += 2) {
+            int radius = Math.max(1, baseRadius - ((layer - canopyStart) * baseRadius / canopyHeight));
+            if (radius < 4) {
+                break;
+            }
+            for (EnumFacing side : EnumFacing.HORIZONTALS) {
+                IBlockState arm = this.withLogAxis(this.logStateSupplier.get(), side.getAxis());
+                for (int i = 1; i < radius; i++) {
+                    this.placeLog(world, position.up(layer).offset(side, i), arm);
+                }
+            }
         }
     }
 
