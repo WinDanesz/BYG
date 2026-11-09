@@ -1,5 +1,6 @@
 package windanesz.byg.worldgen;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.BlockTallGrass;
 import net.minecraft.init.Blocks;
@@ -120,12 +121,21 @@ public final class MarshlandLandGenerator {
             y--;
             cursor = cursor.down();
         }
-        return world.getBlockState(cursor).getBlock() == Blocks.WATER ? y : -1;
+        return isWater(world, cursor) ? y : -1;
+    }
+
+    /**
+     * Templates notify their neighbours whatever flags they are placed with, which turns nearby water sources into
+     * flowing water. Skipping those would punch holes in the land, or a checkerboard if placing land notifies too.
+     */
+    private static boolean isWater(World world, BlockPos pos) {
+        Block block = world.getBlockState(pos).getBlock();
+        return block == Blocks.WATER || block == Blocks.FLOWING_WATER;
     }
 
     private static void raiseAndCoverWaterFloor(World world, BlockPos waterSurface, int targetDepth) {
         BlockPos floorPos = waterSurface.down();
-        while (floorPos.getY() > 0 && world.getBlockState(floorPos).getBlock() == Blocks.WATER) {
+        while (floorPos.getY() > 0 && isWater(world, floorPos)) {
             floorPos = floorPos.down();
         }
         if (floorPos.getY() <= 0) {
@@ -146,7 +156,7 @@ public final class MarshlandLandGenerator {
                 : Blocks.GRASS.getDefaultState(), WORLDGEN_FLAGS);
         for (int depth = 1; depth <= 3; depth++) {
             BlockPos below = surfacePos.down(depth);
-            if (world.getBlockState(below).getBlock() != Blocks.WATER) {
+            if (!isWater(world, below)) {
                 break;
             }
             world.setBlockState(below, Blocks.DIRT.getDefaultState(), WORLDGEN_FLAGS);
@@ -204,7 +214,7 @@ public final class MarshlandLandGenerator {
                     if (x < minX || x > maxX || z < minZ || z > maxZ) {
                         continue;
                     }
-                    if (world.getBlockState(new BlockPos(x, pos.getY(), z)).getBlock() == Blocks.WATER) {
+                    if (isWater(world, new BlockPos(x, pos.getY(), z))) {
                         return distance;
                     }
                 }
