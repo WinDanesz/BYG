@@ -16,6 +16,8 @@ A **creative-only** testing item, added when `biomeTeleporterItemsEnabled` is on
 
 Right-click a teleporter, and it teleports you to the **nearest instance of that biome**, searching up to about 25,000 blocks.
 
+Sneak + right-click to jump to a **different area of that biome** instead. It starts looking from a random point a few thousand blocks away and skips the patch of the biome you are standing in, along with the last 5 areas that teleporter remembers. If there is nothing new to find, it says so and forgets those areas, so the next try can return to them.
+
 ## Mud balls
 
 <ItemIcon id="mud_balls" name="Mud Balls" size={96} />

@@ -17,9 +17,18 @@ import java.util.Locale;
 
 public final class BiomeTeleportation {
     /** Cells are sampled at biome-generation resolution (4 blocks); a tile covers 64 x 64 cells. */
-    private static final int TILE_CELLS = 64;
+    public static final int TILE_CELLS = 64;
     private static final int TILE_BLOCKS = TILE_CELLS * 4;
     private static final int MAX_TILE_RADIUS = 48;
+    /** How far a search reaches (~ 25,000 blocks). */
+    public static final int MAX_SEARCH_BLOCKS = MAX_TILE_RADIUS * TILE_BLOCKS;
+
+    /** Decides whether a biome-generation cell may be chosen as a destination. */
+    public interface CellFilter {
+        CellFilter ALL = (cellX, cellZ) -> true;
+
+        boolean accepts(int cellX, int cellZ);
+    }
 
     private BiomeTeleportation() {
     }
@@ -38,16 +47,22 @@ public final class BiomeTeleportation {
         return null;
     }
 
+    /** Teleports the player to the nearest instance of the biome. */
     public static boolean teleport(EntityPlayerMP player, Biome biome, ICommandSender feedback) {
-        World world = player.world;
         feedback.sendMessage(msg(TextFormatting.GRAY, "message.byg.biome_teleporter.searching", biome.getBiomeName()));
-        BlockPos target = findBiome(world, biome, player.getPosition());
+        BlockPos target = findBiome(player.world, biome, player.getPosition(), CellFilter.ALL);
         if (target == null) {
             feedback.sendMessage(msg(TextFormatting.RED, "message.byg.biome_teleporter.not_found",
-                    biome.getBiomeName(), MAX_TILE_RADIUS * TILE_BLOCKS));
+                    biome.getBiomeName(), MAX_SEARCH_BLOCKS));
             return false;
         }
+        teleportTo(player, biome, target, feedback);
+        return true;
+    }
 
+    /** Moves the player onto the surface at the target column and reports where they landed and how far they went. */
+    public static void teleportTo(EntityPlayerMP player, Biome biome, BlockPos target, ICommandSender feedback) {
+        World world = player.world;
         // Load the surrounding chunks so decoration (trees etc.) exists before choosing the landing height.
         int chunkX = target.getX() >> 4;
         int chunkZ = target.getZ() >> 4;
@@ -57,22 +72,23 @@ public final class BiomeTeleportation {
             }
         }
         BlockPos ground = world.getTopSolidOrLiquidBlock(target);
+        BlockPos from = player.getPosition();
         player.dismountRidingEntity();
         player.connection.setPlayerLocation(ground.getX() + 0.5, ground.getY() + 1, ground.getZ() + 0.5,
                 player.rotationYaw, player.rotationPitch);
         player.fallDistance = 0;
         feedback.sendMessage(msg(TextFormatting.GREEN, "message.byg.biome_teleporter.teleported",
-                biome.getBiomeName(), ground.getX(), ground.getZ()));
-        return true;
+                biome.getBiomeName(), ground.getX(), ground.getZ(),
+                ground.getX() - from.getX(), ground.getY() + 1 - from.getY(), ground.getZ() - from.getZ()));
     }
 
-    private static ITextComponent msg(TextFormatting color, String key, Object... args) {
+    public static ITextComponent msg(TextFormatting color, String key, Object... args) {
         return new TextComponentTranslation(key, args).setStyle(new Style().setColor(color));
     }
 
-    /** Spirals outwards tile by tile and returns the matching cell closest to the tile centre, or null. */
+    /** Spirals outwards tile by tile and returns the accepted matching cell closest to the origin, or null. */
     @Nullable
-    private static BlockPos findBiome(World world, Biome wanted, BlockPos origin) {
+    public static BlockPos findBiome(World world, Biome wanted, BlockPos origin, CellFilter filter) {
         int originCellX = origin.getX() >> 2;
         int originCellZ = origin.getZ() >> 2;
         for (int radius = 0; radius <= MAX_TILE_RADIUS; radius++) {
@@ -87,7 +103,7 @@ public final class BiomeTeleportation {
                     int cellZ = originCellZ + tz * TILE_CELLS - TILE_CELLS / 2;
                     Biome[] biomes = world.getBiomeProvider().getBiomesForGeneration(null, cellX, cellZ, TILE_CELLS, TILE_CELLS);
                     for (int i = 0; i < biomes.length; i++) {
-                        if (biomes[i] != wanted) {
+                        if (biomes[i] != wanted || !filter.accepts(cellX + i % TILE_CELLS, cellZ + i / TILE_CELLS)) {
                             continue;
                         }
                         int x = (cellX + i % TILE_CELLS) * 4 + 2;
