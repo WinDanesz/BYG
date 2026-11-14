@@ -1,11 +1,14 @@
 package windanesz.byg.worldgen.treegenerator;
 
+import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import windanesz.byg.registry.ModBlocks;
+import windanesz.byg.worldgen.BygTreePlacement;
 
 import java.util.Random;
 
@@ -40,7 +43,7 @@ public final class RedwoodTreeGenerator extends WorldGenAbstractTree {
         for (BlockPos sapling : saplings) {
             world.setBlockState(sapling, Blocks.AIR.getDefaultState(), 2);
         }
-        if (generate(world, random, center)) {
+        if (generate(world, random, center, false)) {
             return true;
         }
         for (int i = 0; i < saplings.length; i++) {
@@ -51,6 +54,10 @@ public final class RedwoodTreeGenerator extends WorldGenAbstractTree {
 
     @Override
     public boolean generate(World world, Random random, BlockPos position) {
+        return generate(world, random, position, true);
+    }
+
+    private boolean generate(World world, Random random, BlockPos position, boolean keepApart) {
         // The giant form is deliberately rarer than the five ordinary forms.
         int choice = random.nextInt(16);
         int variant = choice < 10 ? choice % 5 : choice == 10 ? 5 : choice < 13 ? 6 : 7;
@@ -59,7 +66,9 @@ public final class RedwoodTreeGenerator extends WorldGenAbstractTree {
         if (position.getY() < 1 || position.getY() + height + 1 >= world.getHeight()
                 || !world.isAreaLoaded(position.add(-radius, 0, -radius),
                 position.add(radius, height + 1, radius))
-                || !canGrowOn(world, position.down())) {
+                || !canGrowOn(world, position.down())
+                || (keepApart && !BygTreePlacement.hasRoom(world, position.getX(), position.getZ(),
+                position.getX() - radius, position.getX() + radius, position.getZ() - radius, position.getZ() + radius))) {
             return false;
         }
         for (int y = 0; y < height; y++) {
@@ -117,7 +126,26 @@ public final class RedwoodTreeGenerator extends WorldGenAbstractTree {
         if (variant != 6 && variant != 7) {
             placeCrown(world, random, position.up(height - 2), 1, 2, leaves);
         }
+        placeCap(world, position.up(height - 1), leaves);
         return true;
+    }
+
+    private void placeCap(World world, BlockPos top, IBlockState leaves) {
+        for (int x = -1; x <= 1; x++) {
+            for (int z = -1; z <= 1; z++) {
+                placeLeaf(world, top.add(x, 0, z), leaves);
+                if (x == 0 || z == 0) {
+                    placeLeaf(world, top.add(x, 1, z), leaves);
+                }
+            }
+        }
+        placeLeaf(world, top.up(2), leaves);
+    }
+
+    private void placeLeaf(World world, BlockPos pos, IBlockState leaves) {
+        if (isReplaceable(world, pos)) {
+            setBlockAndNotifyAdequately(world, pos, leaves);
+        }
     }
 
     private boolean canPlaceReferenceTrunk(World world, BlockPos base, int height) {
@@ -153,7 +181,7 @@ public final class RedwoodTreeGenerator extends WorldGenAbstractTree {
             int reach = Math.max(1, radius - 1 - random.nextInt(2));
             for (int distance = 1; distance <= reach; distance++) {
                 placeLog(world, center.add(direction[0] * distance, 0,
-                        direction[1] * distance), log);
+                        direction[1] * distance), limbLog(log, direction));
             }
         }
         // A shallow rounded shelf leaves a visible gap before the next tier.
@@ -175,7 +203,7 @@ public final class RedwoodTreeGenerator extends WorldGenAbstractTree {
                 int branchReach = Math.max(1, reach - random.nextInt(2));
                 for (int distance = 1; distance <= branchReach; distance++) {
                     placeLog(world, base.add(direction[0] * distance, y + distance / 4,
-                            direction[1] * distance), log);
+                            direction[1] * distance), limbLog(log, direction));
                 }
                 BlockPos tip = base.add(direction[0] * branchReach,
                         y + branchReach / 4, direction[1] * branchReach);
@@ -242,7 +270,7 @@ public final class RedwoodTreeGenerator extends WorldGenAbstractTree {
             int reach = 2 + random.nextInt(2);
             for (int distance = 1; distance <= reach; distance++) {
                 placeLog(world, base.add(direction[0] * distance, y + distance / 2,
-                        direction[1] * distance), log);
+                        direction[1] * distance), limbLog(log, direction));
             }
             placeCrown(world, random, base.add(direction[0] * reach, y + 2,
                     direction[1] * reach), 1, 1, leaves);
@@ -265,7 +293,7 @@ public final class RedwoodTreeGenerator extends WorldGenAbstractTree {
                 int branchReach = Math.max(2, reach - random.nextInt(2));
                 for (int distance = 1; distance <= branchReach; distance++) {
                     placeLog(world, base.add(direction[0] * distance,
-                            y + distance / 3, direction[1] * distance), log);
+                            y + distance / 3, direction[1] * distance), limbLog(log, direction));
                 }
                 placeCrown(world, random, base.add(direction[0] * branchReach,
                         y + branchReach / 3, direction[1] * branchReach),
@@ -291,6 +319,10 @@ public final class RedwoodTreeGenerator extends WorldGenAbstractTree {
                 }
             }
         }
+    }
+
+    private static IBlockState limbLog(IBlockState log, int[] direction) {
+        return log.withProperty(BlockDirectional.FACING, direction[0] != 0 ? EnumFacing.UP : EnumFacing.EAST);
     }
 
     private void placeLog(World world, BlockPos pos, IBlockState log) {
