@@ -14,6 +14,7 @@ import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import windanesz.byg.Config;
 import windanesz.byg.blocks.BlockSappyMapleLog;
 import windanesz.byg.registry.ModBlocks;
+import windanesz.byg.worldgen.BygTreePlacement;
 
 import java.util.Random;
 import java.util.function.Supplier;
@@ -113,7 +114,7 @@ public final class SaplingTreeGenerator extends WorldGenAbstractTree implements 
         for (BlockPos pos : positions) {
             world.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
         }
-        if (this.generate(world, random, center)) {
+        if (this.place(world, random, center)) {
             return true;
         }
         for (int i = 0; i < positions.length; i++) {
@@ -124,11 +125,18 @@ public final class SaplingTreeGenerator extends WorldGenAbstractTree implements 
 
     @Override
     public boolean growTree(World world, Random random, BlockPos position) {
-        return this.generate(world, random, position);
+        return this.place(world, random, position);
     }
 
     @Override
     public boolean generate(World world, Random random, BlockPos position) {
+        int radius = this.getMaxLeafRadius();
+        return BygTreePlacement.hasRoom(world, position.getX(), position.getZ(),
+                position.getX() - radius, position.getX() + radius, position.getZ() - radius, position.getZ() + radius)
+                && this.place(world, random, position);
+    }
+
+    private boolean place(World world, Random random, BlockPos position) {
         if (this.style == TreeStyle.EBONY) {
             return this.generateEbony(world, random, position);
         }
@@ -1958,7 +1966,7 @@ public final class SaplingTreeGenerator extends WorldGenAbstractTree implements 
     private void placeMahoganyCanopy(World world, Random random, BlockPos base, int height) {
         IBlockState leaves = this.leavesStateSupplier.get();
         IBlockState log = this.logStateSupplier.get();
-        // A wide, shallow crown above smaller platforms carried by side branches.
+        // A wide crown tapering to a plus-shaped tip, above smaller platforms carried by side branches.
         for (int layer = 0; layer < 3; layer++) {
             int radius = layer == 1 ? 5 : 4;
             int y = height - 3 + layer;
@@ -1968,6 +1976,16 @@ public final class SaplingTreeGenerator extends WorldGenAbstractTree implements 
                         continue;
                     }
                     this.placeLeaf(world, base.add(x, y, z), leaves);
+                }
+            }
+        }
+        for (int layer = 0; layer < 3; layer++) {
+            int radius = 3 - layer;
+            for (int x = -radius; x <= radius; x++) {
+                for (int z = -radius; z <= radius; z++) {
+                    if (Math.abs(x) != radius || Math.abs(z) != radius) {
+                        this.placeLeaf(world, base.add(x, height + layer, z), leaves);
+                    }
                 }
             }
         }
@@ -2080,6 +2098,8 @@ public final class SaplingTreeGenerator extends WorldGenAbstractTree implements 
             case REDWOOD:
             case MANGROVE:
                 return 5;
+            case MAHOGANY:
+                return 3;
             case FIR:
                 return 5;
             case TALL_WIZARD_HAT:
