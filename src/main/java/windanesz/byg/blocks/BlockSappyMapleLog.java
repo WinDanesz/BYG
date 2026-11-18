@@ -75,6 +75,12 @@ public class BlockSappyMapleLog extends Block {
         return true;
     }
 
+    // It always stands upright, so it can't be a vanilla log, but other mods should still treat it as one
+    @Override
+    public boolean isWood(IBlockAccess world, BlockPos pos) {
+        return true;
+    }
+
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         super.breakBlock(world, pos, state);

@@ -1,31 +1,19 @@
 {
   "variants": {
-    "normal": {
+    "axis=y": {
       "model": "byg:maple_log"
     },
-    "facing=south": {
-      "model": "byg:maple_log"
-    },
-    "facing=north": {
-      "model": "byg:maple_log"
-    },
-    "facing=east": {
+    "axis=z": {
       "model": "byg:maple_log",
       "x": 90
     },
-    "facing=west": {
-      "model": "byg:maple_log",
-      "x": 90
-    },
-    "facing=up": {
+    "axis=x": {
       "model": "byg:maple_log",
       "x": 90,
       "y": 90
     },
-    "facing=down": {
-      "model": "byg:maple_log",
-      "x": 90,
-      "y": 90
+    "axis=none": {
+      "model": "byg:maple_log"
     }
   }
 }

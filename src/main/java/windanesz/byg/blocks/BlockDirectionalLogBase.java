@@ -1,14 +1,9 @@
 package windanesz.byg.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockLog;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -16,8 +11,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import windanesz.byg.client.BYGTab;
 
-public class BlockDirectionalLogBase extends Block {
-    private static final PropertyDirection FACING = BlockDirectional.FACING;
+public class BlockDirectionalLogBase extends BlockLog {
     private final boolean silkHarvest;
     private final boolean supportsWideCanopy;
 
@@ -26,7 +20,6 @@ public class BlockDirectionalLogBase extends Block {
     }
 
     public BlockDirectionalLogBase(String name, int harvestLevel, boolean silkHarvest, boolean supportsWideCanopy) {
-        super(Material.WOOD);
         this.silkHarvest = silkHarvest;
         this.supportsWideCanopy = supportsWideCanopy;
         this.setRegistryName(name);
@@ -38,28 +31,44 @@ public class BlockDirectionalLogBase extends Block {
         this.setLightLevel(0.0f);
         this.setLightOpacity(255);
         this.setCreativeTab(BYGTab.tab);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.SOUTH));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(LOG_AXIS, BlockLog.EnumAxis.Y));
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]{FACING});
+        return new BlockStateContainer(this, LOG_AXIS);
     }
 
+    // The logs used to store a facing, which still has to read back as the same axis in existing worlds:
+    // 0-1 (down, up) lay along x, 2-3 (north, south) stood upright, 4-5 (west, east) lay along z
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(FACING, EnumFacing.byIndex(meta));
+        switch (meta) {
+            case 0:
+            case 1:
+                return this.getDefaultState().withProperty(LOG_AXIS, BlockLog.EnumAxis.X);
+            case 4:
+            case 5:
+                return this.getDefaultState().withProperty(LOG_AXIS, BlockLog.EnumAxis.Z);
+            case 6:
+                return this.getDefaultState().withProperty(LOG_AXIS, BlockLog.EnumAxis.NONE);
+            default:
+                return this.getDefaultState();
+        }
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(FACING).getIndex();
-    }
-
-    @Override
-    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        facing = facing == EnumFacing.WEST || facing == EnumFacing.EAST ? EnumFacing.UP : (facing == EnumFacing.NORTH || facing == EnumFacing.SOUTH ? EnumFacing.EAST : EnumFacing.SOUTH);
-        return this.getDefaultState().withProperty(FACING, facing);
+        switch (state.getValue(LOG_AXIS)) {
+            case X:
+                return 1;
+            case Z:
+                return 5;
+            case NONE:
+                return 6;
+            default:
+                return 3;
+        }
     }
 
     @Override
@@ -73,11 +82,6 @@ public class BlockDirectionalLogBase extends Block {
     }
 
     @Override
-    public boolean canSustainLeaves(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return true;
-    }
-
-    @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         super.breakBlock(world, pos, state);
         if (this.supportsWideCanopy) {
@@ -85,4 +89,3 @@ public class BlockDirectionalLogBase extends Block {
         }
     }
 }
-

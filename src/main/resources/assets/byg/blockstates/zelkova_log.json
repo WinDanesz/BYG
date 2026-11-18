@@ -1,31 +1,19 @@
 {
   "variants": {
-    "normal": {
+    "axis=y": {
       "model": "byg:zelkova_log"
     },
-    "facing=south": {
-      "model": "byg:zelkova_log"
-    },
-    "facing=north": {
-      "model": "byg:zelkova_log"
-    },
-    "facing=east": {
+    "axis=z": {
       "model": "byg:zelkova_log",
       "x": 90
     },
-    "facing=west": {
-      "model": "byg:zelkova_log",
-      "x": 90
-    },
-    "facing=up": {
+    "axis=x": {
       "model": "byg:zelkova_log",
       "x": 90,
       "y": 90
     },
-    "facing=down": {
-      "model": "byg:zelkova_log",
-      "x": 90,
-      "y": 90
+    "axis=none": {
+      "model": "byg:zelkova_log"
     }
   }
 }

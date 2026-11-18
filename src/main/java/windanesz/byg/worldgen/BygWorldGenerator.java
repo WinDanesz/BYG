@@ -2,6 +2,7 @@ package windanesz.byg.worldgen;
 
 import com.google.common.base.Predicate;
 import net.minecraft.block.*;
+import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -286,7 +287,7 @@ public final class BygWorldGenerator implements IWorldGenerator {
         }
 
         IBlockState logState = ModBlocks.mangrove_log.getDefaultState()
-                .withProperty(BlockDirectional.FACING, alongX ? EnumFacing.UP : EnumFacing.EAST);
+                .withProperty(BlockLog.LOG_AXIS, alongX ? BlockLog.EnumAxis.X : BlockLog.EnumAxis.Z);
         for (int offset = 0; offset < length; ++offset) {
             world.setBlockState(surfacePos.add(stepX * offset, 0, stepZ * offset), logState, 2);
         }
@@ -655,7 +656,7 @@ public final class BygWorldGenerator implements IWorldGenerator {
         }
         Block logBlock = willow && !(cypress && random.nextInt(5) == 0) ? ModBlocks.willow_log : ModBlocks.cypress_log;
         IBlockState logState = logBlock.getDefaultState()
-                .withProperty(BlockDirectional.FACING, bestAlongX ? EnumFacing.UP : EnumFacing.EAST);
+                .withProperty(BlockLog.LOG_AXIS, bestAlongX ? BlockLog.EnumAxis.X : BlockLog.EnumAxis.Z);
         int stepX = bestAlongX ? 1 : 0;
         int stepZ = bestAlongX ? 0 : 1;
         for (int offset = 0; offset < bestLength; offset++) {

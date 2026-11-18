@@ -1,31 +1,19 @@
 {
   "variants": {
-    "normal": {
+    "axis=y": {
       "model": "byg:cika_log"
     },
-    "facing=south": {
-      "model": "byg:cika_log"
-    },
-    "facing=north": {
-      "model": "byg:cika_log"
-    },
-    "facing=east": {
+    "axis=z": {
       "model": "byg:cika_log",
       "x": 90
     },
-    "facing=west": {
-      "model": "byg:cika_log",
-      "x": 90
-    },
-    "facing=up": {
+    "axis=x": {
       "model": "byg:cika_log",
       "x": 90,
       "y": 90
     },
-    "facing=down": {
-      "model": "byg:cika_log",
-      "x": 90,
-      "y": 90
+    "axis=none": {
+      "model": "byg:cika_log"
     }
   }
 }

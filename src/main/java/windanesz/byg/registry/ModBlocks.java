@@ -1757,7 +1757,7 @@ public final class ModBlocks {
 
         registerBlock(registry, new BlockShearableLeavesBase("rainbow_eucalyptus_leaves", -1, () -> ModBlocks.rainbow_eucalyptus_leaves, () -> new ItemStack(ModBlocks.rainbow_eucalyptus_sapling, 1), 0.03, 0, 0.0f, net.minecraft.util.BlockRenderLayer.CUTOUT_MIPPED, false));
 
-        registerBlock(registry, new BlockRainboweucalyptuslog());
+        registerBlock(registry, new BlockDirectionalLogBase("rainbow_eucalyptus_log", 0, false));
 
         registerBlock(registry, new BlockPlanksBase("rainbow_eucalyptus_planks",  0, 2.0f, 8.0f, 255, true));
 

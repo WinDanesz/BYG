@@ -1,31 +1,19 @@
 {
   "variants": {
-    "normal": {
+    "axis=y": {
       "model": "byg:frozen_oak_log"
     },
-    "facing=south": {
-      "model": "byg:frozen_oak_log"
-    },
-    "facing=north": {
-      "model": "byg:frozen_oak_log"
-    },
-    "facing=east": {
+    "axis=z": {
       "model": "byg:frozen_oak_log",
       "x": 90
     },
-    "facing=west": {
-      "model": "byg:frozen_oak_log",
-      "x": 90
-    },
-    "facing=up": {
+    "axis=x": {
       "model": "byg:frozen_oak_log",
       "x": 90,
       "y": 90
     },
-    "facing=down": {
-      "model": "byg:frozen_oak_log",
-      "x": 90,
-      "y": 90
+    "axis=none": {
+      "model": "byg:frozen_oak_log"
     }
   }
 }

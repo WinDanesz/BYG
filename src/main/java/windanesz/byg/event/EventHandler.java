@@ -3,6 +3,7 @@ package windanesz.byg.event;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -308,7 +309,9 @@ public final class EventHandler {
             return;
         }
         IBlockState strippedState = stripped.getDefaultState();
-        if (state.getPropertyKeys().contains(BlockDirectional.FACING) && strippedState.getPropertyKeys().contains(BlockDirectional.FACING)) {
+        if (state.getPropertyKeys().contains(BlockLog.LOG_AXIS) && strippedState.getPropertyKeys().contains(BlockLog.LOG_AXIS)) {
+            strippedState = strippedState.withProperty(BlockLog.LOG_AXIS, state.getValue(BlockLog.LOG_AXIS));
+        } else if (state.getPropertyKeys().contains(BlockDirectional.FACING) && strippedState.getPropertyKeys().contains(BlockDirectional.FACING)) {
             strippedState = strippedState.withProperty(BlockDirectional.FACING, state.getValue(BlockDirectional.FACING));
         }
         world.setBlockState(pos, strippedState, 11);

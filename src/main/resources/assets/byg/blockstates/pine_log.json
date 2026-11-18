@@ -1,31 +1,19 @@
 {
   "variants": {
-    "normal": {
+    "axis=y": {
       "model": "byg:pine_log"
     },
-    "facing=south": {
-      "model": "byg:pine_log"
-    },
-    "facing=north": {
-      "model": "byg:pine_log"
-    },
-    "facing=east": {
+    "axis=z": {
       "model": "byg:pine_log",
       "x": 90
     },
-    "facing=west": {
-      "model": "byg:pine_log",
-      "x": 90
-    },
-    "facing=up": {
+    "axis=x": {
       "model": "byg:pine_log",
       "x": 90,
       "y": 90
     },
-    "facing=down": {
-      "model": "byg:pine_log",
-      "x": 90,
-      "y": 90
+    "axis=none": {
+      "model": "byg:pine_log"
     }
   }
 }

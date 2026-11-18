@@ -1,31 +1,19 @@
 {
   "variants": {
-    "normal": {
+    "axis=y": {
       "model": "byg:stripped_rowan_log"
     },
-    "facing=south": {
-      "model": "byg:stripped_rowan_log"
-    },
-    "facing=north": {
-      "model": "byg:stripped_rowan_log"
-    },
-    "facing=east": {
+    "axis=z": {
       "model": "byg:stripped_rowan_log",
       "x": 90
     },
-    "facing=west": {
-      "model": "byg:stripped_rowan_log",
-      "x": 90
-    },
-    "facing=up": {
+    "axis=x": {
       "model": "byg:stripped_rowan_log",
       "x": 90,
       "y": 90
     },
-    "facing=down": {
-      "model": "byg:stripped_rowan_log",
-      "x": 90,
-      "y": 90
+    "axis=none": {
+      "model": "byg:stripped_rowan_log"
     }
   }
 }

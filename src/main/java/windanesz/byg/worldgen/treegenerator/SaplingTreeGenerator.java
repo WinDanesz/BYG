@@ -2,7 +2,7 @@ package windanesz.byg.worldgen.treegenerator;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
-import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -878,11 +878,10 @@ public final class SaplingTreeGenerator extends WorldGenAbstractTree implements 
     }
 
     private IBlockState withLogAxis(IBlockState logState, EnumFacing.Axis axis) {
-        if (!logState.getPropertyKeys().contains(BlockDirectional.FACING)) {
+        if (!logState.getPropertyKeys().contains(BlockLog.LOG_AXIS)) {
             return logState;
         }
-        // BlockDirectionalLogBase: SOUTH = vertical, UP = X axis, EAST = Z axis.
-        return logState.withProperty(BlockDirectional.FACING, axis == EnumFacing.Axis.X ? EnumFacing.UP : EnumFacing.EAST);
+        return logState.withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.fromFacingAxis(axis));
     }
 
     private void placeSkyrisDisc(World world, Random random, BlockPos center, int radius) {

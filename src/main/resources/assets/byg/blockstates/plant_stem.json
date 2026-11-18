@@ -1,31 +1,19 @@
 {
   "variants": {
-    "normal": {
+    "axis=y": {
       "model": "byg:plant_stem"
     },
-    "facing=south": {
-      "model": "byg:plant_stem"
-    },
-    "facing=north": {
-      "model": "byg:plant_stem"
-    },
-    "facing=east": {
+    "axis=z": {
       "model": "byg:plant_stem",
       "x": 90
     },
-    "facing=west": {
-      "model": "byg:plant_stem",
-      "x": 90
-    },
-    "facing=up": {
+    "axis=x": {
       "model": "byg:plant_stem",
       "x": 90,
       "y": 90
     },
-    "facing=down": {
-      "model": "byg:plant_stem",
-      "x": 90,
-      "y": 90
+    "axis=none": {
+      "model": "byg:plant_stem"
     }
   }
 }

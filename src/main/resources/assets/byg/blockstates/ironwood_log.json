@@ -1,31 +1,19 @@
 {
   "variants": {
-    "normal": {
+    "axis=y": {
       "model": "byg:ironwood_log"
     },
-    "facing=south": {
-      "model": "byg:ironwood_log"
-    },
-    "facing=north": {
-      "model": "byg:ironwood_log"
-    },
-    "facing=east": {
+    "axis=z": {
       "model": "byg:ironwood_log",
       "x": 90
     },
-    "facing=west": {
-      "model": "byg:ironwood_log",
-      "x": 90
-    },
-    "facing=up": {
+    "axis=x": {
       "model": "byg:ironwood_log",
       "x": 90,
       "y": 90
     },
-    "facing=down": {
-      "model": "byg:ironwood_log",
-      "x": 90,
-      "y": 90
+    "axis=none": {
+      "model": "byg:ironwood_log"
     }
   }
 }

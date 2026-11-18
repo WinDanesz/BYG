@@ -2,7 +2,7 @@ package windanesz.byg.worldgen.treegenerator;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
-import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -165,8 +165,8 @@ public final class MangroveTreeGenerator extends WorldGenAbstractTree {
         for (int branch = 0; branch < branchCount; branch++) {
             double angle = phase + Math.PI * 2.0D * branch / branchCount + (random.nextDouble() - 0.5D) * 0.4D;
             int length = 2 + random.nextInt(4);
-            IBlockState limb = log.withProperty(BlockDirectional.FACING,
-                    Math.abs(Math.cos(angle)) >= Math.abs(Math.sin(angle)) ? EnumFacing.UP : EnumFacing.EAST);
+            IBlockState limb = log.withProperty(BlockLog.LOG_AXIS,
+                    Math.abs(Math.cos(angle)) >= Math.abs(Math.sin(angle)) ? BlockLog.EnumAxis.X : BlockLog.EnumAxis.Z);
             for (int step = 0; step <= length; step++) {
                 int x = (int) Math.round(Math.cos(angle) * step);
                 int z = (int) Math.round(Math.sin(angle) * step);

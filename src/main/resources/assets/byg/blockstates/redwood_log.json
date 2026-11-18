@@ -1,31 +1,19 @@
 {
   "variants": {
-    "normal": {
+    "axis=y": {
       "model": "byg:redwood_log"
     },
-    "facing=south": {
-      "model": "byg:redwood_log"
-    },
-    "facing=north": {
-      "model": "byg:redwood_log"
-    },
-    "facing=east": {
+    "axis=z": {
       "model": "byg:redwood_log",
       "x": 90
     },
-    "facing=west": {
-      "model": "byg:redwood_log",
-      "x": 90
-    },
-    "facing=up": {
+    "axis=x": {
       "model": "byg:redwood_log",
       "x": 90,
       "y": 90
     },
-    "facing=down": {
-      "model": "byg:redwood_log",
-      "x": 90,
-      "y": 90
+    "axis=none": {
+      "model": "byg:redwood_log"
     }
   }
 }

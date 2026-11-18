@@ -1,6 +1,6 @@
 package windanesz.byg.worldgen.treegenerator;
 
-import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -46,7 +46,7 @@ public final class AspenTreeGenerator extends WorldGenAbstractTree {
         placeCrown(world, random, position.up(height), leaves);
         placeTufts(world, random, position, height, leaves);
         for (int y = 0; y <= height; y++) {
-            this.setBlockAndNotifyAdequately(world, position.up(y), log.withProperty(BlockDirectional.FACING, EnumFacing.SOUTH));
+            this.setBlockAndNotifyAdequately(world, position.up(y), log.withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
         }
         placeBranches(world, random, position, height, log, leaves);
         if (large) {
@@ -92,9 +92,9 @@ public final class AspenTreeGenerator extends WorldGenAbstractTree {
             if (!canReplace(world, branch)) {
                 continue;
             }
-            // Log axis: X = facing UP, Z = facing EAST (see BlockDirectionalLogBase).
-            EnumFacing axis = side.getAxis() == EnumFacing.Axis.X ? EnumFacing.UP : EnumFacing.EAST;
-            this.setBlockAndNotifyAdequately(world, branch, log.withProperty(BlockDirectional.FACING, axis));
+            // Branches run horizontally, along the side they grow towards.
+            BlockLog.EnumAxis axis = BlockLog.EnumAxis.fromFacingAxis(side.getAxis());
+            this.setBlockAndNotifyAdequately(world, branch, log.withProperty(BlockLog.LOG_AXIS, axis));
             setLeaf(world, branch.offset(side), leaves);
             setLeaf(world, branch.up(), leaves);
             setLeaf(world, branch.offset(side.rotateY()), leaves);
@@ -111,7 +111,7 @@ public final class AspenTreeGenerator extends WorldGenAbstractTree {
             }
             for (int y = 0; y < armHeight; y++) {
                 if (canReplace(world, arm.up(y))) {
-                    this.setBlockAndNotifyAdequately(world, arm.up(y), log.withProperty(BlockDirectional.FACING, EnumFacing.SOUTH));
+                    this.setBlockAndNotifyAdequately(world, arm.up(y), log.withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
                 }
             }
         }

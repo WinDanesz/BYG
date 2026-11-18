@@ -1,6 +1,7 @@
 package windanesz.byg.items;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockSlab;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,7 +44,7 @@ public class ItemWoodSlab extends ItemBlock {
             return false;
         }
 
-        IBlockState mergedState = state.withProperty(BlockWoodSlabBase.DOUBLE, true).withProperty(BlockWoodSlabBase.HALF, BlockWoodSlabBase.SlabHalf.BOTTOM);
+        IBlockState mergedState = state.withProperty(BlockWoodSlabBase.DOUBLE, true).withProperty(BlockWoodSlabBase.HALF, BlockSlab.EnumBlockHalf.BOTTOM);
         SoundType soundType = this.block.getSoundType(mergedState, world, pos, player);
         if (!world.isRemote) {
             world.setBlockState(pos, mergedState, 11);

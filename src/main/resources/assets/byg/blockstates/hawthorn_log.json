@@ -1,31 +1,19 @@
 {
   "variants": {
-    "normal": {
+    "axis=y": {
       "model": "byg:hawthorn_log"
     },
-    "facing=south": {
-      "model": "byg:hawthorn_log"
-    },
-    "facing=north": {
-      "model": "byg:hawthorn_log"
-    },
-    "facing=east": {
+    "axis=z": {
       "model": "byg:hawthorn_log",
       "x": 90
     },
-    "facing=west": {
-      "model": "byg:hawthorn_log",
-      "x": 90
-    },
-    "facing=up": {
+    "axis=x": {
       "model": "byg:hawthorn_log",
       "x": 90,
       "y": 90
     },
-    "facing=down": {
-      "model": "byg:hawthorn_log",
-      "x": 90,
-      "y": 90
+    "axis=none": {
+      "model": "byg:hawthorn_log"
     }
   }
 }

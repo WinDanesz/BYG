@@ -1,31 +1,19 @@
 {
   "variants": {
-    "normal": {
+    "axis=y": {
       "model": "byg:fir_log"
     },
-    "facing=south": {
-      "model": "byg:fir_log"
-    },
-    "facing=north": {
-      "model": "byg:fir_log"
-    },
-    "facing=east": {
+    "axis=z": {
       "model": "byg:fir_log",
       "x": 90
     },
-    "facing=west": {
-      "model": "byg:fir_log",
-      "x": 90
-    },
-    "facing=up": {
+    "axis=x": {
       "model": "byg:fir_log",
       "x": 90,
       "y": 90
     },
-    "facing=down": {
-      "model": "byg:fir_log",
-      "x": 90,
-      "y": 90
+    "axis=none": {
+      "model": "byg:fir_log"
     }
   }
 }

@@ -1,31 +1,19 @@
 {
   "variants": {
-    "normal": {
+    "axis=y": {
       "model": "byg:palm_log"
     },
-    "facing=south": {
-      "model": "byg:palm_log"
-    },
-    "facing=north": {
-      "model": "byg:palm_log"
-    },
-    "facing=east": {
+    "axis=z": {
       "model": "byg:palm_log",
       "x": 90
     },
-    "facing=west": {
-      "model": "byg:palm_log",
-      "x": 90
-    },
-    "facing=up": {
+    "axis=x": {
       "model": "byg:palm_log",
       "x": 90,
       "y": 90
     },
-    "facing=down": {
-      "model": "byg:palm_log",
-      "x": 90,
-      "y": 90
+    "axis=none": {
+      "model": "byg:palm_log"
     }
   }
 }

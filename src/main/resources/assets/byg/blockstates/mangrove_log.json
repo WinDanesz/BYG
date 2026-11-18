@@ -1,31 +1,19 @@
 {
   "variants": {
-    "normal": {
+    "axis=y": {
       "model": "byg:mangrove_log"
     },
-    "facing=south": {
-      "model": "byg:mangrove_log"
-    },
-    "facing=north": {
-      "model": "byg:mangrove_log"
-    },
-    "facing=east": {
+    "axis=z": {
       "model": "byg:mangrove_log",
       "x": 90
     },
-    "facing=west": {
-      "model": "byg:mangrove_log",
-      "x": 90
-    },
-    "facing=up": {
+    "axis=x": {
       "model": "byg:mangrove_log",
       "x": 90,
       "y": 90
     },
-    "facing=down": {
-      "model": "byg:mangrove_log",
-      "x": 90,
-      "y": 90
+    "axis=none": {
+      "model": "byg:mangrove_log"
     }
   }
 }

@@ -1,31 +1,19 @@
 {
   "variants": {
-    "normal": {
+    "axis=y": {
       "model": "byg:willow_log"
     },
-    "facing=south": {
-      "model": "byg:willow_log"
-    },
-    "facing=north": {
-      "model": "byg:willow_log"
-    },
-    "facing=east": {
+    "axis=z": {
       "model": "byg:willow_log",
       "x": 90
     },
-    "facing=west": {
-      "model": "byg:willow_log",
-      "x": 90
-    },
-    "facing=up": {
+    "axis=x": {
       "model": "byg:willow_log",
       "x": 90,
       "y": 90
     },
-    "facing=down": {
-      "model": "byg:willow_log",
-      "x": 90,
-      "y": 90
+    "axis=none": {
+      "model": "byg:willow_log"
     }
   }
 }

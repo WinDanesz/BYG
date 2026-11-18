@@ -1,7 +1,7 @@
 package windanesz.byg.worldgen.treegenerator;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -58,8 +58,8 @@ import java.util.Random;
             double angle = Math.PI * 2.0 * branch / 7.0 + random.nextDouble() * 0.35;
             int length = 3 + random.nextInt(3);
             int baseY = height - 5 + random.nextInt(3);
-            IBlockState limbLog = log.withProperty(BlockDirectional.FACING,
-                    Math.abs(Math.cos(angle)) >= Math.abs(Math.sin(angle)) ? EnumFacing.UP : EnumFacing.EAST);
+            IBlockState limbLog = log.withProperty(BlockLog.LOG_AXIS,
+                    Math.abs(Math.cos(angle)) >= Math.abs(Math.sin(angle)) ? BlockLog.EnumAxis.X : BlockLog.EnumAxis.Z);
             BlockPos tip = origin.up(baseY);
             for (int step = 1; step <= length; step++) {
                 BlockPos limb = origin.add((int) Math.round(Math.cos(angle) * step),

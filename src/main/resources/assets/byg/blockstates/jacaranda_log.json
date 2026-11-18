@@ -1,31 +1,19 @@
 {
   "variants": {
-    "normal": {
+    "axis=y": {
       "model": "byg:jacaranda_log"
     },
-    "facing=south": {
-      "model": "byg:jacaranda_log"
-    },
-    "facing=north": {
-      "model": "byg:jacaranda_log"
-    },
-    "facing=east": {
+    "axis=z": {
       "model": "byg:jacaranda_log",
       "x": 90
     },
-    "facing=west": {
-      "model": "byg:jacaranda_log",
-      "x": 90
-    },
-    "facing=up": {
+    "axis=x": {
       "model": "byg:jacaranda_log",
       "x": 90,
       "y": 90
     },
-    "facing=down": {
-      "model": "byg:jacaranda_log",
-      "x": 90,
-      "y": 90
+    "axis=none": {
+      "model": "byg:jacaranda_log"
     }
   }
 }

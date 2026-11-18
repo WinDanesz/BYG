@@ -16,6 +16,7 @@ import windanesz.byg.command.CommandByg;
 import windanesz.byg.event.TerrainGenEventHandler;
 import windanesz.byg.init.BygInitialization;
 import windanesz.byg.proxy.IProxyBYG;
+import windanesz.byg.registry.ModDataFixes;
 import windanesz.byg.registry.OreDictionaryEntries;
 import windanesz.byg.worldgen.BygWorldGenerator;
 
@@ -39,6 +40,7 @@ public class BiomesYouGo {
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandlerBYG());
         MinecraftForge.TERRAIN_GEN_BUS.register(new TerrainGenEventHandler());
         BygInitialization.preInit(event);
+        ModDataFixes.register();
         proxy.preInit(event);
     }
 

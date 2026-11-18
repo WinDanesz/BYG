@@ -1,6 +1,6 @@
 package windanesz.byg.worldgen.treegenerator;
 
-import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
@@ -32,11 +32,12 @@ public abstract class WoodlandTreeGenerator extends WorldGenAbstractTree impleme
         }
     }
 
-    /** Log state for a trunk running along the given axis (vertical = SOUTH, X = UP, Z = EAST). */
+    /** Log state for a trunk running along the given axis. */
     protected static IBlockState log(IBlockState log, EnumFacing.Axis axis) {
-        EnumFacing facing = axis == EnumFacing.Axis.Y ? EnumFacing.SOUTH
-                : axis == EnumFacing.Axis.X ? EnumFacing.UP : EnumFacing.EAST;
-        return log.withProperty(BlockDirectional.FACING, facing);
+        if (!log.getPropertyKeys().contains(BlockLog.LOG_AXIS)) {
+            return log;
+        }
+        return log.withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.fromFacingAxis(axis));
     }
 
     protected static EnumFacing randomSide(Random random) {

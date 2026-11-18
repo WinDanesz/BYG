@@ -1,6 +1,6 @@
 package windanesz.byg.worldgen.treegenerator;
 
-import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockLog;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
@@ -322,7 +322,7 @@ public final class RedwoodTreeGenerator extends WorldGenAbstractTree {
     }
 
     private static IBlockState limbLog(IBlockState log, int[] direction) {
-        return log.withProperty(BlockDirectional.FACING, direction[0] != 0 ? EnumFacing.UP : EnumFacing.EAST);
+        return log.withProperty(BlockLog.LOG_AXIS, direction[0] != 0 ? BlockLog.EnumAxis.X : BlockLog.EnumAxis.Z);
     }
 
     private void placeLog(World world, BlockPos pos, IBlockState log) {
