@@ -5,6 +5,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -74,9 +76,28 @@ public final class EventHandler {
         if (item == Items.AIR || !isCuttablePlant(state)) {
             return;
         }
-        event.getDrops().clear();
-        event.getDrops().add(new ItemStack(item, 1, block.damageDropped(state)));
+        List<ItemStack> drops = event.getDrops();
+        if (hasGrowthStage(state)) {
+            // Keep what the plant yields at this stage (ripe berries, fruit, beans) and add the plant itself.
+            for (ItemStack drop : drops) {
+                if (drop.getItem() == item) {
+                    return;
+                }
+            }
+        } else {
+            drops.clear();
+        }
+        drops.add(new ItemStack(item, 1, block.damageDropped(state)));
         event.setDropChance(1.0f);
+    }
+
+    private static boolean hasGrowthStage(IBlockState state) {
+        for (IProperty<?> property : state.getPropertyKeys()) {
+            if (property instanceof PropertyInteger && ("stage".equals(property.getName()) || "age".equals(property.getName()))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean isShears(ItemStack stack) {

@@ -498,7 +498,7 @@ public final class BygWorldGenerator implements IWorldGenerator {
         int count = Config.scaleClusterPlantAttempts(attempts);
         for (int i = 0; i < count; ++i) {
             BlockPos placePos = findGroundPlacementThroughLeaves(world, centeredChunkCoordinate(random, chunkX), centeredChunkCoordinate(random, chunkZ));
-            if (placePos == null) {
+            if (placePos == null || !canPlaceOnGround(world, placePos, block)) {
                 continue;
             }
             IBlockState state = block.getDefaultState();
@@ -507,6 +507,18 @@ public final class BygWorldGenerator implements IWorldGenerator {
             }
             world.setBlockState(placePos, state, 2);
         }
+    }
+
+    /** Pebbles and spikes need an empty spot (no snow layer to overwrite) on top of solid, non-ice ground. */
+    private static boolean canPlaceOnGround(World world, BlockPos placePos, Block block) {
+        if (!world.isAirBlock(placePos) || !block.canPlaceBlockAt(world, placePos)) {
+            return false;
+        }
+        BlockPos groundPos = placePos.down();
+        IBlockState ground = world.getBlockState(groundPos);
+        Material material = ground.getMaterial();
+        return material != Material.ICE && material != Material.PACKED_ICE
+                && ground.isSideSolid(world, groundPos, EnumFacing.UP);
     }
 
     private static void generateDeadLeafPiles(Random random, int chunkX, int chunkZ, World world, int dimID) {

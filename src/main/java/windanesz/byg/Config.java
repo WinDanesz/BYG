@@ -856,6 +856,11 @@ public final class Config {
         return Math.max(0, (int) Math.round(chancePerMillion * worldgenSettings.templateChanceMultiplier));
     }
 
+    public static double getTemplateChanceMultiplier() {
+        ensureBaked();
+        return Math.max(0.0D, worldgenSettings.templateChanceMultiplier);
+    }
+
     public static double getSonoranCactusChanceMultiplier() {
         ensureBaked();
         return Math.max(0.0D, worldgenSettings.sonoranCactusChanceMultiplier);

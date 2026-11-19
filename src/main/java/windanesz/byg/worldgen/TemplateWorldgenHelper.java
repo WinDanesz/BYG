@@ -91,7 +91,8 @@ public final class TemplateWorldgenHelper {
         if (spacing > 1 && (Math.floorMod(chunkIndexX, spacing) != cell.nextInt(spacing) || Math.floorMod(chunkIndexZ, spacing) != cell.nextInt(spacing))) {
             return;
         }
-        if (cell.nextDouble() >= Math.min(1.0D, 0.75D * windanesz.byg.Config.getSonoranCactusChanceMultiplier())) {
+        if (cell.nextDouble() >= Math.min(1.0D, 0.75D * windanesz.byg.Config.getSonoranCactusChanceMultiplier()
+                * windanesz.byg.Config.getTemplateChanceMultiplier())) {
             return;
         }
 
