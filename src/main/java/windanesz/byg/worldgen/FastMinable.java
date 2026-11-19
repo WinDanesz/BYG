@@ -6,18 +6,12 @@ import java.util.Random;
 
 import com.google.common.base.Predicate;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.server.management.PlayerChunkMapEntry;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 
 /** Must consume the Random exactly like {@link WorldGenMinable} so existing seeds keep producing the same veins. */
@@ -142,11 +136,7 @@ public class FastMinable extends WorldGenMinable {
         }
 
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-        int chunkX = Integer.MIN_VALUE;
-        int chunkZ = Integer.MIN_VALUE;
-        Chunk chunk = null;
-        ExtendedBlockStorage[] storages = null;
-        PlayerChunkMapEntry watchers = null;
+        FastBlockWriter writer = new FastBlockWriter(world);
 
         for (int xi = 0; xi < sizeX; xi++) {
             int x = originX + xi;
@@ -167,32 +157,14 @@ public class FastMinable extends WorldGenMinable {
                         if (z < -WORLD_LIMIT || z >= WORLD_LIMIT) {
                             continue;
                         }
-                        int cx = x >> 4;
-                        int cz = z >> 4;
-                        if (chunk == null || cx != chunkX || cz != chunkZ) {
-                            chunk = world.getChunk(cx, cz);
-                            chunkX = cx;
-                            chunkZ = cz;
-                            storages = chunk.getBlockStorageArray();
-                            watchers = chunk.isPopulated() && world instanceof WorldServer
-                                    ? ((WorldServer) world).getPlayerChunkMap().getEntry(cx, cz) : null;
-                        }
-                        ExtendedBlockStorage storage = storages[y >> 4];
-                        IBlockState state = storage == Chunk.NULL_BLOCK_STORAGE
-                                ? Blocks.AIR.getDefaultState() : storage.get(x & 15, y & 15, z & 15);
+                        IBlockState state = writer.get(x, y, z);
                         pos.setPos(x, y, z);
                         if (!state.getBlock().isReplaceableOreGen(state, world, pos, this.predicate)
                                 || !isInAllowedBiome(world, pos)) {
                             continue;
                         }
-                        if (this.writesDirectly && storage != Chunk.NULL_BLOCK_STORAGE && isPlainTerrain(state)
-                                && state.getLightOpacity() == this.oreBlock.getLightOpacity()
-                                && state.getLightValue() == this.oreBlock.getLightValue()) {
-                            storage.set(x & 15, y & 15, z & 15, this.oreBlock);
-                            chunk.markDirty();
-                            if (watchers != null) {
-                                watchers.blockChanged(x & 15, y, z & 15);
-                            }
+                        if (this.writesDirectly && FastBlockWriter.isPlain(state)) {
+                            writer.setDirect(x, y, z, this.oreBlock);
                         } else {
                             world.setBlockState(new BlockPos(x, y, z), this.oreBlock, PLACE_FLAGS);
                         }
@@ -202,12 +174,6 @@ public class FastMinable extends WorldGenMinable {
         }
 
         return true;
-    }
-
-    private static boolean isPlainTerrain(IBlockState state) {
-        Block block = state.getBlock();
-        return block == Blocks.STONE || block == Blocks.DIRT || block == Blocks.GRASS || block == Blocks.GRAVEL
-                || block == Blocks.SAND || block == Blocks.NETHERRACK || block == Blocks.SNOW;
     }
 
     private static void markRange(long[] columns, int rowStart, int from, int to) {

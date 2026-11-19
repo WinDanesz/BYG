@@ -9,7 +9,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 
-/** Writes blocks straight into the chunk, skipping {@link World#setBlockState}; {@link #set} only does so for plain terrain blocks. */
+/**
+ * Writes blocks straight into the chunk, skipping {@link World#setBlockState}. {@link #set} only does so when both the
+ * old and new block are plain terrain; {@link #setDirect} leaves that check to the caller. Shared by the stone pillar
+ * features, template placement and {@link FastMinable}.
+ */
 public final class FastBlockWriter {
 
     private static final int FALLBACK_FLAGS = 2 | 16;
@@ -92,14 +96,19 @@ public final class FastBlockWriter {
         return chunk;
     }
 
-    private static boolean isPlain(IBlockState state) {
+    /** Terrain blocks with no tile entity or neighbour-dependent state, safe to overwrite without the world's update path. */
+    static boolean isPlain(IBlockState state) {
         Block block = state.getBlock();
         return block == Blocks.AIR
-                || block == Blocks.HARDENED_CLAY
-                || block == Blocks.STAINED_HARDENED_CLAY
                 || block == Blocks.STONE
                 || block == Blocks.DIRT
                 || block == Blocks.GRASS
+                || block == Blocks.GRAVEL
+                || block == Blocks.SAND
+                || block == Blocks.SNOW
+                || block == Blocks.NETHERRACK
+                || block == Blocks.HARDENED_CLAY
+                || block == Blocks.STAINED_HARDENED_CLAY
                 || block == Blocks.SANDSTONE
                 || block == Blocks.RED_SANDSTONE;
     }
