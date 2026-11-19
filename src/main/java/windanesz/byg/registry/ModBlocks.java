@@ -31,6 +31,7 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -737,14 +738,45 @@ public final class ModBlocks {
     private static final ResourceLocation REMOVED_ROCKY_GRASS_ALPS = new ResourceLocation(BiomesYouGo.MODID, "rocky_grass_alps");
     private static final ResourceLocation RENAMED_PURPLE_SAGE = new ResourceLocation(BiomesYouGo.MODID, "purple_age");
 
-    /** Remaps the removed Rocky Grass (Alps) block in old saves to regular Rocky Grass. */
+    /**
+     * Old fence gates were a closed block {@code <wood>_gate} and an open block {@code <wood>_gate_closed} (or
+     * {@code _gate_open} for baobab and willow). Returns the {@code <wood>_fence_gate} name that replaced either, or null.
+     */
+    @Nullable
+    static ResourceLocation renamedFenceGate(ResourceLocation old) {
+        if (!BiomesYouGo.MODID.equals(old.getNamespace())) {
+            return null;
+        }
+        String path = old.getPath();
+        String wood = path.endsWith("_gate_closed") ? path.substring(0, path.length() - "_gate_closed".length())
+                : path.endsWith("_gate_open") ? path.substring(0, path.length() - "_gate_open".length())
+                : path.endsWith("_gate") && !path.endsWith("_fence_gate") ? path.substring(0, path.length() - "_gate".length())
+                : null;
+        return wood == null || wood.isEmpty() ? null : new ResourceLocation(BiomesYouGo.MODID, wood + "_fence_gate");
+    }
+
+    /** True for the old open variant, which has no block of its own to remap to. */
+    static boolean isOldOpenFenceGate(ResourceLocation old) {
+        return old.getPath().endsWith("_gate_closed") || old.getPath().endsWith("_gate_open");
+    }
+
+    /** Remaps renamed and removed blocks in old saves. */
     @SubscribeEvent
     public static void remapBlocks(RegistryEvent.MissingMappings<Block> event) {
         for (RegistryEvent.MissingMappings.Mapping<Block> mapping : event.getMappings()) {
+            ResourceLocation fenceGate = renamedFenceGate(mapping.key);
             if (REMOVED_ROCKY_GRASS_ALPS.equals(mapping.key) && rocky_grass != null) {
                 mapping.remap(rocky_grass);
             } else if (RENAMED_PURPLE_SAGE.equals(mapping.key) && purple_sage != null) {
                 mapping.remap(purple_sage);
+            } else if (fenceGate != null && ForgeRegistries.BLOCKS.containsKey(fenceGate)) {
+                // A block can take over only one old id, so the closed gate keeps its id and loads closed,
+                // with BlockFenceGateBase reading its old metadata. Gates saved open are dropped.
+                if (isOldOpenFenceGate(mapping.key)) {
+                    mapping.ignore();
+                } else {
+                    mapping.remap(ForgeRegistries.BLOCKS.getValue(fenceGate));
+                }
             }
         }
     }
@@ -752,7 +784,11 @@ public final class ModBlocks {
     @SubscribeEvent
     public static void remapItems(RegistryEvent.MissingMappings<Item> event) {
         for (RegistryEvent.MissingMappings.Mapping<Item> mapping : event.getMappings()) {
-            if (REMOVED_ROCKY_GRASS_ALPS.equals(mapping.key)) {
+            ResourceLocation fenceGate = renamedFenceGate(mapping.key);
+            if (fenceGate != null && ForgeRegistries.ITEMS.containsKey(fenceGate)) {
+                // Saved stacks find items by name, so both old names resolve to the gate through the remap's alias.
+                mapping.remap(ForgeRegistries.ITEMS.getValue(fenceGate));
+            } else if (REMOVED_ROCKY_GRASS_ALPS.equals(mapping.key)) {
                 Item item = Item.getItemFromBlock(rocky_grass);
                 if (item != Items.AIR) {
                     mapping.remap(item);
