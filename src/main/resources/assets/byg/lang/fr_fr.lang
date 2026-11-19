@@ -612,6 +612,7 @@ tile.frozen_oak_fence.name=Frozen Oak Fence
 tile.rocky_grass.name=Rocky Grass
 tile.plant_stem.name=Plant Stem
 tile.prairie_grass.name=Prairie Grass
+tile.prairie_grass_tall.name=Tall Prairie Grass
 tile.cika_planks.name=Cika Planks
 tile.skyris_leaves_green_apple.name=Green Apple Skyris Leaves
 tile.stripped_rainbow_eucalyptus_log.name=Stripped Rainbow Eucalyptus Log
