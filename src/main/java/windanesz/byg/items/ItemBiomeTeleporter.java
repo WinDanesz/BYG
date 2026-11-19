@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BooleanSupplier;
 
 /**
  * Creative-only testing aid: right-click to teleport to the nearest instance of the item's biome, sneak + right-click
@@ -124,20 +125,20 @@ public class ItemBiomeTeleporter extends Item {
         }
         player.getCooldownTracker().setCooldown(this, COOLDOWN_TICKS);
         EntityPlayerMP playerMP = (EntityPlayerMP) player;
-        if (!player.isSneaking()) {
-            boolean teleported = BiomeTeleportation.teleport(playerMP, biome, player);
-            return new ActionResult<>(teleported ? EnumActionResult.SUCCESS : EnumActionResult.FAIL, stack);
+        boolean started;
+        if (player.isSneaking()) {
+            BlockPos origin = player.getPosition();
+            double angle = world.rand.nextDouble() * Math.PI * 2;
+            int offset = NEW_AREA_MIN_OFFSET + world.rand.nextInt(NEW_AREA_MAX_OFFSET - NEW_AREA_MIN_OFFSET + 1);
+            BlockPos searchFrom = origin.add(Math.cos(angle) * offset, 0, Math.sin(angle) * offset);
+            started = BiomeTeleportation.start(playerMP, biome, player, searchFrom, new NewArea(world, biome, origin, stack));
+            if (started) {
+                player.sendMessage(msg(TextFormatting.GRAY, "message.byg.biome_teleporter.searching_new", biome.getBiomeName()));
+            }
+        } else {
+            started = BiomeTeleportation.teleport(playerMP, biome, player);
         }
-
-        player.sendMessage(msg(TextFormatting.GRAY, "message.byg.biome_teleporter.searching_new", biome.getBiomeName()));
-        BlockPos target = findNewArea(world, biome, player.getPosition(), stack);
-        if (target == null) {
-            player.sendMessage(msg(TextFormatting.RED, "message.byg.biome_teleporter.not_found_new",
-                    biome.getBiomeName(), BiomeTeleportation.MAX_SEARCH_BLOCKS));
-            return new ActionResult<>(EnumActionResult.FAIL, stack);
-        }
-        BiomeTeleportation.teleportTo(playerMP, biome, target, player);
-        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+        return new ActionResult<>(started ? EnumActionResult.SUCCESS : EnumActionResult.FAIL, stack);
     }
 
     private static ITextComponent msg(TextFormatting color, String key, Object... args) {
@@ -145,41 +146,76 @@ public class ItemBiomeTeleporter extends Item {
     }
 
     /**
-     * Looks for an area of the biome other than the one the player is in and the ones this stack remembers, starting
-     * from a random nearby point, and updates the stack's memory. If there is none, the memory is cleared so that the
-     * next attempt can go back to those areas.
+     * Limits a search to areas of the biome other than the one the player is in and the ones the stack remembers,
+     * and updates the stack's memory when it ends. If there is no such area, the memory is cleared so that the next
+     * attempt can go back to those areas.
      */
-    @Nullable
-    private static BlockPos findNewArea(World world, Biome wanted, BlockPos origin, ItemStack stack) {
-        NBTTagCompound tag = stack.getTagCompound();
-        int[] visited = tag.getIntArray(TAG_VISITED);
-        VisitedBiomeAreas.CellTest isWanted = wantedCellTest(world, wanted);
+    private static final class NewArea implements BiomeTeleportation.Rules {
+        private final Biome wanted;
+        private final ItemStack stack;
+        private final VisitedBiomeAreas.CellTest isWanted;
+        private final Set<Long> skipped = new HashSet<>();
+        /** Cells to fill areas from, as x, z pairs: the remembered ones first, then those around the player. */
+        private final int[] seeds;
+        private final int remembered;
+        private int[] visited;
+        private int nextSeed;
+        @Nullable
+        private VisitedBiomeAreas.Fill fill;
 
-        Set<Long> skipped = new HashSet<>();
-        for (int i = 0; i + 1 < visited.length; i += 2) {
-            VisitedBiomeAreas.fillArea(visited[i] >> 2, visited[i + 1] >> 2, isWanted, skipped, MAX_AREA_CELLS);
-        }
-        // The area being left also counts as visited, in case the player got here on foot or with a plain right-click.
-        int originCellX = origin.getX() >> 2;
-        int originCellZ = origin.getZ() >> 2;
-        for (int x = originCellX - CURRENT_AREA_CELLS; x <= originCellX + CURRENT_AREA_CELLS; x++) {
-            for (int z = originCellZ - CURRENT_AREA_CELLS; z <= originCellZ + CURRENT_AREA_CELLS; z++) {
-                if (!skipped.contains(VisitedBiomeAreas.pack(x, z)) && isWanted.matches(x, z)) {
-                    visited = VisitedBiomeAreas.remember(visited, x * 4 + 2, z * 4 + 2);
-                    VisitedBiomeAreas.fillArea(x, z, isWanted, skipped, MAX_AREA_CELLS);
-                }
+        NewArea(World world, Biome wanted, BlockPos origin, ItemStack stack) {
+            this.wanted = wanted;
+            this.stack = stack;
+            isWanted = wantedCellTest(world, wanted);
+            visited = stack.getTagCompound().getIntArray(TAG_VISITED);
+            remembered = visited.length / 2;
+            int side = CURRENT_AREA_CELLS * 2 + 1;
+            seeds = new int[(remembered + side * side) * 2];
+            for (int i = 0; i < remembered * 2; i++) {
+                seeds[i] = visited[i] >> 2;
+            }
+            for (int i = 0; i < side * side; i++) {
+                seeds[(remembered + i) * 2] = (origin.getX() >> 2) - CURRENT_AREA_CELLS + i / side;
+                seeds[(remembered + i) * 2 + 1] = (origin.getZ() >> 2) - CURRENT_AREA_CELLS + i % side;
             }
         }
 
-        double angle = world.rand.nextDouble() * Math.PI * 2;
-        int offset = NEW_AREA_MIN_OFFSET + world.rand.nextInt(NEW_AREA_MAX_OFFSET - NEW_AREA_MIN_OFFSET + 1);
-        BlockPos searchFrom = origin.add(Math.cos(angle) * offset, 0, Math.sin(angle) * offset);
+        @Override
+        public boolean prepare(BooleanSupplier outOfTime) {
+            while (fill != null || nextSeed < seeds.length / 2) {
+                if (fill == null) {
+                    int x = seeds[nextSeed * 2];
+                    int z = seeds[nextSeed * 2 + 1];
+                    // The area being left also counts as visited, in case the player got here on foot or with a plain
+                    // right-click.
+                    if (nextSeed >= remembered && !skipped.contains(VisitedBiomeAreas.pack(x, z)) && isWanted.matches(x, z)) {
+                        visited = VisitedBiomeAreas.remember(visited, x * 4 + 2, z * 4 + 2);
+                    }
+                    fill = new VisitedBiomeAreas.Fill(x, z, isWanted, skipped, MAX_AREA_CELLS);
+                    nextSeed++;
+                }
+                if (!fill.run(outOfTime)) {
+                    return false;
+                }
+                fill = null;
+            }
+            return true;
+        }
 
-        BlockPos target = BiomeTeleportation.findBiome(world, wanted, searchFrom,
-                (cellX, cellZ) -> !skipped.contains(VisitedBiomeAreas.pack(cellX, cellZ)));
-        tag.setIntArray(TAG_VISITED, target == null ? new int[0]
-                : VisitedBiomeAreas.remember(visited, target.getX(), target.getZ()));
-        return target;
+        @Override
+        public boolean accepts(int cellX, int cellZ) {
+            return !skipped.contains(VisitedBiomeAreas.pack(cellX, cellZ));
+        }
+
+        @Override
+        public void finished(EntityPlayerMP player, @Nullable BlockPos target) {
+            stack.getTagCompound().setIntArray(TAG_VISITED, target == null ? new int[0]
+                    : VisitedBiomeAreas.remember(visited, target.getX(), target.getZ()));
+            if (target == null) {
+                player.sendMessage(msg(TextFormatting.RED, "message.byg.biome_teleporter.not_found_new",
+                        wanted.getBiomeName(), BiomeTeleportation.MAX_SEARCH_BLOCKS));
+            }
+        }
     }
 
     /** Tests cells against the wanted biome, keeping the sampled tiles as a flood fill keeps asking about the same ones. */

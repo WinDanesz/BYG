@@ -814,6 +814,7 @@ tooltip.byg.biome_teleporter=Creative only. Right-click to teleport to the neare
 tooltip.byg.biome_teleporter.sneak=Sneak + right-click: go to a new area.
 message.byg.biome_teleporter.creative_only=Biome teleporters only work in creative mode.
 message.byg.biome_teleporter.invalid_biome=Stack has no valid biome: %s
+message.byg.biome_teleporter.busy=A biome search is already running in this dimension.
 message.byg.biome_teleporter.searching=Looking for biome: %s...
 message.byg.biome_teleporter.searching_new=Looking for a new area of biome: %s...
 message.byg.biome_teleporter.not_found=Could not find %s within %s blocks (does this world type generate it?).

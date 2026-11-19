@@ -810,6 +810,7 @@ tooltip.byg.biome_teleporter=Csak kreatív módban. Jobb kattintással a legköz
 tooltip.byg.biome_teleporter.sneak=Lopakodás + jobb kattintás: ugrás egy új területre.
 message.byg.biome_teleporter.creative_only=A biomteleportálók csak kreatív módban működnek.
 message.byg.biome_teleporter.invalid_biome=A tárgyhoz nem tartozik érvényes biom: %s
+message.byg.biome_teleporter.busy=Ebben a dimenzióban már folyamatban van egy biomkeresés.
 message.byg.biome_teleporter.searching=Biom keresése: %s...
 message.byg.biome_teleporter.searching_new=Új terület keresése ebben a biomban: %s...
 message.byg.biome_teleporter.not_found=Nem található %s %s blokkon belül (generálódik ebben a világtípusban?).
