@@ -1,5 +1,5 @@
 {
-  "parent": "block/fence_gate_wall_closed",
+  "parent": "block/wall_gate_closed",
   "textures": {
     "texture": "byg:blocks/great_oak_planks"
   }

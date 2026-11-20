@@ -1,5 +1,5 @@
 {
-  "parent": "block/fence_gate_wall_open",
+  "parent": "block/wall_gate_open",
   "textures": {
     "texture": "byg:blocks/cherry_planks"
   }
