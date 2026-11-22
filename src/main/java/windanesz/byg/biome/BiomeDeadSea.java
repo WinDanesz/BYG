@@ -27,6 +27,7 @@ public class BiomeDeadSea
     private static final WorldGenDeadSeaStoneCave CAVE_GENERATOR = new WorldGenDeadSeaStoneCave();
     private static final WorldGenDeadSeaBones BONES_GENERATOR = new WorldGenDeadSeaBones();
     private static final WorldGenDeadSeaSpikes SPIKE_GENERATOR = new WorldGenDeadSeaSpikes();
+    private static final int SHIPWRECK_CHANCE = 24;
 
     public BiomeDeadSea() {
         super(new Biome.BiomeProperties("Dead Sea").setRainfall(0.2f).setBaseHeight(-0.6f).setWaterColor(-16777216).setHeightVariation(0.3f).setTemperature(2.0f));
@@ -78,12 +79,11 @@ public class BiomeDeadSea
     @Override
     public void decorate(World world, Random rand, BlockPos pos) {
         super.decorate(world, rand, pos);
-        boolean wreck = false;
-        if (rand.nextInt(12) == 0) {
-            for (int attempt = 0; attempt < 4 && !wreck; attempt++) {
-                wreck = SHIPWRECK_GENERATOR.generate(world, rand,
-                        pos.add(8 + rand.nextInt(16), 0, 8 + rand.nextInt(16)));
-            }
+        // Wrecks reach up to 17 blocks from their keel, past what population may touch, so they are queued and built
+        // once their whole area is loaded
+        boolean wreck = rand.nextInt(SHIPWRECK_CHANCE) == 0;
+        if (wreck) {
+            DeferredStructureManager.schedule(world, DeferredStructureManager.Kind.DEAD_SEA_SHIPWRECK, pos.add(16, 0, 16), rand.nextLong());
         }
         if (!wreck && rand.nextInt(12) == 0) {
             for (int attempt = 0; attempt < 4; attempt++) {
@@ -116,6 +116,16 @@ public class BiomeDeadSea
                         pos.add(8 + rand.nextInt(16), 0, 8 + rand.nextInt(16)))) break;
             }
         }
+    }
+
+    /** Tries the keel at a few spots of the chunk that queued it; {@code center} is the middle of its decoration area. */
+    public static boolean buildShipwreck(World world, Random rand, BlockPos center) {
+        for (int attempt = 0; attempt < 4; attempt++) {
+            if (SHIPWRECK_GENERATOR.generate(world, rand, center.add(rand.nextInt(16) - 8, 0, rand.nextInt(16) - 8))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     static class CustomTree

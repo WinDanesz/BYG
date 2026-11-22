@@ -876,6 +876,11 @@ public final class Config {
         return Math.max(0, worldgenSettings.sonoranCactusSpacing);
     }
 
+    public static int getStonePillarSpacing() {
+        ensureBaked();
+        return Math.max(1, worldgenSettings.stonePillarSpacing);
+    }
+
     public static int scaleFlowerAttempts(int attempts) {
         ensureBaked();
         return Math.max(0, (int) Math.round(attempts * worldgenSettings.flowerAttemptMultiplier));
@@ -2158,6 +2163,10 @@ public final class Config {
         @net.minecraftforge.common.config.Config.Comment("Number of cacti grouped in one Sonoran cactus patch. Some may be skipped where the ground does not fit.")
         @net.minecraftforge.common.config.Config.RangeInt(min = 1, max = 30)
         public int sonoranCactusPatchSize = 10;
+
+        @net.minecraftforge.common.config.Config.Comment("Spacing in chunks for the large stone pillars of the Stone Pillar Savanna: each spacing x spacing chunk area holds at most one pillar. Higher values make pillars rarer; 1 allows one in every chunk, where large ones overlap. A pillar appears once all chunks around it have generated.")
+        @net.minecraftforge.common.config.Config.RangeInt(min = 1, max = 16)
+        public int stonePillarSpacing = 3;
 
         @net.minecraftforge.common.config.Config.Comment("Multiplies BYG flower patch placement attempts in matching biomes when generating new chunks. 1.0 is the default; 0 skips these attempts. Increase gradually: higher values add generation work but do not guarantee proportionally more flowers because placement needs valid spots.")
         @net.minecraftforge.common.config.Config.RangeDouble(min = 0.0, max = 10.0)

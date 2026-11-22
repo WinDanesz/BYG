@@ -14,6 +14,7 @@ import net.minecraft.world.gen.feature.WorldGenSavannaTree;
 import net.minecraft.world.gen.feature.WorldGenTallGrass;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import windanesz.byg.Config;
 import windanesz.byg.registry.ModBlocks;
 import windanesz.byg.worldgen.*;
 import windanesz.byg.worldgen.treegenerator.BygTrees;
@@ -88,21 +89,42 @@ public class BiomeStonePillarSavanna extends Biome {
         placeGroundGrassPatches(worldIn, rand, pos);
         placeGroundDeadBushes(worldIn, rand, pos);
         placeGroundCacti(worldIn, rand, pos);
-        placePillars(worldIn, rand, pos);
+        placePillars(worldIn, pos);
         // super.decorate() is skipped on purpose: vanilla decorators spread past chunk borders and cascade worldgen.
     }
 
-    private static void placePillars(World worldIn, Random rand, BlockPos pos) {
-        int attempts = 5 + rand.nextInt(2);
-        for (int i = 0; i < attempts; i++) {
-            BlockPos pillarPos = pos.add(8 + rand.nextInt(16), 0, 8 + rand.nextInt(16));
-            if (PILLAR_MESA_GENERATOR.generate(worldIn, rand, pillarPos)) {
-                boolean hasWaterfall = rand.nextInt(4) == 0 && WATERFALL_GENERATOR.generate(worldIn, rand, pillarPos);
-                if (!hasWaterfall) {
-                    placePillarGrass(worldIn, rand, pillarPos);
-                }
+    /**
+     * Mesas reach up to about 40 blocks, far past what population may touch, so they are queued and built once their
+     * whole area is loaded. Each spacing x spacing chunk cell holds at most one, in a chunk picked from the world seed.
+     */
+    private static void placePillars(World worldIn, BlockPos pos) {
+        int chunkX = pos.getX() >> 4;
+        int chunkZ = pos.getZ() >> 4;
+        int spacing = Config.getStonePillarSpacing();
+        int cellX = Math.floorDiv(chunkX, spacing);
+        int cellZ = Math.floorDiv(chunkZ, spacing);
+        Random cell = new Random(worldIn.getSeed() ^ cellX * 341873128712L ^ cellZ * 132897987541L ^ 0x3E5A2L);
+        if (Math.floorMod(chunkX, spacing) != cell.nextInt(spacing) || Math.floorMod(chunkZ, spacing) != cell.nextInt(spacing)) {
+            return;
+        }
+        for (int attempt = 0; attempt < 6; attempt++) {
+            BlockPos pillarPos = pos.add(8 + cell.nextInt(16), 0, 8 + cell.nextInt(16));
+            if (PILLAR_MESA_GENERATOR.canStartAt(worldIn, pillarPos)) {
+                DeferredStructureManager.schedule(worldIn, DeferredStructureManager.Kind.STONE_PILLAR_MESA, pillarPos, cell.nextLong());
+                return;
             }
         }
+    }
+
+    public static boolean buildPillar(World world, Random rand, BlockPos pillarPos) {
+        if (!PILLAR_MESA_GENERATOR.generate(world, rand, pillarPos)) {
+            return false;
+        }
+        boolean hasWaterfall = rand.nextInt(4) == 0 && WATERFALL_GENERATOR.generate(world, rand, pillarPos);
+        if (!hasWaterfall) {
+            placePillarGrass(world, rand, pillarPos);
+        }
+        return true;
     }
 
     private static void placeGroundCacti(World worldIn, Random rand, BlockPos pos) {

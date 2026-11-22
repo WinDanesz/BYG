@@ -24,6 +24,12 @@ public class WorldGenStonePillarMesa extends WorldGenerator {
     private static final IBlockState GRASS = Blocks.GRASS.getDefaultState();
     private static final IBlockState AIR = Blocks.AIR.getDefaultState();
 
+    /** The ground checks of {@link #generate}. They read only the origin column, so population can run them safely. */
+    public boolean canStartAt(World world, BlockPos position) {
+        BlockPos surface = findSurface(world, position);
+        return surface != null && surface.getY() >= 62 && canAnchorTo(world.getBlockState(surface).getBlock());
+    }
+
     @Override
     public boolean generate(World world, Random rand, BlockPos position) {
         BlockPos surface = findSurface(world, position);
