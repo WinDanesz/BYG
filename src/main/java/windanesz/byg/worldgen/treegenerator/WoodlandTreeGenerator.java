@@ -6,30 +6,19 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import windanesz.byg.blocks.BlockGeneratedSaplingBase;
 import windanesz.byg.worldgen.BygTreePlacement;
 
 import java.util.Random;
 
-public abstract class WoodlandTreeGenerator extends WorldGenAbstractTree implements TreeGrowthGenerator {
+public abstract class WoodlandTreeGenerator extends BygTreeGenerator implements TreeGrowthGenerator {
     /** Deepest a root arm may reach below the trunk base before it is dropped instead of extended. */
     private static final int MAX_ROOT_DEPTH = 3;
     private static final EnumFacing[] SIDES = {EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST};
-    private static final ThreadLocal<Boolean> GROWING = new ThreadLocal<>();
-
-    protected WoodlandTreeGenerator() {
-        super(false);
-    }
 
     @Override
     public boolean growTree(World world, Random random, BlockPos position) {
-        GROWING.set(Boolean.TRUE);
-        try {
-            return this.generate(world, random, position);
-        } finally {
-            GROWING.remove();
-        }
+        return grow(() -> this.generate(world, random, position));
     }
 
     /** Log state for a trunk running along the given axis. */
@@ -67,7 +56,7 @@ public abstract class WoodlandTreeGenerator extends WorldGenAbstractTree impleme
         if (origin.getY() < 1 || origin.getY() + crownTop >= world.getHeight()
                 || !world.isAreaLoaded(origin.add(-radius, -MAX_ROOT_DEPTH, -radius), origin.add(radius, crownTop, radius))
                 || !this.canGrowOn(world, origin.down())
-                || (GROWING.get() == null && !BygTreePlacement.hasRoom(world, origin.getX(), origin.getZ(),
+                || (!isGrowing() && !BygTreePlacement.hasRoom(world, origin.getX(), origin.getZ(),
                 origin.getX() - radius, origin.getX() + radius, origin.getZ() - radius, origin.getZ() + radius))) {
             return false;
         }

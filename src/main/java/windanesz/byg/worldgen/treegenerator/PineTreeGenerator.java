@@ -4,14 +4,13 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import windanesz.byg.registry.ModBlocks;
 import windanesz.byg.worldgen.BygTreePlacement;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Random;
 
-public final class PineTreeGenerator extends WorldGenAbstractTree implements TreeGrowthGenerator {
+public final class PineTreeGenerator extends BygTreeGenerator implements TreeGrowthGenerator {
     public enum Size { SMALL, LARGE, SAPLING }
 
     private static final Variant[] VARIANTS = {
@@ -27,13 +26,12 @@ public final class PineTreeGenerator extends WorldGenAbstractTree implements Tre
     private final Size size;
 
     public PineTreeGenerator(Size size) {
-        super(false);
         this.size = size;
     }
 
     @Override
     public boolean growTree(World world, Random random, BlockPos position) {
-        return this.generate(world, random, position);
+        return grow(() -> this.generate(world, random, position));
     }
 
     @Override

@@ -7,19 +7,14 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import windanesz.byg.registry.ModBlocks;
 import windanesz.byg.worldgen.BygTreePlacement;
 
 import java.util.Random;
 
-public final class AspenTreeGenerator extends WorldGenAbstractTree {
+public final class AspenTreeGenerator extends BygTreeGenerator {
     private static final EnumFacing[] SIDES = {EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST};
     private static final int[] CROWN_RADII = {1, 2, 2, 2, 1, 1};
-
-    public AspenTreeGenerator() {
-        super(false);
-    }
 
     @Override
     public boolean generate(World world, Random random, BlockPos position) {

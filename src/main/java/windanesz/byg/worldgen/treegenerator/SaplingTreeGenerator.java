@@ -10,7 +10,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import windanesz.byg.Config;
 import windanesz.byg.blocks.BlockSappyMapleLog;
 import windanesz.byg.registry.ModBlocks;
@@ -19,7 +18,7 @@ import windanesz.byg.worldgen.BygTreePlacement;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public final class SaplingTreeGenerator extends WorldGenAbstractTree implements TreeGrowthGenerator {
+public final class SaplingTreeGenerator extends BygTreeGenerator implements TreeGrowthGenerator {
 
     private static final int SAPPY_LOG_CHANCE_PERCENT = 35;
     public enum TreeStyle {
@@ -83,7 +82,6 @@ public final class SaplingTreeGenerator extends WorldGenAbstractTree implements 
 
     public SaplingTreeGenerator(Supplier<IBlockState> logStateSupplier, Supplier<IBlockState> leavesStateSupplier,
                                 Supplier<IBlockState> accentLeavesStateSupplier, TreeStyle style, int minHeight, int extraHeight) {
-        super(false);
         this.logStateSupplier = logStateSupplier;
         this.leavesStateSupplier = leavesStateSupplier;
         this.accentLeavesStateSupplier = accentLeavesStateSupplier;
@@ -114,7 +112,7 @@ public final class SaplingTreeGenerator extends WorldGenAbstractTree implements 
         for (BlockPos pos : positions) {
             world.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
         }
-        if (this.place(world, random, center)) {
+        if (grow(() -> this.place(world, random, center))) {
             return true;
         }
         for (int i = 0; i < positions.length; i++) {
@@ -125,7 +123,7 @@ public final class SaplingTreeGenerator extends WorldGenAbstractTree implements 
 
     @Override
     public boolean growTree(World world, Random random, BlockPos position) {
-        return this.place(world, random, position);
+        return grow(() -> this.place(world, random, position));
     }
 
     @Override

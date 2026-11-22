@@ -6,23 +6,18 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import windanesz.byg.registry.ModBlocks;
 import windanesz.byg.worldgen.BygTreePlacement;
 
 import java.util.Random;
 
-public final class RedwoodTreeGenerator extends WorldGenAbstractTree {
+public final class RedwoodTreeGenerator extends BygTreeGenerator {
     private static final int[] HEIGHTS = {18, 20, 22, 19, 15, 33, 29, 36};
     private static final int[] RADII = {5, 5, 6, 5, 4, 7, 6, 8};
     private static final int[][] DIRECTIONS = {
             {1, 0}, {-1, 0}, {0, 1}, {0, -1},
             {1, 1}, {1, -1}, {-1, 1}, {-1, -1}
     };
-
-    public RedwoodTreeGenerator() {
-        super(false);
-    }
 
     /** Grow the same variants used by the biome from a complete 3x3 sapling group. */
     public boolean growFromSaplings(World world, Random random, BlockPos center) {
@@ -43,7 +38,7 @@ public final class RedwoodTreeGenerator extends WorldGenAbstractTree {
         for (BlockPos sapling : saplings) {
             world.setBlockState(sapling, Blocks.AIR.getDefaultState(), 2);
         }
-        if (generate(world, random, center, false)) {
+        if (grow(() -> generate(world, random, center, false))) {
             return true;
         }
         for (int i = 0; i < saplings.length; i++) {

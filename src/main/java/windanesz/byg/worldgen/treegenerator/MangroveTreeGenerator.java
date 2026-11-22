@@ -11,19 +11,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import windanesz.byg.registry.ModBlocks;
 import windanesz.byg.worldgen.BygTreePlacement;
 
 import java.util.Random;
 
-public final class MangroveTreeGenerator extends WorldGenAbstractTree {
+public final class MangroveTreeGenerator extends BygTreeGenerator {
     private static final ResourceLocation MANGROVE_MARSHES = new ResourceLocation("byg", "byg_mangrove_marshes");
     private static final int MAX_WATER_DEPTH = 4;
-
-    public MangroveTreeGenerator() {
-        super(false);
-    }
 
     @Override
     public boolean generate(World world, Random random, BlockPos position) {

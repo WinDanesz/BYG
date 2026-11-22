@@ -8,18 +8,13 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import windanesz.byg.registry.ModBlocks;
 import windanesz.byg.worldgen.BygTreePlacement;
 
 import java.util.Random;
 
-    public final class WeepingWitchTreeGenerator extends WorldGenAbstractTree {
+public final class WeepingWitchTreeGenerator extends BygTreeGenerator {
     private static final int[][] DIRECTIONS = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-
-    public WeepingWitchTreeGenerator() {
-        super(false);
-    }
 
     @Override
     public boolean generate(World world, Random random, BlockPos origin) {
