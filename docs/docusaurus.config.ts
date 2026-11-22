@@ -39,6 +39,17 @@ const config: Config = {
     'https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap',
   ],
 
+  themes: [
+    [
+      '@easyops-cn/docusaurus-search-local',
+      {
+        hashed: true,
+        indexDocs: true,
+        docsRouteBasePath: '/',
+      },
+    ],
+  ],
+
   presets: [
     [
       'classic',
