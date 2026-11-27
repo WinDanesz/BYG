@@ -44,11 +44,16 @@ public class WorldGenDeadSeaRocks extends WorldGenerator {
             boolean support = Math.abs(d) >= halfSpan - 2;
             int bottom = support ? 0 : Math.max(3, rise - 2);
             int width = support ? 2 : 1;
-            for (int y = bottom; y <= rise; y++) {
-                for (int side = -width + 1; side < width; side++) {
+            for (int side = -width + 1; side < width; side++) {
+                for (int y = bottom; y <= rise; y++) {
                     BlockPos target = new BlockPos(position.getX() + (alongX ? d : side),
                             floor + y, position.getZ() + (alongX ? side : d));
                     placeRock(world, rand, target);
+                }
+                // The ends are measured from the floor at the middle, so carry them down to the seabed where it dips
+                if (support) {
+                    fillDown(world, rand, new BlockPos(position.getX() + (alongX ? d : side), floor - 1,
+                            position.getZ() + (alongX ? side : d)));
                 }
             }
         }
@@ -89,9 +94,20 @@ public class WorldGenDeadSeaRocks extends WorldGenerator {
         return world.getBlockState(bed.down()).getBlock() == ModBlocks.black_sand ? bed.getY() : -1;
     }
 
+    /** Fills water from {@code top} down to the seabed so the block above it rests on the ground. */
+    static void fillDown(World world, Random rand, BlockPos top) {
+        for (BlockPos pos = top; pos.getY() > 0 && world.getBlockState(pos).getBlock() == Blocks.WATER; pos = pos.down()) {
+            world.setBlockState(pos, pickRock(rand), 2);
+        }
+    }
+
+    static IBlockState pickRock(Random rand) {
+        int palette = rand.nextInt(10);
+        return palette < 6 ? ROCK : palette < 9 ? STONE : MOSSY;
+    }
+
     private void placeRock(World world, Random rand, BlockPos target) {
         if (world.getBlockState(target).getBlock() != Blocks.WATER && !world.isAirBlock(target)) return;
-        int palette = rand.nextInt(10);
-        world.setBlockState(target, palette < 6 ? ROCK : palette < 9 ? STONE : MOSSY, 2);
+        world.setBlockState(target, pickRock(rand), 2);
     }
 }

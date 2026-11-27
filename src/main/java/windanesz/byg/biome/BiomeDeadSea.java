@@ -49,7 +49,9 @@ public class BiomeDeadSea
         this.spawnableCreatureList.clear();
         this.spawnableWaterCreatureList.clear();
         this.spawnableCaveCreatureList.clear();
-        this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntityGuardian.class, 40, 1, 5));
+        // As monsters they use their IN_WATER placement and count toward the hostile cap; the creature list put
+        // them on dry land during chunk generation and never capped them
+        this.spawnableMonsterList.add(new Biome.SpawnListEntry(EntityGuardian.class, 40, 1, 5));
     }
 
     @Override

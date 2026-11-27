@@ -5,14 +5,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
-import windanesz.byg.registry.ModBlocks;
 
 import java.util.Random;
 
 public class WorldGenDeadSeaPillar extends WorldGenerator {
-    private static final IBlockState ROCK = ModBlocks.rocky_stone.getDefaultState();
-    private static final IBlockState STONE = Blocks.STONE.getDefaultState();
-    private static final IBlockState MOSSY = Blocks.MOSSY_COBBLESTONE.getDefaultState();
 
     // Writes stay inside the two-chunk window that decorate() may touch, minus a 1-block margin because
     // setBlockState notifies neighbours (observers), which would read into an unpopulated chunk.
@@ -72,7 +68,7 @@ public class WorldGenDeadSeaPillar extends WorldGenerator {
                 leanZ = Math.max(-1, Math.min(1, leanZ));
             }
             disc(world, rand, base.getX() + (y > footHeight ? leanX : 0), floor + y,
-                    base.getZ() + (y > footHeight ? leanZ : 0), radius);
+                    base.getZ() + (y > footHeight ? leanZ : 0), radius, y == -1);
         }
         if (cap) {
             int capY = floor + height;
@@ -80,35 +76,37 @@ public class WorldGenDeadSeaPillar extends WorldGenerator {
             int cz = base.getZ() + leanZ;
             if (rand.nextInt(3) != 0) {
                 // Wider caprock overhanging the neck.
-                disc(world, rand, cx, capY, cz, 3);
-                disc(world, rand, cx, capY + 1, cz, 2);
-                if (rand.nextBoolean()) disc(world, rand, cx, capY + 2, cz, 1);
+                disc(world, rand, cx, capY, cz, 3, false);
+                disc(world, rand, cx, capY + 1, cz, 2, false);
+                if (rand.nextBoolean()) disc(world, rand, cx, capY + 2, cz, 1, false);
             } else {
-                disc(world, rand, cx, capY, cz, 1);
-                disc(world, rand, cx, capY + 1, cz, 0);
+                disc(world, rand, cx, capY, cz, 1, false);
+                disc(world, rand, cx, capY + 1, cz, 0, false);
             }
         }
     }
 
     /** Fills a rough disc; edge blocks are randomly dropped so outlines are never perfect. */
-    private void disc(World world, Random rand, int cx, int y, int cz, int radius) {
+    private void disc(World world, Random rand, int cx, int y, int cz, int radius, boolean settle) {
         for (int x = -radius; x <= radius; x++) {
             for (int z = -radius; z <= radius; z++) {
                 int d2 = x * x + z * z;
                 if (d2 > radius * radius + (radius > 1 ? 1 : 0)) continue;
                 if (radius > 1 && d2 >= radius * radius - 1 && rand.nextInt(3) == 0) continue;
-                place(world, new BlockPos(cx + x, y, cz + z), pick(rand));
+                BlockPos pos = new BlockPos(cx + x, y, cz + z);
+                place(world, pos, WorldGenDeadSeaRocks.pickRock(rand));
+                // The foot is laid at the floor under the spire's centre; reach down where the seabed falls away
+                if (settle && inWindow(pos)) WorldGenDeadSeaRocks.fillDown(world, rand, pos.down());
             }
         }
     }
 
-    private IBlockState pick(Random rand) {
-        int roll = rand.nextInt(10);
-        return roll < 6 ? ROCK : roll < 9 ? STONE : MOSSY;
+    private boolean inWindow(BlockPos pos) {
+        return pos.getX() >= minX && pos.getX() <= maxX && pos.getZ() >= minZ && pos.getZ() <= maxZ;
     }
 
     private void place(World world, BlockPos pos, IBlockState state) {
-        if (pos.getX() < minX || pos.getX() > maxX || pos.getZ() < minZ || pos.getZ() > maxZ) return;
+        if (!inWindow(pos)) return;
         if (world.getBlockState(pos).getBlock() == Blocks.WATER || world.isAirBlock(pos)) {
             world.setBlockState(pos, state, 2);
         }

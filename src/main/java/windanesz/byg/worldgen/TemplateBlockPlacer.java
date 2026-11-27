@@ -123,7 +123,7 @@ final class TemplateBlockPlacer {
     }
 
     @SuppressWarnings("unchecked")
-    private static List<Template.BlockInfo> blocksOf(Template template) {
+    static List<Template.BlockInfo> blocksOf(Template template) {
         resolve();
         if (blocksField == null) {
             return null;

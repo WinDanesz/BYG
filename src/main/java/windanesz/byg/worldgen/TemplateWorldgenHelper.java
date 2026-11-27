@@ -21,7 +21,10 @@ import windanesz.byg.BiomesYouGo;
 import windanesz.byg.registry.ModBlocks;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -324,7 +327,11 @@ public final class TemplateWorldgenHelper {
             // Same convention as the scan above: the origin layer replaces the ground block it stands on.
             spawnY = lowest - 1 + config.spawnYOffset;
         }
-        if (config.templatePath.startsWith("ds_rock")) {
+        boolean deadSeaRock = config.templatePath.startsWith("ds_rock");
+        List<Template.BlockInfo> seabedBase = deadSeaRock || "ds_guardiancove1".equals(config.templatePath)
+                ? templateBase(template, new PlacementSettings().setRotation(rotation).setMirror(mirror))
+                : Collections.<Template.BlockInfo>emptyList();
+        if (deadSeaRock) {
             // These templates were positioned relative to the water surface.
             // The seabed varies by several blocks, leaving some rocks suspended.
             int floorY = waterFloorY(world, x, z);
@@ -337,6 +344,16 @@ public final class TemplateWorldgenHelper {
             }
             if (floorY < 1) return;
             spawnY = floorY - 1;
+            // The corners are open water; the rock stands on a narrow base that may lie over a dip or start a
+            // layer or two up the template, so sit that base on the highest seabed under it instead
+            if (!seabedBase.isEmpty()) {
+                spawnY = Integer.MIN_VALUE;
+                for (Template.BlockInfo info : seabedBase) {
+                    int baseFloor = waterFloorY(world, x + info.pos.getX(), z + info.pos.getZ());
+                    if (baseFloor < 1) return;
+                    spawnY = Math.max(spawnY, baseFloor - 1 - info.pos.getY());
+                }
+            }
         }
         BlockPos spawnTo = new BlockPos(x, spawnY, z);
         // Evergreen tree templates include air below their canopies. Do not let
@@ -351,6 +368,7 @@ public final class TemplateWorldgenHelper {
             CrystalCanyonWorldgen.place(world, random, spawnTo, rotation, mirror, clipMinX, clipMaxX, clipMinZ, clipMaxZ);
         } else {
             placeTemplateWithSettings(world, template, spawnTo, placement);
+            supportFromSeabed(world, spawnTo, seabedBase);
             if (farmHouse) {
                 fillFoundationBelow(world, spawnTo, bounds);
             }
@@ -560,6 +578,42 @@ public final class TemplateWorldgenHelper {
             case "tspruce3":
             case "tyellowspruce3": return new int[][]{{3, 3}, {3, 4}, {4, 3}, {4, 4}};
             default: return null;
+        }
+    }
+
+    /** The lowest solid block of every column whose bottom is within a layer of the template's lowest, as placed with {@code settings}. */
+    private static List<Template.BlockInfo> templateBase(Template template, PlacementSettings settings) {
+        List<Template.BlockInfo> blocks = TemplateBlockPlacer.blocksOf(template);
+        if (blocks == null) return Collections.emptyList();
+        Map<BlockPos, Template.BlockInfo> lowest = new HashMap<>();
+        int minY = Integer.MAX_VALUE;
+        for (Template.BlockInfo info : blocks) {
+            if (!info.blockState.getMaterial().blocksMovement()) continue;
+            BlockPos pos = Template.transformedBlockPos(settings, info.pos);
+            BlockPos column = new BlockPos(pos.getX(), 0, pos.getZ());
+            Template.BlockInfo current = lowest.get(column);
+            if (current == null || pos.getY() < current.pos.getY()) {
+                lowest.put(column, new Template.BlockInfo(pos, info.blockState, null));
+            }
+            minY = Math.min(minY, pos.getY());
+        }
+        List<Template.BlockInfo> base = new ArrayList<>();
+        for (Template.BlockInfo info : lowest.values()) {
+            if (info.pos.getY() <= minY + 1) base.add(info);
+        }
+        return base;
+    }
+
+    /** Builds each base column of a placed template down through the water to the seabed. */
+    private static void supportFromSeabed(World world, BlockPos origin, List<Template.BlockInfo> base) {
+        for (Template.BlockInfo info : base) {
+            IBlockState fill = info.blockState.getMaterial() == Material.ROCK && info.blockState.isFullCube()
+                    ? info.blockState : Blocks.STONE.getDefaultState();
+            BlockPos pos = origin.add(info.pos).down();
+            while (pos.getY() > 0 && world.getBlockState(pos).getMaterial() == Material.WATER) {
+                world.setBlockState(pos, fill, PLACE_FLAGS);
+                pos = pos.down();
+            }
         }
     }
 

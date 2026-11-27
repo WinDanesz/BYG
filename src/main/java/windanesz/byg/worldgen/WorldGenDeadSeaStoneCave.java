@@ -9,15 +9,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
-import windanesz.byg.registry.ModBlocks;
 
 import java.util.Random;
 
 public class WorldGenDeadSeaStoneCave extends WorldGenerator {
     private static final ResourceLocation LOOT = new ResourceLocation("byg", "chests/dead_sea_shipwreck");
-    private static final IBlockState ROCK = ModBlocks.rocky_stone.getDefaultState();
-    private static final IBlockState STONE = Blocks.STONE.getDefaultState();
-    private static final IBlockState MOSSY = Blocks.MOSSY_COBBLESTONE.getDefaultState();
 
     @Override
     public boolean generate(World world, Random rand, BlockPos position) {
@@ -42,7 +38,10 @@ public class WorldGenDeadSeaStoneCave extends WorldGenerator {
                     double dist = Math.sqrt(dx * dx + dz * dz + (dy + 0.5) * (dy + 0.5) * 1.2);
                     if (dist > radius + 0.4 || dist <= inner) continue;
                     if (isEntrance(dx, dz, dy, entrance, radius)) continue;
-                    place(world, position.add(dx, floor - position.getY() + dy, dz), pickRock(rand));
+                    BlockPos pos = position.add(dx, floor - position.getY() + dy, dz);
+                    place(world, pos, WorldGenDeadSeaRocks.pickRock(rand));
+                    // The dome is laid at the floor under its centre; reach down where the seabed falls away
+                    if (dy == -1) WorldGenDeadSeaRocks.fillDown(world, rand, pos.down());
                 }
             }
         }
@@ -74,11 +73,6 @@ public class WorldGenDeadSeaStoneCave extends WorldGenerator {
         int along = dx * facing.getXOffset() + dz * facing.getZOffset();
         int side = facing.getAxis() == EnumFacing.Axis.X ? dz : dx;
         return along > 0 && side >= 0 && side <= 1;
-    }
-
-    private IBlockState pickRock(Random rand) {
-        int roll = rand.nextInt(10);
-        return roll < 6 ? ROCK : roll < 9 ? STONE : MOSSY;
     }
 
     private void place(World world, BlockPos pos, IBlockState state) {
