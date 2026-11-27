@@ -1328,31 +1328,58 @@ public final class SaplingTreeGenerator extends BygTreeGenerator implements Tree
     }
 
     /**
-     * Broad umbrella crown: a short forked trunk carrying several wide leaf discs. The tall variant keeps the
-     * same silhouette but rises more steeply and uses rounder, deeper discs instead of flattened ones.
+     * Spreading vase crown: two to four limbs leave the trunk at different heights and angles, some fork once
+     * more, and each ends in a flat leaf cloud. The tall variant climbs more steeply and uses deeper clouds.
      */
     private void placeJacarandaCanopy(World world, Random random, BlockPos position, int height, boolean tall) {
         IBlockState leavesState = this.leavesStateSupplier.get();
         IBlockState logState = this.logStateSupplier.get();
-        BlockPos top = position.up(height - 1);
-        int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
-        int start = random.nextInt(directions.length);
-        int branches = 4 + random.nextInt(2);
-        for (int i = 0; i < branches; i++) {
-            int[] direction = directions[(start + i * 2) % directions.length];
-            int length = 2 + random.nextInt(2);
-            BlockPos tip = top;
-            for (int step = 1; step <= length; step++) {
-                tip = top.add(direction[0] * step, tall ? step : step / 2, direction[1] * step);
-                this.placeLog(world, tip, logState);
+        // Keeps every leaf within 7 blocks of the trunk, inside the decoration window.
+        int maxSpread = 7;
+        int limbs = 2 + random.nextInt(3);
+        double baseAngle = random.nextDouble() * Math.PI * 2;
+        for (int i = 0; i < limbs; i++) {
+            double angle = baseAngle + i * Math.PI * 2 / limbs + (random.nextDouble() - 0.5) * 0.7;
+            int forkY = height / 2 + random.nextInt(Math.max(1, height / 2 - 1));
+            double rise = tall ? 0.8 + random.nextDouble() * 0.4 : 0.35 + random.nextDouble() * 0.45;
+            BlockPos tip = this.placeJacarandaLimb(world, position.up(forkY), angle, 2 + random.nextInt(3), rise);
+            if (random.nextBoolean()) {
+                double twigAngle = angle + (random.nextBoolean() ? 0.9 : -0.9);
+                BlockPos twigTip = this.placeJacarandaLimb(world, tip, twigAngle, 1 + random.nextInt(2), rise);
+                int twigRadius = Math.max(1, Math.min(2, maxSpread - horizontalSpread(position, twigTip)));
+                this.placeJacarandaDisc(world, random, twigTip.up(), twigRadius, leavesState, tall);
             }
-            this.placeJacarandaDisc(world, random, tip.up(), 3, leavesState, tall);
+            int radius = Math.max(2, Math.min(2 + random.nextInt(2), maxSpread - horizontalSpread(position, tip)));
+            this.placeJacarandaDisc(world, random, tip.up(), radius, leavesState, tall);
         }
-        this.placeLog(world, top.up(), logState);
-        if (tall) {
-            this.placeLog(world, top.up(2), logState);
+        BlockPos top = position.up(height - 1);
+        int leader = tall ? 2 : 1;
+        for (int y = 1; y <= leader; y++) {
+            this.placeLog(world, top.up(y), logState);
         }
-        this.placeJacarandaDisc(world, random, top.up(tall ? 3 : 2), 4, leavesState, tall);
+        this.placeJacarandaDisc(world, random, top.up(leader + 1), 2 + random.nextInt(3), leavesState, tall);
+    }
+
+    private BlockPos placeJacarandaLimb(World world, BlockPos start, double angle, int reach, double rise) {
+        IBlockState logState = this.logStateSupplier.get();
+        double dx = Math.cos(angle);
+        double dz = Math.sin(angle);
+        BlockPos previous = start;
+        for (int step = 1; step <= reach; step++) {
+            BlockPos next = start.add((int) Math.round(dx * step), (int) Math.round(rise * step), (int) Math.round(dz * step));
+            for (int y = previous.getY() + 1; y < next.getY(); y++) {
+                this.placeLog(world, new BlockPos(previous.getX(), y, previous.getZ()), logState);
+            }
+            EnumFacing.Axis axis = next.getY() != previous.getY() ? EnumFacing.Axis.Y
+                    : Math.abs(dx) >= Math.abs(dz) ? EnumFacing.Axis.X : EnumFacing.Axis.Z;
+            this.placeLog(world, next, this.withLogAxis(logState, axis));
+            previous = next;
+        }
+        return previous;
+    }
+
+    private static int horizontalSpread(BlockPos trunk, BlockPos pos) {
+        return Math.max(Math.abs(pos.getX() - trunk.getX()), Math.abs(pos.getZ() - trunk.getZ()));
     }
 
     private void placeJacarandaDisc(World world, Random random, BlockPos center, int radius, IBlockState leavesState, boolean tall) {
@@ -1364,7 +1391,7 @@ public final class SaplingTreeGenerator extends BygTreeGenerator implements Tree
             }
             for (int x = -layerRadius; x <= layerRadius; x++) {
                 for (int z = -layerRadius; z <= layerRadius; z++) {
-                    if (x * x + z * z > layerRadius * layerRadius + 1) {
+                    if (x * x + z * z > layerRadius * layerRadius + random.nextInt(layerRadius + 1)) {
                         continue;
                     }
                     if (y != 0 && random.nextInt(3) == 0) {
