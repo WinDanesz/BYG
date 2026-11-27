@@ -10,6 +10,8 @@ import windanesz.byg.Config;
 import windanesz.byg.blocks.BlockCrate;
 import windanesz.byg.blocks.BlockNetherFurnaceLit;
 import windanesz.byg.blocks.BlockSpringwater;
+import windanesz.byg.compat.GeographiCraftCompat;
+import windanesz.byg.compat.RTGCompat;
 import windanesz.byg.entity.EntityFungalSkeleton;
 import windanesz.byg.entity.EntityFungalZombie;
 import windanesz.byg.entity.EntityKiwiBird;
@@ -39,6 +41,8 @@ public final class BygInitialization {
         BlockNetherFurnaceLit.init(event);
         ModBrewingRecipes.init();
         SmeltingRecipes.init();
+        GeographiCraftCompat.init();
+        RTGCompat.init();
     }
 
     public static <T extends IMessage, V extends IMessage> void addNetworkMessage(Class<? extends IMessageHandler<T, V>> handler, Class<T> messageClass, Side... sides) {

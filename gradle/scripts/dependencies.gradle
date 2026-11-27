@@ -43,6 +43,10 @@ dependencies {
     runtimeOnly rfg.deobf('curse.maven:had-enough-items-557549:4543375')
     // spark profiler 1.6.3 (Forge 1.12.2) for profiling dev runs; Spark Unforged is newer but its mixins don't apply in this dev env
     runtimeOnly rfg.deobf('curse.maven:spark-361579:3542217')
+    // GeographiCraft API, for adding BYG biomes to its worlds
+    compileOnly rfg.deobf('maven.modrinth:geographicraft:1.0')
+    // Realistic Terrain Generation, for giving BYG biomes realistic terrain in its worlds
+    compileOnly rfg.deobf('curse.maven:realistic-terrain-generation-237989:2782568')
 
     // By wrapping a dependency descriptor in rfg.deobf() method call, the dependency is queued for deobfuscation
     // When deobfuscating, RFG respects the mapping_channel + mapping_version stated in gradle.properties
